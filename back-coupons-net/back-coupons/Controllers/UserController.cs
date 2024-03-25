@@ -78,5 +78,34 @@ namespace back_coupons.Controllers
             }
         }
 
+        [HttpPut]
+        public async Task<IActionResult> updateUser([FromBody] Entities.User user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (user == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var response = await _userUnitOfWork.UpdateUserAsync(user);
+                if (response != null)
+                {
+                    return Ok(new { user = user });
+                }
+
+                return BadRequest("No se pudo actualizar el usuario en el sistema");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500,  ex.Message);
+            }
+        }
+
     }
 }
