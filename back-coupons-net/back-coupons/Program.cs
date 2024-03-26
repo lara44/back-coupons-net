@@ -24,9 +24,12 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Container services
+// Container UnitOfWork
 builder.Services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
+builder.Services.AddScoped<IContactUnitOfWork, ContactUnitOfWork>();
+// Container Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
 
 
 var app = builder.Build();
