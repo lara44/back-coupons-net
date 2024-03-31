@@ -17,7 +17,9 @@ namespace back_coupons.Repositories.Implementations
 
         public async Task<ICollection<Product>> GetAllAsync()
         {
-            return await _dbContext.Products.ToListAsync();
+            return await _dbContext.Products
+                //.Include(x => x.ProductCategories)
+                .ToListAsync();
         }
 
         public async Task<Product> GetByIdAsync(int id)

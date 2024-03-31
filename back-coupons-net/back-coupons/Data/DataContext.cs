@@ -13,6 +13,9 @@ namespace back_coupons.Data
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductCategory> ProductCategories { get; set; }
+
+        public DbSet<Country> Countries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
