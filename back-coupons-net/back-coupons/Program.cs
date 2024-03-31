@@ -28,10 +28,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
 builder.Services.AddScoped<IContactUnitOfWork, ContactUnitOfWork>();
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
+builder.Services.AddScoped<IProductUnitOfWork, ProductUnitOfWork>();
 // Container Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 
 
