@@ -2,18 +2,20 @@
 
 namespace back_coupons.Entities
 {
-    public class Country
+    public class State
     {
         public int Id { get; set; }
 
-        [Display(Name = "País")]
+        [Display(Name = "Departamento / Estado")]
         [MaxLength(100, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Name { get; set; } = null!;
+        public int CountryId { get; set; }
+        public Country? Country { get; set; }
 
-        public ICollection<State>? States { get; set; }
+        public ICollection<City>? Cities { get; set; }
 
-        [Display(Name = "Estados/Departamentos")]
-        public int StatesNumber => States == null || States.Count == 0 ? 0 : States.Count;
+        [Display(Name = "Ciudades")]
+        public int CitiesNumber => Cities == null || Cities.Count == 0 ? 0 : Cities.Count;
     }
 }
