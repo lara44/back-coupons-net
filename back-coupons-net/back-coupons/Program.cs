@@ -13,6 +13,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
+builder.Services.AddTransient<SeedDB>();
 
 // Add CORS services
 builder.Services.AddCors(options =>
@@ -44,6 +45,19 @@ builder.Services.AddScoped<IStateRepository, StateRepository>();
 
 
 var app = builder.Build();
+
+SeedData(app);
+
+void SeedData(WebApplication app)
+{
+    var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+
+    using (var scope = scopedFactory!.CreateScope())
+    {
+        var service = scope.ServiceProvider.GetService<SeedDB>();
+        service!.SeedAsync().Wait();
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {
