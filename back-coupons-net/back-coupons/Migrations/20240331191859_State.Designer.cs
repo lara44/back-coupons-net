@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using back_coupons.Data;
 
@@ -10,9 +11,11 @@ using back_coupons.Data;
 namespace back_coupons.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240331191859_State")]
+    partial class State
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,30 +43,6 @@ namespace back_coupons.Migrations
                         .IsUnique();
 
                     b.ToTable("Category");
-                });
-
-            modelBuilder.Entity("back_coupons.Entities.City", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("StateId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StateId", "Name")
-                        .IsUnique();
-
-                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("back_coupons.Entities.Contact", b =>
@@ -230,17 +209,6 @@ namespace back_coupons.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("back_coupons.Entities.City", b =>
-                {
-                    b.HasOne("back_coupons.Entities.State", "States")
-                        .WithMany("Cities")
-                        .HasForeignKey("StateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("States");
-                });
-
             modelBuilder.Entity("back_coupons.Entities.ProductCategory", b =>
                 {
                     b.HasOne("back_coupons.Entities.Category", "Category")
@@ -263,22 +231,12 @@ namespace back_coupons.Migrations
             modelBuilder.Entity("back_coupons.Entities.State", b =>
                 {
                     b.HasOne("back_coupons.Entities.Country", "Country")
-                        .WithMany("States")
+                        .WithMany()
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Country");
-                });
-
-            modelBuilder.Entity("back_coupons.Entities.Country", b =>
-                {
-                    b.Navigation("States");
-                });
-
-            modelBuilder.Entity("back_coupons.Entities.State", b =>
-                {
-                    b.Navigation("Cities");
                 });
 #pragma warning restore 612, 618
         }
