@@ -1,0 +1,52 @@
+import { defineStore } from "pinia";
+import axios from "axios";
+
+export const useProductStore = defineStore("productStore", {
+  state: () => {
+    return {
+      listProducts: [],
+      product: {
+        id: "",
+        name: "",
+        email: "",
+      },
+    };
+  },
+
+  actions: {
+
+    async getProducts() {
+      try {
+        const response = await axios.get('/api/products');
+        if (response.data.products) {
+          this.listProducts =  response.data.products
+          console.log("respuesta", response.data.products, this.listProducts)
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async createProduct(newProduct) {
+      try {
+        const response = await axios.post('/api/products', newProduct);
+        if(response.data.success){
+          await this.getProducts(); 
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    
+    async updateProduct(updatedProduct) {
+      try {
+        const response = await axios.put(`/api/products/${updatedProduct.id}`, updatedProduct);
+        if(response.data.success){
+          await this.getProducts();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+});
