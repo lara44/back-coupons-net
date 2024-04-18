@@ -4,6 +4,7 @@ import home from '../views/Home.vue';
 import login from '../views/Login.vue';
 import user from '../components/users/UserContainer.vue';
 import product from '../components/products/ProductContainer.vue';
+import category from '../components/categories/CategoryContainer.vue';
 import role from '../components/roles/RoleContainer.vue';
 import { useLoginStore } from '../stores/loginStore';
 
@@ -45,6 +46,12 @@ const routes = [
                 path: '/products',
                 name: 'products',
                 component: product,
+                //beforeEnter: requiredAuth
+            },
+            {
+                path: '/categories',
+                name: 'categories',
+                component: category,
                 //beforeEnter: requiredAuth
             },
             {

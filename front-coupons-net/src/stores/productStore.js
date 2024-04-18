@@ -17,10 +17,10 @@ export const useProductStore = defineStore("productStore", {
 
     async getProducts() {
       try {
-        const response = await axios.get('/api/products');
-        if (response.data.products) {
-          this.listProducts =  response.data.products
-          console.log("respuesta", response.data.products, this.listProducts)
+        const response = await axios.get('/api/products/full');
+        if (response.data.data) {
+          this.listProducts =  response.data.data
+          console.log("respuesta", response.data.data, this.listProducts)
         }
       } catch (error) {
         console.error(error);
