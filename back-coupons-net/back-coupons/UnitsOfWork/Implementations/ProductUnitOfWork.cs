@@ -15,7 +15,5 @@ namespace back_coupons.UnitsOfWork.Implementations
 
         public async Task<ICollection<Product>> GetAllAsync() => await _repository.GetAllAsync();
         public async Task<Product> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
-        public async Task<Product> CreateAsync(Product product) => await _repository.CreateAsync(product);
-        public async Task<Product> UpdateAsync(Product product) => await _repository.UpdateAsync(product);
     }
 }

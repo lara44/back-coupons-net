@@ -1,4 +1,5 @@
-﻿using back_coupons.Responses;
+﻿using back_coupons.DTOs;
+using back_coupons.Responses;
 
 namespace back_coupons.Repositories.Interfaces
 {
@@ -6,6 +7,8 @@ namespace back_coupons.Repositories.Interfaces
     {
         Task<ActionResponse<IEnumerable<T>>> GetAsync();
         Task<ActionResponse<T>> GetAsync(int id);
+        Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination);
+        Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
         Task<ActionResponse<T>> AddAsync(T entity);
         Task<ActionResponse<T>> UpdateAsync(T entity);
         Task<ActionResponse<T>> DeleteAsync(int id);

@@ -1,6 +1,10 @@
-﻿using back_coupons.Entities;
+﻿using Azure;
+using back_coupons.DTOs;
+using back_coupons.Entities;
+using back_coupons.UnitsOfWork.Implementations;
 using back_coupons.UnitsOfWork.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace back_coupons.Controllers
 {
@@ -14,13 +18,24 @@ namespace back_coupons.Controllers
             _countryUnitOfWork = countryUnitOfWork;
         }
 
-        [HttpGet]
+        [HttpGet("full")]
         public override async Task<IActionResult> GetAsync()
         {
             var action = await _countryUnitOfWork.GetAsync();
             if (action.Successfully)
             {
-                return Ok(action.Result);
+                return Ok(new { data = action.Result });
+            }
+            return BadRequest();
+        }
+
+        [HttpGet]
+        public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
+        {
+            var response = await _countryUnitOfWork.GetAsync(pagination);
+            if (response.Successfully)
+            {
+                return Ok(new { data = response.Result });
             }
             return BadRequest();
         }
@@ -28,10 +43,10 @@ namespace back_coupons.Controllers
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(int id)
         {
-            var action = await _countryUnitOfWork.GetAsync(id);
-            if (action.Successfully)
+            var response = await _countryUnitOfWork.GetAsync(id);
+            if (response.Successfully)
             {
-                return Ok(action.Result);
+                return Ok(new { data = response.Result });
             }
             return NotFound();
         }
