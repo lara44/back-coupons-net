@@ -7,7 +7,5 @@ namespace back_coupons.Repositories.Interfaces
     {
         Task<ICollection<Product>> GetAllAsync();
         Task<Product> GetByIdAsync(int id);
-        Task<Product> CreateAsync(Product product);
-        Task<Product> UpdateAsync(Product product);
     }
 }

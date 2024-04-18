@@ -1,4 +1,6 @@
 ﻿using back_coupons.Data;
+using back_coupons.DTOs;
+using back_coupons.Helpers;
 using back_coupons.Repositories.Interfaces;
 using back_coupons.Responses;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,58 @@ namespace back_coupons.Repositories.Implementations
         {
             _dbContext = dbContext;
             _entity = dbContext.Set<T>();
+        }
+
+        public virtual async Task<ActionResponse<T>> GetAsync(int id)
+        {
+            var row = await _entity.FindAsync(id);
+            if (row != null)
+            {
+                return new ActionResponse<T>
+                {
+                    Successfully = true,
+                    Result = row
+                };
+            }
+            return new ActionResponse<T>
+            {
+                Successfully = false,
+                Message = "Registro no encontrado"
+            };
+        }
+
+        public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync()
+        {
+            return new ActionResponse<IEnumerable<T>>
+            {
+                Successfully = true,
+                Result = await _entity.ToListAsync()
+            };
+        }
+
+
+        public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination)
+        {
+            var queryable = _entity.AsQueryable();
+            return new ActionResponse<IEnumerable<T>>
+            {
+                Successfully = true,
+                Result = await queryable
+                    .Paginate(pagination)
+                    .ToListAsync()
+            };
+        }
+
+        public virtual async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
+        {
+            var queryable = _entity.AsQueryable();
+            var count = await queryable.CountAsync();
+            int totalPages = (int)Math.Ceiling((double)count / pagination.RecordsNumber);
+            return new ActionResponse<int>
+            {
+                Successfully = true,
+                Result = totalPages
+            };
         }
 
         public virtual async Task<ActionResponse<T>> AddAsync(T entity)
@@ -69,33 +123,6 @@ namespace back_coupons.Repositories.Implementations
             }
         }
 
-        public virtual async Task<ActionResponse<T>> GetAsync(int id)
-        {
-            var row = await _entity.FindAsync(id);
-            if (row != null)
-            {
-                return new ActionResponse<T>
-                {
-                    Successfully = true,
-                    Result = row
-                };
-            }
-            return new ActionResponse<T>
-            {
-                Successfully = false,
-                Message = "Registro no encontrado"
-            };
-        }
-
-        public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync()
-        {
-            return new ActionResponse<IEnumerable<T>>
-            {
-                Successfully = true,
-                Result = await _entity.ToListAsync()
-            };
-        }
-
         public virtual async Task<ActionResponse<T>> UpdateAsync(T entity)
         {
             try
@@ -135,6 +162,5 @@ namespace back_coupons.Repositories.Implementations
                 Message = "Ya existe el registro que estas intentando crear."
             };
         }
-
     }
 }

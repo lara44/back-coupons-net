@@ -1,4 +1,6 @@
 ﻿using back_coupons.Data;
+using back_coupons.DTOs;
+using back_coupons.Helpers;
 using back_coupons.Repositories.Interfaces;
 using back_coupons.Responses;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +44,27 @@ namespace back_coupons.Repositories.Implementations
                 Result = await _dbContext.States
                    .Include(s => s.Cities!)
                    .ToListAsync()
+            };
+        }
+
+        public override async Task<ActionResponse<IEnumerable<Entities.State>>> GetAsync(PaginationDTO pagination)
+        {
+            var queryable = _dbContext.States
+                .Include(s => s.Cities!)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
+            {
+                queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
+            }
+
+            return new ActionResponse<IEnumerable<Entities.State>>
+            {
+                Successfully = true,
+                Result = await queryable
+                    .OrderBy(x => x.Name)
+                    .Paginate(pagination)
+                    .ToListAsync()
             };
         }
     }

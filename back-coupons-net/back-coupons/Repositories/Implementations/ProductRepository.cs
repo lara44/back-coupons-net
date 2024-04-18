@@ -18,7 +18,6 @@ namespace back_coupons.Repositories.Implementations
         public async Task<ICollection<Product>> GetAllAsync()
         {
             return await _dbContext.Products
-                //.Include(x => x.ProductCategories)
                 .ToListAsync();
         }
 
@@ -31,42 +30,6 @@ namespace back_coupons.Repositories.Implementations
             }
 
             return response;
-        }
-
-        public async Task<Product> CreateAsync(Product product)
-        {
-            try
-            {
-                _dbContext.Products.Add(product);
-                await _dbContext.SaveChangesAsync();
-                return product;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public async Task<Product> UpdateAsync(Product product)
-        {
-            try
-            {
-                var existingProduct = await _dbContext.Products.FindAsync(product.Id);
-                if (existingProduct == null)
-                {
-                    throw new Exception("Usuario no encontrado");
-                }
-
-                existingProduct.Name = product.Name;
-                existingProduct.Barcode = product.Barcode;
-                existingProduct.Price = product.Price;
-                await _dbContext.SaveChangesAsync();
-                return existingProduct;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al actualizar producto", ex);
-            }
         }
     }
 }
