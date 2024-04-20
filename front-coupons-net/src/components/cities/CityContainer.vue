@@ -3,17 +3,20 @@
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline">{{ selectedCategory ? 'Editar Categoria' : 'Crear Categoria' }}</span>
+          <span class="headline">{{ selectedCity ? 'Editar Ciudad' : 'Crear ciudad' }}</span>
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="submitForm">
-            <v-text-field v-model="newCategory.name" label="Nombre" 
+            <v-text-field v-model="newCity.name" label="Nombre" 
               :rules="[requiredRule('Nombre')]" required></v-text-field>
+            <v-text-field v-model="newCity.stateId" label="Departamento" 
+              :rules="[requiredRule('Departamento'), stateIdRule]" required></v-text-field>
+            <v-text-field v-model="newCity.states" label="states"></v-text-field>
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="blue darken-1" text @click="closeModal">Cancelar</v-btn>
-          <v-btn color="primary" @click="submitForm">{{ selectedCategory ? 'Actualizar' : 'Guardar' }}</v-btn>
+          <v-btn color="primary" @click="submitForm">{{ selectedCity ? 'Actualizar' : 'Guardar' }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -22,10 +25,10 @@
       <v-card-title>
         <v-row>
           <v-col md="6" sm="6" cols="12">
-            <span class="headline">Lista de Categorias registradas</span>
+            <span class="headline">Lista de Ciudades registradas</span>
           </v-col>
           <v-col md="6" sm="6" cols="12">
-            <v-text-field v-model="search" append-icon="mdi-magnify" label="Buscar Categoria" single-line hide-details
+            <v-text-field v-model="search" append-icon="mdi-magnify" label="Buscar Ciudad" single-line hide-details
               variant="underlined"></v-text-field>
           </v-col>
         </v-row>
@@ -37,19 +40,23 @@
             <tr>
               <th>ID</th>
               <th>Nombre</th>
+              <th>Departamento</th>
+              <th>States</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="category in filteredCategories" :key="category.id">
-              <td>{{ category.id }}</td>
-              <td>{{ category.name }}</td>
+            <tr v-for="city in filteredCities" :key="city.id">
+              <td>{{ city.id }}</td>
+              <td>{{ city.name }}</td>
+              <td>{{ city.stateId }}</td>
+              <td>{{ city.states }}</td>
               <td>
-                <v-icon @click="editCategory(category)" color="primary">mdi-pencil</v-icon>
+                <v-icon @click="editCity(city)" color="primary">mdi-pencil</v-icon>
               </td>
             </tr>
-            <tr v-if="!filteredCategories.length">
-              <td colspan="4">No se encontraron categorias</td>
+            <tr v-if="!filteredCities.length">
+              <td colspan="4">No se encontraron Cityos</td>
             </tr>
           </tbody>
         </v-table>
@@ -59,62 +66,74 @@
 
     <!-- Snackbar para mostrar el mensaje de éxito -->
     <v-snackbar v-model="successMessageVisible" timeout="3000">
-      {{ selectedCategory ? 'Categoria actualizada exitosamente' : 'Categoria creada exitosamente' }}
+      {{ selectedCity ? 'Ciudad actualizada exitosamente' : 'Ciudad creada exitosamente' }}
     </v-snackbar>
   </v-container>
 </template>
 
 <script>
 import { ref, reactive, computed } from 'vue';
-import { useCategoryStore } from '../../stores/categoryStore';
+import { useCityStore } from '../../stores/cityStore';
 
 export default {
-  name: 'CategoryDataTable',
+  name: 'CityDataTable',
   setup() {
     const currentPage = ref(1); // Página actual
     const itemsPerPage = 10; // Número de usuarios por página
-    const categoryStore = useCategoryStore();
+    const cityStore = useCityStore();
     const successMessageVisible = ref(false);
     const search = ref('');
-    const newCategory = reactive({
+    const newCity = reactive({
       name: '',
+      email: '',
+      password: '',
     });
-    const selectedCategory = ref(null);
+    const selectedCity = ref(null);
     const dialog = ref(false);
 
-    const totalCategories = computed(() => categoryStore.listCategories.length);
-    const totalPages = computed(() => Math.ceil(totalCategories.value / itemsPerPage));
+    const totalCities = computed(() => cityStore.listCities.length);
+    const totalPages = computed(() => Math.ceil(totalCities.value / itemsPerPage));
 
-    const filteredCategories = computed(() => {
+    const filteredCities = computed(() => {
       const startIndex = (currentPage.value - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
-      const categoryList = categoryStore.listCategories;
-      return categoryList
-        .filter(category => category.name.toLowerCase().includes(search.value.toLowerCase()))
+      const cityList = cityStore.listCities;
+      return cityList
+        .filter(city => city.name.toLowerCase().includes(search.value.toLowerCase()))
         .slice(startIndex, endIndex);
     });
 
     const requiredRule = (fieldName) => (value) => !!value || `El campo "${fieldName}" es obligatorio`;
 
+    const stateIdRule = (value) => {
+      const numberRegex = /^[0-9]+$/;
+      return numberRegex.test(value) || 'El campo debe ser un número válido';
+    };
+
+
     const openModal = () => {
       dialog.value = true;
-      selectedCategory.value = null;
-      newCategory.name = '';
+      selectedCity.value = null;
+      newCity.name = '';
+      newCity.stateId = '';
+      newCity.states = '';
     };
 
     const submitForm = async () => {
-      if (!newCategory.name) {
+      if (!newCity.name || !newCity.stateId) {
         return;
       }
-      if (selectedCategory.value) {
-        await categoryStore.updateCategory({ ...selectedCategory.value, ...newCategory });
+      if (selectedCity.value) {
+        await cityStore.updateCity({ ...selectedCity.value, ...newCity });
       } else {
-        await categoryStore.createCategory(newCategory);
+        await cityStore.createCity(newCity);
       }
 
-      await categoryStore.getCategories();
+      await cityStore.getCities();
 
-      newCategory.name = '';
+      newCity.name = '';
+      newCity.stateId = '';
+      newCity.states = '';
 
       successMessageVisible.value = true;
 
@@ -125,30 +144,35 @@ export default {
       dialog.value = false;
     };
 
-    const editCategory = (category) => {
-      selectedCategory.value = { ...category };
-      newCategory.name = selectedCategory.value.name;
+    const editCity = (city) => {
+      selectedCity.value = { ...city };
+      newCity.name = selectedCity.value.name;
+      newCity.stateId = selectedCity.value.stateId;
+      newCity.states = selectedCity.value.states;
       dialog.value = true;
     };
 
     const closeModal = () => {
       dialog.value = false;
-      selectedCategory.value = null;
-      newCategory.name = '';
+      selectedCity.value = null;
+      newCity.name = '';
+      newCity.stateId = '';
+      newCity.states = '';
     };
 
     return {
       search,
       currentPage,
       itemsPerPage,
-      filteredCategories,
-      newCategory,
+      filteredCities,
+      newCity,
       successMessageVisible,
-      selectedCategory,
+      selectedCity,
       dialog,
       submitForm,
       requiredRule,
-      editCategory,
+      stateIdRule,
+      editCity,
       openModal,
       closeModal,
       totalPages
@@ -157,7 +181,7 @@ export default {
 
   async mounted() {
     try {
-      await useCategoryStore().getCategories();
+      await useCityStore().getCities();
     } catch (error) {
       console.error(error);
     } finally {

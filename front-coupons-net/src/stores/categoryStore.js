@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
-export const useCategoryStore = defineStore("userStore", {
+export const useCategoryStore = defineStore("categoryStore", {
   state: () => {
     return {
       listCategories: [],
@@ -16,7 +16,7 @@ export const useCategoryStore = defineStore("userStore", {
 
     async getCategories() {
       try {
-        const response = await axios.get('/api/category/full');
+        const response = await axios.get('/api/categories/full');
         if (response.data.data) {
           this.listCategories =  response.data.data
           console.log("respuesta", response.data.data, this.listCategories)
@@ -28,7 +28,7 @@ export const useCategoryStore = defineStore("userStore", {
 
     async createCategory(newCategory) {
       try {
-        const response = await axios.post('/api/category', newCategory);
+        const response = await axios.post('/api/categories', newCategory);
         if(response.data.success){
           await this.getCategories(); 
         }
