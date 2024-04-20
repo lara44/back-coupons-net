@@ -6,7 +6,7 @@ namespace back_coupons.UnitsOfWork.Interfaces
 {
     public interface IStateUnitOfWork
     {
-        Task<ActionResponse<IEnumerable<State>>> GetAsync();
+        Task<ActionResponse<IEnumerable<State>>> GetAsyncFull();
         Task<ActionResponse<State>> GetAsync(int id);
         Task<ActionResponse<IEnumerable<State>>> GetAsync(PaginationDTO pagination);
     }

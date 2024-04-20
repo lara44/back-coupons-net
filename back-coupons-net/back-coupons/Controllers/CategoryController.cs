@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace back_coupons.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/categories")]
     public class CategoryController : GenericController<Category>
     {
         public CategoryController(IGenericUnitOfWork<Category> unit) : base(unit)

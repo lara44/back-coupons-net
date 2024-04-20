@@ -36,7 +36,7 @@ namespace back_coupons.Repositories.Implementations
             };
         }
 
-        public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync()
+        public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsyncFull()
         {
             return new ActionResponse<IEnumerable<T>>
             {

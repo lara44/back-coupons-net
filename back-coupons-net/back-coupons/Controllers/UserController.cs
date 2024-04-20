@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace back_coupons.Controllers
 {
-    //[Route("api/[controller]")]
     [ApiController]
     [Route("api/users")]
     public class UserController : ControllerBase

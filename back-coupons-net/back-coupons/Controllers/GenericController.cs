@@ -15,9 +15,9 @@ namespace back_coupons.Controllers
         }
 
         [HttpGet("full")]
-        public virtual async Task<IActionResult> GetAsync()
+        public virtual async Task<IActionResult> GetAsyncFull()
         {
-            var action = await _unitOfWork.GetAsync();
+            var action = await _unitOfWork.GetAsyncFull();
             if (action.Successfully)
             {
                 return Ok(new { data = action.Result });
