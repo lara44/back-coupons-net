@@ -8,52 +8,46 @@ using Microsoft.EntityFrameworkCore;
 
 namespace back_coupons.Repositories.Implementations
 {
-    public class CountryRepository : GenericRepository<Country>, ICountryRepository
+    public class ContactRepository : GenericRepository<Contact>, IContactRepository
     {
         private readonly DataContext _dbContext;
-        public CountryRepository(DataContext dbContext) : base(dbContext)
+        public ContactRepository(DataContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public override async Task<ActionResponse<Country>> GetAsync(int id)
+        public override async Task<ActionResponse<Contact>> GetAsync(int id)
         {
-            var row = await _dbContext.Countries
-                .Include(c => c.States!)
-                .ThenInclude(s => s.Cities!)
+            var row = await _dbContext.Contacts
                 .FirstOrDefaultAsync(c => c.Id == id);
             if (row != null)
             {
-                return new ActionResponse<Country>
+                return new ActionResponse<Contact>
                 {
                     Successfully = true,
                     Result = row
                 };
             }
-            return new ActionResponse<Country>
+            return new ActionResponse<Contact>
             {
                 Successfully = false,
                 Message = "Registro no encontrado"
             };
         }
 
-        public override async Task<ActionResponse<IEnumerable<Country>>> GetAsyncFull()
+        public override async Task<ActionResponse<IEnumerable<Contact>>> GetAsyncFull()
         {
-            return new ActionResponse<IEnumerable<Country>>
+            return new ActionResponse<IEnumerable<Contact>>
             {
                 Successfully = true,
-                Result = await _dbContext.Countries
-                .Include(c => c.States!)
-                .ThenInclude(s => s.Cities)
+                Result = await _dbContext.Contacts
                 .ToListAsync()
             };
         }
 
-        public override async Task<ActionResponse<IEnumerable<Country>>> GetAsync(PaginationDTO pagination)
+        public override async Task<ActionResponse<IEnumerable<Contact>>> GetAsync(PaginationDTO pagination)
         {
-            var queryable = _dbContext.Countries
-                .Include(c => c.States!)
-                .ThenInclude(s => s.Cities)
+            var queryable = _dbContext.Contacts
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
@@ -61,7 +55,7 @@ namespace back_coupons.Repositories.Implementations
                 queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }
 
-            return new ActionResponse<IEnumerable<Country>>
+            return new ActionResponse<IEnumerable<Contact>>
             {
                 Successfully = true,
                 Result = await queryable

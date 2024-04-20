@@ -36,7 +36,7 @@ namespace back_coupons.Repositories.Implementations
             };
         }
 
-        public override async Task<ActionResponse<IEnumerable<Entities.State>>> GetAsync()
+        public override async Task<ActionResponse<IEnumerable<Entities.State>>> GetAsyncFull()
         {
             return new ActionResponse<IEnumerable<Entities.State>>
             {

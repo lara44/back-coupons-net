@@ -7,22 +7,22 @@ using Microsoft.AspNetCore.Mvc;
 namespace back_coupons.Controllers
 {
     [ApiController]
-    [Route("api/cities")]
-    public class CityController : GenericController<City>
+    [Route("api/companies")]
+    public class CompanyController : GenericController<Company>
     {
-        private readonly ICityUnitOfWork _cityUnitOfWork;
-        public CityController(IGenericUnitOfWork<City> unit, ICityUnitOfWork cityUnitOfWork) : base(unit)
+        private readonly ICompanyUnitOfWork _companyUnitOfWork;
+        public CompanyController(IGenericUnitOfWork<Company> unit, ICompanyUnitOfWork companyUnitOfWork) : base(unit)
         {
-            _cityUnitOfWork = cityUnitOfWork;
+            _companyUnitOfWork = companyUnitOfWork;
         }
 
         [HttpGet("full")]
         public override async Task<IActionResult> GetAsyncFull()
         {
-            var response = await _cityUnitOfWork.GetAsyncFull();
-            if (response.Successfully)
+            var action = await _companyUnitOfWork.GetAsyncFull();
+            if (action.Successfully)
             {
-                return Ok(new { data = response.Result });
+                return Ok(new { data = action.Result });
             }
             return BadRequest();
         }
@@ -30,7 +30,7 @@ namespace back_coupons.Controllers
         [HttpGet]
         public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
-            var response = await _cityUnitOfWork.GetAsync(pagination);
+            var response = await _companyUnitOfWork.GetAsync(pagination);
             if (response.Successfully)
             {
                 return Ok(new { data = response.Result });
@@ -41,7 +41,7 @@ namespace back_coupons.Controllers
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(int id)
         {
-            var response = await _cityUnitOfWork.GetAsync(id);
+            var response = await _companyUnitOfWork.GetAsync(id);
             if (response.Successfully)
             {
                 return Ok(new { data = response.Result });

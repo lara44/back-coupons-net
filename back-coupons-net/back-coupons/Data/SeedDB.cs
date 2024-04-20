@@ -16,8 +16,9 @@ namespace back_coupons.Data
             await _context.Database.EnsureCreatedAsync();
 
             await CheckCategoriesAsync();
-            await CheckCountriesAsync();
+            await CheckCompaniesAsync();
             await CheckContactsAsync();
+            await CheckCountriesAsync();
             await CheckProductsAsync();
             await CheckUsersAsync();
         }
@@ -42,6 +43,21 @@ namespace back_coupons.Data
             }
         }
 
+        private async Task CheckCompaniesAsync()
+        {
+            if (!_context.Companies.Any())
+            {
+                _context.Companies.Add(new Company { 
+                    Nit = "123456",
+                    Name = "NeoCode",
+                    Address = "Cl 22b",
+                    Phone = "1234567890",
+                    Email = "neocode.gmail.com"
+                });
+                await _context.SaveChangesAsync();
+            }
+        }
+
         private async Task CheckContactsAsync()
         {
             if (!_context.Contacts.Any())
@@ -51,84 +67,96 @@ namespace back_coupons.Data
                     Name = "Carlos Andres Cuellar",
                     Phone = "123456789",
                     Address = "Call 1",
-                    Email = "carlos.cuella@gmail.com"
+                    Email = "carlos.cuella@gmail.com",
+                    CompanyId = 1
                 });
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Mauricio Andres Peréz",
                     Phone = "123456789",
                     Address = "Call 2",
-                    Email = "mauricio.andres@gmail.com"
+                    Email = "mauricio.andres@gmail.com",
+                    CompanyId = 1
                 });
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Andres Moreno Collazos",
                     Phone = "123456789",
                     Address = "Call 3",
-                    Email = "andres.moreno@gmail.com"
+                    Email = "andres.moreno@gmail.com",
+                    CompanyId = 1
                 });
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Luis Daniel Espinoza",
                     Phone = "123456789",
                     Address = "Call 4",
-                    Email = "luis.daniel@gmail.com"
+                    Email = "luis.daniel@gmail.com",
+                    CompanyId = 1
                 });
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Karen Escobar",
                     Phone = "123456789",
                     Address = "Call 5",
-                    Email = "karen.escobar"
+                    Email = "karen.escobar",
+                    CompanyId = 1
                 });
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Cristian Castillo",
                     Phone = "123456789",
                     Address = "Call 6",
-                    Email = "cristian.castillo@gmail.com"
+                    Email = "cristian.castillo@gmail.com",
+                    CompanyId = 1
                 });
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Ana Catalina Barbosa",
                     Phone = "123456789",
                     Address = "Call 7",
-                    Email = "ana.catalina@gmail.com"
+                    Email = "ana.catalina@gmail.com",
+                    CompanyId = 1
                 });
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Mariana Pereira",
                     Phone = "123456789",
                     Address = "Call 8",
-                    Email = "mariana.pereira@gmail.com"
+                    Email = "mariana.pereira@gmail.com",
+                    CompanyId = 1
                 });
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Carlos Andres Parra",
                     Phone = "123456789",
                     Address = "Call 9",
-                    Email = "carlos.parra@gmail.com"
+                    Email = "carlos.parra@gmail.com",
+                    CompanyId = 1
                 });
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Brayan Medina",
                     Phone = "123456789",
                     Address = "Call 10",
-                    Email = "brayan.medina@gmail.com"
+                    Email = "brayan.medina@gmail.com",
+                    CompanyId = 1
                 });
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Alfredo Rojas Cuevas",
                     Phone = "123456789",
                     Address = "Call 11",
-                    Email = "alfredo.rojas@gmail.com"
+                    Email = "alfredo.rojas@gmail.com",
+                    CompanyId = 1
                 });
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Jhon Freddy Burgos",
                     Phone = "123456789",
                     Address = "Call 12",
-                    Email = "jhon.burgos@gmail.com"
+                    Email = "jhon.burgos@gmail.com",
+                    CompanyId = 1
                 });
                 await _context.SaveChangesAsync();
             }

@@ -6,7 +6,7 @@ namespace back_coupons.Repositories.Interfaces
 {
     public interface ICountryRepository
     {
-        Task<ActionResponse<IEnumerable<Country>>> GetAsync();
+        Task<ActionResponse<IEnumerable<Country>>> GetAsyncFull();
         Task<ActionResponse<Country>> GetAsync(int id);
         Task<ActionResponse<IEnumerable<Country>>> GetAsync(PaginationDTO pagination);
     }
