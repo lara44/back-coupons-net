@@ -36,6 +36,20 @@
                     <v-list-item
                         link
                         style="font-size: 10px !important"
+                        prepend-icon="mdi-account-group-outline mdi-18px"
+                        title="Categorias"
+                        to="/categories"
+                    ></v-list-item>
+                    <v-list-item
+                        link
+                        style="font-size: 10px !important"
+                        prepend-icon="mdi-account-group-outline mdi-18px"
+                        title="Ciudades"
+                        to="/cities"
+                    ></v-list-item>
+                    <v-list-item
+                        link
+                        style="font-size: 10px !important"
                         prepend-icon="mdi-account-details mdi-18px"
                         title="Roles"
                     ></v-list-item>

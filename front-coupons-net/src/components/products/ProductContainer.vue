@@ -12,7 +12,7 @@
             <v-text-field v-model="newProduct.price" label="Precio" 
               :rules="[requiredRule('Precio'), priceRule]" required></v-text-field>
             <v-text-field v-model="newProduct.barcode" label="Código de barras"
-              :rules="[requiredRule('Código de Barras'), priceRule]" required></v-text-field>
+              :rules="[requiredRule('Código de Barras'), barcodeRule]" required></v-text-field>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -67,7 +67,7 @@
 
     <!-- Snackbar para mostrar el mensaje de éxito -->
     <v-snackbar v-model="successMessageVisible" timeout="3000">
-      {{ selectedProduct ? 'Usuario actualizado exitosamente' : 'Usuario creado exitosamente' }}
+      {{ selectedProduct ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente' }}
     </v-snackbar>
   </v-container>
 </template>
@@ -112,7 +112,7 @@ export default {
     };
 
     const barcodeRule = (value) => {
-      return value.length >= 8 || 'La contraseña debe tener al menos 8 caracteres';
+      return value.length >= 8 || 'El código de Barras debe tener al menos 8 caracteres';
     };
 
 

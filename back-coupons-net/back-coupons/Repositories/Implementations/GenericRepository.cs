@@ -123,11 +123,22 @@ namespace back_coupons.Repositories.Implementations
             }
         }
 
-        public virtual async Task<ActionResponse<T>> UpdateAsync(T entity)
+        public virtual async Task<ActionResponse<T>> UpdateAsync(int id, T updatedEntity)
         {
+            var entity = await _entity.FindAsync(id);
+
+            if (entity == null)
+            {
+                return new ActionResponse<T>
+                {
+                    Successfully = false,
+                    Message = "Registro no encontrado"
+                };
+            }
+
             try
             {
-                _dbContext.Update(entity);
+                _dbContext.Entry(entity).CurrentValues.SetValues(updatedEntity);
                 await _dbContext.SaveChangesAsync();
                 return new ActionResponse<T>
                 {

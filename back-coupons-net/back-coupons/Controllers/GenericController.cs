@@ -69,10 +69,10 @@ namespace back_coupons.Controllers
             return BadRequest(response.Message);
         }
 
-        [HttpPut]
-        public virtual async Task<IActionResult> PutAsync(T model)
+        [HttpPut("{id}")]
+        public virtual async Task<IActionResult> PutAsync(int id, T updatedModel)
         {
-            var response = await _unitOfWork.UpdateAsync(model);
+            var response = await _unitOfWork.UpdateAsync(id, updatedModel);
             if (response.Successfully)
             {
                 return Ok(new { data = response.Result });
