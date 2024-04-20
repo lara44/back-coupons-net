@@ -17,9 +17,9 @@ namespace back_coupons.Controllers
         }
 
         [HttpGet("full")]
-        public override async Task<IActionResult> GetAsync()
+        public override async Task<IActionResult> GetAsyncFull()
         {
-            var action = await _companyUnitOfWork.GetAsync();
+            var action = await _companyUnitOfWork.GetAsyncFull();
             if (action.Successfully)
             {
                 return Ok(new { data = action.Result });

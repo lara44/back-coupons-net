@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace back_coupons.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/states")]
     public class StateController : GenericController<State>
     {
         private readonly IStateUnitOfWork _stateUnitOfWork;
@@ -16,9 +16,9 @@ namespace back_coupons.Controllers
         }
 
         [HttpGet("full")]
-        public override async Task<IActionResult> GetAsync()
+        public override async Task<IActionResult> GetAsyncFull()
         {
-            var response = await _stateUnitOfWork.GetAsync();
+            var response = await _stateUnitOfWork.GetAsyncFull();
             if (response.Successfully)
             {
                 return Ok(new { data = response.Result });

@@ -14,7 +14,7 @@ namespace back_coupons.UnitsOfWork.Implementations
             _countryRepository = countryRepository;
         }
 
-        public override async Task<ActionResponse<IEnumerable<Country>>> GetAsync() => await _countryRepository.GetAsync();
+        public override async Task<ActionResponse<IEnumerable<Country>>> GetAsyncFull() => await _countryRepository.GetAsyncFull();
         public override async Task<ActionResponse<Country>> GetAsync(int id) => await _countryRepository.GetAsync(id);
         public override async Task<ActionResponse<IEnumerable<Country>>> GetAsync(PaginationDTO pagination) => await _countryRepository.GetAsync(pagination);
     }

@@ -37,7 +37,7 @@ namespace back_coupons.Repositories.Implementations
             };
         }
 
-        public override async Task<ActionResponse<IEnumerable<Country>>> GetAsync()
+        public override async Task<ActionResponse<IEnumerable<Country>>> GetAsyncFull()
         {
             return new ActionResponse<IEnumerable<Country>>
             {

@@ -14,7 +14,7 @@ namespace back_coupons.UnitsOfWork.Implementations
             _companyRepository = companyRepository;
         }
 
-        public override async Task<ActionResponse<IEnumerable<Company>>> GetAsync() => await _companyRepository.GetAsync();
+        public override async Task<ActionResponse<IEnumerable<Company>>> GetAsyncFull() => await _companyRepository.GetAsyncFull();
         public override async Task<ActionResponse<Company>> GetAsync(int id) => await _companyRepository.GetAsync(id);
         public override async Task<ActionResponse<IEnumerable<Company>>> GetAsync(PaginationDTO pagination) => await _companyRepository.GetAsync(pagination);
     }

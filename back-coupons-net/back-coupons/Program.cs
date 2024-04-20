@@ -34,6 +34,8 @@ builder.Services.AddScoped<IProductUnitOfWork, ProductUnitOfWork>();
 builder.Services.AddScoped<ICountryUnitOfWork, CountryUnitOfWork>();
 builder.Services.AddScoped<IStateUnitOfWork, StateUnitOfWork>();
 builder.Services.AddScoped<ICompanyUnitOfWork, CompanyUnitOfWork>();
+builder.Services.AddScoped<ICityUnitOfWork, CityUnitOfWork>();
+builder.Services.AddScoped<IContactUnitOfWork, ContactUnitOfWork>();
 // Container Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -41,7 +43,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IStateRepository, StateRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
-
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
 
 
 var app = builder.Build();

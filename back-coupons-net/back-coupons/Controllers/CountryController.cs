@@ -9,7 +9,7 @@ using System;
 namespace back_coupons.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/countries")]
     public class CountryController : GenericController<Country>
     {
         private readonly ICountryUnitOfWork _countryUnitOfWork;
@@ -19,9 +19,9 @@ namespace back_coupons.Controllers
         }
 
         [HttpGet("full")]
-        public override async Task<IActionResult> GetAsync()
+        public override async Task<IActionResult> GetAsyncFull()
         {
-            var action = await _countryUnitOfWork.GetAsync();
+            var action = await _countryUnitOfWork.GetAsyncFull();
             if (action.Successfully)
             {
                 return Ok(new { data = action.Result });
