@@ -3,19 +3,19 @@
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline">{{ selectedCity ? 'Editar Ciudad' : 'Crear ciudad' }}</span>
+          <span class="headline">{{ selectedState ? 'Editar Departamento' : 'Crear Departamento' }}</span>
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="submitForm">
-            <v-text-field v-model="newCity.name" label="Nombre" :rules="[requiredRule('Nombre')]"
+            <v-text-field v-model="newState.name" label="Nombre" :rules="[requiredRule('Nombre')]"
               required></v-text-field>
-            <v-text-field v-model="newCity.stateId" label="Departamento"
-              :rules="[requiredRule('Departamento'), stateIdRule]" required></v-text-field>
+            <v-text-field v-model="newState.countryId" label="País"
+              :rules="[requiredRule('País'), countryIdRule]" required></v-text-field>
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="blue darken-1" text @click="closeModal">Cancelar</v-btn>
-          <v-btn color="primary" @click="submitForm">{{ selectedCity ? 'Actualizar' : 'Guardar' }}</v-btn>
+          <v-btn color="primary" @click="submitForm">{{ selectedState ? 'Actualizar' : 'Guardar' }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -24,10 +24,10 @@
       <v-card-title>
         <v-row>
           <v-col md="6" sm="6" cols="12">
-            <span class="headline">Lista de Ciudades registradas</span>
+            <span class="headline">Lista de Departamentos registrados</span>
           </v-col>
           <v-col md="6" sm="6" cols="12">
-            <v-text-field v-model="search" append-icon="mdi-magnify" label="Buscar Ciudad" single-line hide-details
+            <v-text-field v-model="search" append-icon="mdi-magnify" label="Buscar Departamento" single-line hide-details
               variant="underlined"></v-text-field>
           </v-col>
         </v-row>
@@ -39,21 +39,21 @@
             <tr>
               <th>ID</th>
               <th>Nombre</th>
-              <th>Departamento</th>
+              <th>Pais</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="city in filteredCities" :key="city.id">
-              <td>{{ city.id }}</td>
-              <td>{{ city.name }}</td>
-              <td>{{ city.stateId }}</td>
+            <tr v-for="state in filteredStates" :key="state.id">
+              <td>{{ state.id }}</td>
+              <td>{{ state.name }}</td>
+              <td>{{ state.countryId }}</td>
               <td>
-                <v-icon @click="editCity(city)" color="primary">mdi-pencil</v-icon>
+                <v-icon @click="editState(state)" color="primary">mdi-pencil</v-icon>
               </td>
             </tr>
-            <tr v-if="!filteredCities.length">
-              <td colspan="4">No se encontraron Cityos</td>
+            <tr v-if="!filteredStates.length">
+              <td colspan="4">No se encontraron Departamentos</td>
             </tr>
           </tbody>
         </v-table>
@@ -64,45 +64,45 @@
 
     <!-- Snackbar para mostrar el mensaje de éxito -->
     <v-snackbar v-model="successMessageVisible" timeout="3000">
-      {{ selectedCity ? 'Ciudad actualizada exitosamente' : 'Ciudad creada exitosamente' }}
+      {{ selectedState ? 'Departamento actualizado exitosamente' : 'Departamento creado exitosamente' }}
     </v-snackbar>
   </v-container>
 </template>
 
 <script>
 import { ref, reactive, computed } from 'vue';
-import { useCityStore } from '../../stores/cityStore';
+import { useStateStore } from '../../stores/stateStore';
 
 export default {
-  name: 'CityDataTable',
+  name: 'StateDataTable',
   setup() {
     const currentPage = ref(1); // Página actual
     const itemsPerPage = 10; // Número de usuarios por página
-    const cityStore = useCityStore();
+    const stateStore = useStateStore();
     const successMessageVisible = ref(false);
     const search = ref('');
-    const newCity = reactive({
+    const newState = reactive({
       name: '',
-      stateId: '',
+      countryId: '',
     });
-    const selectedCity = ref(null);
+    const selectedState = ref(null);
     const dialog = ref(false);
 
-    const totalCities = computed(() => cityStore.listCities.length);
-    const totalPages = computed(() => Math.ceil(totalCities.value / itemsPerPage));
+    const totalStates = computed(() => stateStore.listStates.length);
+    const totalPages = computed(() => Math.ceil(totalStates.value / itemsPerPage));
 
-    const filteredCities = computed(() => {
+    const filteredStates = computed(() => {
       const startIndex = (currentPage.value - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
-      const cityList = cityStore.listCities;
-      return cityList
-        .filter(city => city.name.toLowerCase().includes(search.value.toLowerCase()))
+      const stateList = stateStore.listStates;
+      return stateList
+        .filter(state => state.name.toLowerCase().includes(search.value.toLowerCase()))
         .slice(startIndex, endIndex);
     });
 
     const requiredRule = (fieldName) => (value) => !!value || `El campo "${fieldName}" es obligatorio`;
 
-    const stateIdRule = (value) => {
+    const countryIdRule = (value) => {
       const numberRegex = /^[0-9]+$/;
       return numberRegex.test(value) || 'El campo debe ser un número válido';
     };
@@ -110,25 +110,25 @@ export default {
 
     const openModal = () => {
       dialog.value = true;
-      selectedCity.value = null;
-      newCity.name = '';
-      newCity.stateId = '';
+      selectedState.value = null;
+      newState.name = '';
+      newState.countryId = '';
     };
 
     const submitForm = async () => {
-      if (!newCity.name || !newCity.stateId) {
+      if (!newState.name || !newState.countryId) {
         return;
       }
-      if (selectedCity.value) {
-        await cityStore.updateCity({ ...selectedCity.value, ...newCity });
+      if (selectedState.value) {
+        await stateStore.updateState({ ...selectedState.value, ...newState });
       } else {
-        await cityStore.createCity(newCity);
+        await stateStore.createState(newState);
       }
 
-      await cityStore.getCities();
+      await stateStore.getStates();
 
-      newCity.name = '';
-      newCity.stateId = '';
+      newState.name = '';
+      newState.countryId = '';
 
       successMessageVisible.value = true;
 
@@ -139,33 +139,33 @@ export default {
       dialog.value = false;
     };
 
-    const editCity = (city) => {
-      selectedCity.value = { ...city };
-      newCity.name = selectedCity.value.name;
-      newCity.stateId = selectedCity.value.stateId;
+    const editState = (state) => {
+      selectedState.value = { ...state };
+      newState.name = selectedState.value.name;
+      newState.countryId = selectedState.value.countryId;
       dialog.value = true;
     };
 
     const closeModal = () => {
       dialog.value = false;
-      selectedCity.value = null;
-      newCity.name = '';
-      newCity.stateId = '';
+      selectedState.value = null;
+      newState.name = '';
+      newState.countryId = '';
     };
 
     return {
       search,
       currentPage,
       itemsPerPage,
-      filteredCities,
-      newCity,
+      filteredStates,
+      newState,
       successMessageVisible,
-      selectedCity,
+      selectedState,
       dialog,
       submitForm,
       requiredRule,
-      stateIdRule,
-      editCity,
+      countryIdRule,
+      editState,
       openModal,
       closeModal,
       totalPages
@@ -174,7 +174,7 @@ export default {
 
   async mounted() {
     try {
-      await useCityStore().getCities();
+      await useStateStore().getStates();
     } catch (error) {
       console.error(error);
     } finally {
