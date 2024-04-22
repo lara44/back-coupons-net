@@ -58,6 +58,13 @@
                         link
                         style="font-size: 10px !important"
                         prepend-icon="mdi-account-group-outline mdi-18px"
+                        title="Departamentos"
+                        to="/states"
+                    ></v-list-item>
+                    <v-list-item
+                        link
+                        style="font-size: 10px !important"
+                        prepend-icon="mdi-account-group-outline mdi-18px"
                         title="Empresas"
                         to="/companies"
                     ></v-list-item>

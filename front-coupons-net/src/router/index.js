@@ -9,6 +9,7 @@ import city from '../components/cities/CityContainer.vue';
 import country from '../components/countries/CountryContainer.vue';
 import contact from '../components/contacts/ContactContainer.vue';
 import company from '../components/companies/CompanyContainer.vue';
+import state from '../components/states/StateContainer.vue';
 import role from '../components/roles/RoleContainer.vue';
 import { useLoginStore } from '../stores/loginStore';
 
@@ -80,6 +81,12 @@ const routes = [
                 path: '/countries',
                 name: 'countries',
                 component: country,
+                //beforeEnter: requiredAuth
+            },
+            {
+                path: '/states',
+                name: 'states',
+                component: state,
                 //beforeEnter: requiredAuth
             },
             {
