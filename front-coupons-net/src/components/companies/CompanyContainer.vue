@@ -100,13 +100,11 @@ export default {
     const successMessageVisible = ref(false);
     const search = ref('');
     const newCompany = reactive({
-      id: "",
       nit: "",
       name: "",
       address: "",
       email: "",
       phone: "",
-      contacts: "",
     });
     const selectedCompany = ref(null);
     const dialog = ref(false);

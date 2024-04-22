@@ -7,20 +7,20 @@
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="submitForm">
-            <v-text-field v-model="newContact.name" label="Nombre" 
-              :rules="[requiredRule('Nombre')]" required></v-text-field>
+            <v-text-field v-model="newContact.name" label="Nombre" :rules="[requiredRule('Nombre')]"
+              required></v-text-field>
 
-              <v-text-field v-model="newContact.phone" label="Teléfono" 
-              :rules="[requiredRule('Teléfono'), numberdRule]" required></v-text-field>
+            <v-text-field v-model="newContact.phone" label="Teléfono" :rules="[requiredRule('Teléfono'), numberdRule]"
+              required></v-text-field>
 
-              <v-text-field v-model="newContact.address" label="Dirección" 
-              :rules="[requiredRule('Dirección')]" required></v-text-field>
+            <v-text-field v-model="newContact.address" label="Dirección" :rules="[requiredRule('Dirección')]"
+              required></v-text-field>
 
-              <v-text-field v-model="newContact.email" label="Correo electrónico"
+            <v-text-field v-model="newContact.email" label="Correo electrónico"
               :rules="[requiredRule('Correo electrónico'), emailRule]" required></v-text-field>
 
-              <v-text-field v-model="newContact.companyId" label="Empresa" 
-              :rules="[requiredRule('Empresa'), numberdRule]" required></v-text-field>
+            <v-text-field v-model="newContact.companyId" label="Empresa" :rules="[requiredRule('Empresa'), numberdRule]"
+              required></v-text-field>
 
           </v-form>
         </v-card-text>
@@ -43,7 +43,7 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <v-btn class="ma-2" color="primary" dark @click="openModal" >Nuevo</v-btn>
+      <v-btn class="ma-2" color="primary" dark @click="openModal">Nuevo</v-btn>
       <v-card-text>
         <v-table density="compact">
           <thead>
@@ -54,7 +54,6 @@
               <th>Dirección</th>
               <th>Email</th>
               <th>Empresa</th>
-              <th>Company</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -66,7 +65,6 @@
               <td>{{ contact.address }}</td>
               <td>{{ contact.email }}</td>
               <td>{{ contact.companyId }}</td>
-              <td>{{ contact.company }}</td>
               <td>
                 <v-icon @click="editContact(contact)" color="primary">mdi-pencil</v-icon>
               </td>
@@ -77,7 +75,8 @@
           </tbody>
         </v-table>
       </v-card-text>
-      <v-pagination v-model="currentPage" rounded="circle" :length="totalPages" style="box-shadow: none !important;"></v-pagination>
+      <v-pagination v-model="currentPage" rounded="circle" :length="totalPages"
+        style="box-shadow: none !important;"></v-pagination>
     </v-card>
 
     <!-- Snackbar para mostrar el mensaje de éxito -->
@@ -100,12 +99,11 @@ export default {
     const successMessageVisible = ref(false);
     const search = ref('');
     const newContact = reactive({
-        id: "",
-        name: "",
-        phone: "",
-        address: "",
-        companyId: "",
-        company: "",
+      name: "",
+      phone: "",
+      address: "",
+      email: "",
+      companyId: "",
     });
     const selectedContact = ref(null);
     const dialog = ref(false);
@@ -143,7 +141,6 @@ export default {
       newContact.address = '';
       newContact.email = '';
       newContact.companyId = '';
-      newContact.company = '';
     };
 
     const submitForm = async () => {
@@ -163,7 +160,6 @@ export default {
       newContact.address = '';
       newContact.email = '';
       newContact.companyId = '';
-      newContact.company = '';
 
       successMessageVisible.value = true;
 
@@ -181,7 +177,6 @@ export default {
       newContact.address = selectedContact.value.address;
       newContact.email = selectedContact.value.email;
       newContact.companyId = selectedContact.value.companyId;
-      newContact.company = selectedContact.value.company;
       dialog.value = true;
     };
 
@@ -193,7 +188,6 @@ export default {
       newContact.address = '';
       newContact.email = '';
       newContact.companyId = '';
-      newContact.company = '';
     };
 
     return {
