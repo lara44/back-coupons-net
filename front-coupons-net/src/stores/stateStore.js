@@ -48,5 +48,16 @@ export const useStateStore = defineStore("stateStore", {
         console.error(error);
       }
     },
+
+    async deleteState(deleteState) {
+      try {
+        const response = await axios.delete(`/api/states/${deleteState.id}`, deleteState);
+        if(response.data.success){
+          await this.getStates();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 });

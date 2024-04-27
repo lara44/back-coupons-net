@@ -24,7 +24,6 @@ export const useCompanyStore = defineStore("companyStore", {
         const response = await axios.get('/api/companies/full');
         if (response.data.data) {
           this.listCompanies =  response.data.data
-          console.log("respuesta", response.data.data, this.listCompanies)
         }
       } catch (error) {
         console.error(error);
@@ -52,5 +51,14 @@ export const useCompanyStore = defineStore("companyStore", {
         console.error(error);
       }
     },
+
+    async deleteCompany(deleteCompany) {
+      try {
+        return await axios.delete(`/api/companies/${deleteCompany.id}`);
+      } catch (error) {
+        // return error;
+      }
+    },
+
   },
 });

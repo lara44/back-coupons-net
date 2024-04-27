@@ -47,5 +47,17 @@ export const useCategoryStore = defineStore("categoryStore", {
         console.error(error);
       }
     },
+
+    async deleteCategory(deleteCategory) {
+      try {
+        const response = await axios.delete(`/api/categories/${deleteCategory.id}`, deleteCategory);
+        if(response.data.success){
+          await this.getCategories();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
   },
 });

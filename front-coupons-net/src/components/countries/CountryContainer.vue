@@ -17,7 +17,42 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- Tabla HTML para mostrar los usuarios -->
+
+
+    <v-dialog v-model="dialogStates" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Departamentos</span>
+        </v-card-title>
+        <v-card-text>
+          <v-table density="compact">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Departamentos</th>
+              <th>Número de municipios</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="state in statesByDepartment" :key="state.id">
+              <td>{{ state.id }}</td>
+              <td>{{ state.name }}</td>
+              <td>{{ state.cities.length }}</td>
+            </tr>
+            <tr v-if="!statesByDepartment.length">
+              <td colspan="4">No se encontraron Departamentos</td>
+            </tr>
+          </tbody>
+        </v-table>
+
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="blue darken-1" text @click="dialogStates = false">Cerrar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    
     <v-card>
       <v-card-title>
         <v-row>
@@ -37,6 +72,7 @@
             <tr>
               <th>ID</th>
               <th>Nombre</th>
+              <th>Departamentos</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -44,8 +80,11 @@
             <tr v-for="country in filteredCountries" :key="country.id">
               <td>{{ country.id }}</td>
               <td>{{ country.name }}</td>
+              <td>{{ country.states.length }}</td>
               <td>
+                <v-icon @click="getDeparmentsByState(country.states)" color="primary">mdi-eye</v-icon>
                 <v-icon @click="editCountry(country)" color="primary">mdi-pencil</v-icon>
+                <v-icon @click="deleteCountry(country)" color="primary">mdi-delete</v-icon>
               </td>
             </tr>
             <tr v-if="!filteredCountries.length">
@@ -72,6 +111,7 @@ import { useCountryStore } from '../../stores/countryStore';
 export default {
   name: 'CountryDataTable',
   setup() {
+    const statesByDepartment = ref([]);
     const currentPage = ref(1); // Página actual
     const itemsPerPage = 10; // Número de usuarios por página
     const countryStore = useCountryStore();
@@ -82,6 +122,7 @@ export default {
     });
     const selectedCountry = ref(null);
     const dialog = ref(false);
+    const dialogStates = ref(false);
 
     const totalCountries = computed(() => countryStore.listCountries.length);
     const totalPages = computed(() => Math.ceil(totalCountries.value / itemsPerPage));
@@ -133,10 +174,23 @@ export default {
       dialog.value = true;
     };
 
+    const deleteCountry = (country) =>{
+        countryStore.deleteCountry(country).then(() => {
+        countryStore.getCountries();
+        }).catch((e) => {
+          console.log(e)
+        });   
+    } 
+
     const closeModal = () => {
       dialog.value = false;
       selectedCountry.value = null;
       newCountry.name = '';
+    };
+
+    const getDeparmentsByState = (data) => {
+      dialogStates.value = true;
+      statesByDepartment.value = data;
     };
 
     return {
@@ -149,10 +203,14 @@ export default {
       selectedCountry,
       dialog,
       submitForm,
+      deleteCountry,
       requiredRule,
       editCountry,
       openModal,
       closeModal,
+      getDeparmentsByState,
+      statesByDepartment,
+      dialogStates,
       totalPages
     };
   },

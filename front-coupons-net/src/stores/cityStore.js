@@ -32,7 +32,7 @@ export const useCityStore = defineStore("cityStore", {
       try {
         const response = await axios.post('/api/cities', newCity);
         if(response.data.success){
-          await this.getCitys(); 
+          await this.getCities(); 
         }
       } catch (error) {
         console.error(error);
@@ -43,11 +43,23 @@ export const useCityStore = defineStore("cityStore", {
       try {
         const response = await axios.put(`/api/cities/${updatedCity.id}`, updatedCity);
         if(response.data.success){
-          await this.getCitys();
+          await this.getCities();
         }
       } catch (error) {
         console.error(error);
       }
     },
+
+    async deleteCity(deleteCity) {
+      try {
+        const response = await axios.delete(`/api/cities/${deleteCity.id}`, deleteCity);
+        if(response.data.success){
+          await this.getCities();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
   },
 });

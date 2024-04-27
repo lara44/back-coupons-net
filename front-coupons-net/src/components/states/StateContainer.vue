@@ -19,7 +19,38 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- Tabla HTML para mostrar los usuarios -->
+
+    <v-dialog v-model="dialogCities" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Ciudades</span>
+        </v-card-title>
+        <v-card-text>
+          <v-table density="compact">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="city in cityByState" :key="city.id">
+              <td>{{ city.id }}</td>
+              <td>{{ city.name }}</td>
+            </tr>
+            <tr v-if="!cityByState.length">
+              <td colspan="4">No se encontraron ciudades</td>
+            </tr>
+          </tbody>
+        </v-table>
+
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="blue darken-1" text @click="dialogCities = false">Cerrar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-card>
       <v-card-title>
         <v-row>
@@ -39,7 +70,7 @@
             <tr>
               <th>ID</th>
               <th>Nombre</th>
-              <th>Pais</th>
+              <th>Número de ciudades</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -47,9 +78,11 @@
             <tr v-for="state in filteredStates" :key="state.id">
               <td>{{ state.id }}</td>
               <td>{{ state.name }}</td>
-              <td>{{ state.countryId }}</td>
+              <td>{{ state.citiesNumber }}</td>
               <td>
+                <v-icon @click="getCityByState(state.cities)" color="primary">mdi-eye</v-icon>
                 <v-icon @click="editState(state)" color="primary">mdi-pencil</v-icon>
+                <v-icon @click="deleteState(state)" color="primary">mdi-delete</v-icon>
               </td>
             </tr>
             <tr v-if="!filteredStates.length">
@@ -76,6 +109,7 @@ import { useStateStore } from '../../stores/stateStore';
 export default {
   name: 'StateDataTable',
   setup() {
+    const cityByState = ref([]);
     const currentPage = ref(1); // Página actual
     const itemsPerPage = 10; // Número de usuarios por página
     const stateStore = useStateStore();
@@ -87,6 +121,7 @@ export default {
     });
     const selectedState = ref(null);
     const dialog = ref(false);
+    const dialogCities = ref(false);
 
     const totalStates = computed(() => stateStore.listStates.length);
     const totalPages = computed(() => Math.ceil(totalStates.value / itemsPerPage));
@@ -145,12 +180,25 @@ export default {
       newState.countryId = selectedState.value.countryId;
       dialog.value = true;
     };
+    
+    const deleteState = (state) =>{
+        stateStore.deleteState(state).then(() => {
+          stateStore.getStates();
+        }).catch((e) => {
+          console.log(e)
+        });   
+    } 
 
     const closeModal = () => {
       dialog.value = false;
       selectedState.value = null;
       newState.name = '';
       newState.countryId = '';
+    };
+
+    const getCityByState = (data) => {
+      dialogCities.value = true;
+      cityByState.value = data;
     };
 
     return {
@@ -168,6 +216,10 @@ export default {
       editState,
       openModal,
       closeModal,
+      deleteState,
+      dialogCities,
+      cityByState,
+      getCityByState,
       totalPages
     };
   },

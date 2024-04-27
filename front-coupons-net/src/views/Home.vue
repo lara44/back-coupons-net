@@ -22,28 +22,49 @@
                     <v-list-item
                         link
                         style="font-size: 10px !important"
-                        prepend-icon="mdi-account-group-outline mdi-18px"
-                        title="Users"
-                        to="/users"
-                    ></v-list-item>
-                    <v-list-item
-                        link
-                        style="font-size: 10px !important"
-                        prepend-icon="mdi-account-group-outline mdi-18px"
+                        prepend-icon="mdi-package-variant-closed mdi-18px"
                         title="Productos"
                         to="/products"
                     ></v-list-item>
                     <v-list-item
                         link
                         style="font-size: 10px !important"
-                        prepend-icon="mdi-account-group-outline mdi-18px"
+                        prepend-icon="mdi-clipboard-outline mdi-18px"
                         title="Categorias"
                         to="/categories"
                     ></v-list-item>
                     <v-list-item
                         link
                         style="font-size: 10px !important"
-                        prepend-icon="mdi-account-group-outline mdi-18px"
+                        prepend-icon="mdi-store-24-hour mdi-18px"
+                        title="Empresas"
+                        to="/companies"
+                    ></v-list-item>
+                    <v-list-item
+                        link
+                        style="font-size: 10px !important"
+                        prepend-icon="mdi-contacts mdi-18px"
+                        title="Contactos"
+                        to="/contacts"
+                    ></v-list-item>
+                    <v-list-item
+                        link
+                        style="font-size: 10px !important"
+                        prepend-icon="mdi-google-maps mdi-18px"
+                        title="Paises"
+                        to="/countries"
+                    ></v-list-item>
+                    <v-list-item
+                        link
+                        style="font-size: 10px !important"
+                        prepend-icon="mdi-map mdi-18px"
+                        title="Departamentos"
+                        to="/states"
+                    ></v-list-item>
+                    <v-list-item
+                        link
+                        style="font-size: 10px !important"
+                        prepend-icon="mdi-city mdi-18px"
                         title="Ciudades"
                         to="/cities"
                     ></v-list-item>
@@ -51,35 +72,8 @@
                         link
                         style="font-size: 10px !important"
                         prepend-icon="mdi-account-group-outline mdi-18px"
-                        title="Contactos"
-                        to="/contacts"
-                    ></v-list-item>
-                    <v-list-item
-                        link
-                        style="font-size: 10px !important"
-                        prepend-icon="mdi-account-group-outline mdi-18px"
-                        title="Departamentos"
-                        to="/states"
-                    ></v-list-item>
-                    <v-list-item
-                        link
-                        style="font-size: 10px !important"
-                        prepend-icon="mdi-account-group-outline mdi-18px"
-                        title="Empresas"
-                        to="/companies"
-                    ></v-list-item>
-                    <v-list-item
-                        link
-                        style="font-size: 10px !important"
-                        prepend-icon="mdi-account-group-outline mdi-18px"
-                        title="Paises"
-                        to="/countries"
-                    ></v-list-item>
-                    <v-list-item
-                        link
-                        style="font-size: 10px !important"
-                        prepend-icon="mdi-account-details mdi-18px"
-                        title="Roles"
+                        title="Users"
+                        to="/users"
                     ></v-list-item>
                 </v-list-group>
                 <v-list-item link prepend-icon="mdi-logout-variant mdi-18px" title="Logout" @click="loginStore.logout"></v-list-item>

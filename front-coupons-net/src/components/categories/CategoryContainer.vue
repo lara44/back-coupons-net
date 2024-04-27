@@ -46,6 +46,7 @@
               <td>{{ category.name }}</td>
               <td>
                 <v-icon @click="editCategory(category)" color="primary">mdi-pencil</v-icon>
+                <v-icon @click="deleteCategory(category)" color="primary">mdi-delete</v-icon>
               </td>
             </tr>
             <tr v-if="!filteredCategories.length">
@@ -64,13 +65,10 @@
   </v-container>
 </template>
 
-<script>
-import { ref, reactive, computed } from 'vue';
+<script setup>
+import { ref, reactive, computed, onMounted } from 'vue';
 import { useCategoryStore } from '../../stores/categoryStore';
 
-export default {
-  name: 'CategoryDataTable',
-  setup() {
     const currentPage = ref(1); // Página actual
     const itemsPerPage = 10; // Número de usuarios por página
     const categoryStore = useCategoryStore();
@@ -131,38 +129,21 @@ export default {
       dialog.value = true;
     };
 
+    const deleteCategory = (category) =>{
+        categoryStore.deleteCategory(category).then(() => {
+          categoryStore.getCategories();
+        });  
+    } 
+
+
     const closeModal = () => {
       dialog.value = false;
       selectedCategory.value = null;
       newCategory.name = '';
     };
 
-    return {
-      search,
-      currentPage,
-      itemsPerPage,
-      filteredCategories,
-      newCategory,
-      successMessageVisible,
-      selectedCategory,
-      dialog,
-      submitForm,
-      requiredRule,
-      editCategory,
-      openModal,
-      closeModal,
-      totalPages
-    };
-  },
-
-  async mounted() {
-    try {
-      await useCategoryStore().getCategories();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      this.loading = false;
+  onMounted(() => {
+      useCategoryStore().getCategories();
     }
-  },
-};
+  ); 
 </script>

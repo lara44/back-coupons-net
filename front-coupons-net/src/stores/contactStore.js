@@ -51,5 +51,17 @@ export const useContactStore = defineStore("contactStore", {
         console.error(error);
       }
     },
+
+    async deleteContact(deleteContact) {
+      try {
+        const response = await axios.delete(`/api/contacts/${deleteContact.id}`, deleteContact);
+        if(response.data.success){
+          await this.getContacts();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
   },
 });

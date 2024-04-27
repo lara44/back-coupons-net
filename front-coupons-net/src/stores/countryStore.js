@@ -47,5 +47,13 @@ export const useCountryStore = defineStore("countryStore", {
         console.error(error);
       }
     },
+
+    async deleteCountry(deleteCountry) {
+      try {
+        return await axios.delete(`/api/countries/${deleteCountry.id}`);
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 });

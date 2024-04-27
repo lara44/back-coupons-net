@@ -53,7 +53,6 @@
               <th>Telefono</th>
               <th>Dirección</th>
               <th>Email</th>
-              <th>Empresa</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -64,9 +63,9 @@
               <td>{{ contact.phone }}</td>
               <td>{{ contact.address }}</td>
               <td>{{ contact.email }}</td>
-              <td>{{ contact.companyId }}</td>
               <td>
                 <v-icon @click="editContact(contact)" color="primary">mdi-pencil</v-icon>
+                <v-icon @click="deleteContact(contact)" color="primary">mdi-delete</v-icon>
               </td>
             </tr>
             <tr v-if="!filteredContacts.length">
@@ -180,6 +179,12 @@ export default {
       dialog.value = true;
     };
 
+    const deleteContact = (contact) =>{
+        contactStore.deleteContact(contact).then(() => {
+          contactStore.getContacts();
+        });   
+    } 
+
     const closeModal = () => {
       dialog.value = false;
       selectedContact.value = null;
@@ -206,9 +211,13 @@ export default {
       editContact,
       openModal,
       closeModal,
+      deleteContact,
       totalPages
     };
   },
+
+
+
 
   async mounted() {
     try {
