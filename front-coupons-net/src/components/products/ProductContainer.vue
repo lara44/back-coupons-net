@@ -54,6 +54,7 @@
               <td>{{ product.barcode }}</td>
               <td>
                 <v-icon @click="editProduct(product)" color="primary">mdi-pencil</v-icon>
+                <v-icon @click="deleteProduct(product)" color="primary">mdi-delete</v-icon>
               </td>
             </tr>
             <tr v-if="!filteredProducts.length">
@@ -149,6 +150,12 @@ export default {
       dialog.value = false;
     };
 
+    const deleteProduct = (product) =>{
+        productStore.deleteProduct(product).then(() => {
+          productStore.getProducts();
+        });   
+    } 
+
     const editProduct = (product) => {
       selectedProduct.value = { ...product };
       newProduct.name = selectedProduct.value.name;
@@ -179,6 +186,7 @@ export default {
       priceRule,
       barcodeRule,
       editProduct,
+      deleteProduct,
       openModal,
       closeModal,
       totalPages

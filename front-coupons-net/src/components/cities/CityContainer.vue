@@ -39,7 +39,6 @@
             <tr>
               <th>ID</th>
               <th>Nombre</th>
-              <th>Departamento</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -47,13 +46,13 @@
             <tr v-for="city in filteredCities" :key="city.id">
               <td>{{ city.id }}</td>
               <td>{{ city.name }}</td>
-              <td>{{ city.stateId }}</td>
               <td>
                 <v-icon @click="editCity(city)" color="primary">mdi-pencil</v-icon>
+                <v-icon @click="deleteCity(city)" color="primary">mdi-delete</v-icon>
               </td>
             </tr>
             <tr v-if="!filteredCities.length">
-              <td colspan="4">No se encontraron Cityos</td>
+              <td colspan="4">No se encontraron Ciudades</td>
             </tr>
           </tbody>
         </v-table>
@@ -146,6 +145,12 @@ export default {
       dialog.value = true;
     };
 
+    const deleteCity = (product) =>{
+        cityStore.deleteCity(product).then(() => {
+          cityStore.getCities();
+        });   
+    } 
+
     const closeModal = () => {
       dialog.value = false;
       selectedCity.value = null;
@@ -168,6 +173,7 @@ export default {
       editCity,
       openModal,
       closeModal,
+      deleteCity,
       totalPages
     };
   },

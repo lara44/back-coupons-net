@@ -31,7 +31,44 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- Tabla HTML para mostrar los usuarios -->
+
+    <v-dialog v-model="dialogContacts" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Contactos</span>
+        </v-card-title>
+        <v-card-text>
+          <v-table density="compact">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Telefono</th>
+              <th>Dirección</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="contact in contactsByCompany" :key="contact.id">
+              <td>{{ contact.id }}</td>
+              <td>{{ contact.name }}</td>
+              <td>{{ contact.phone }}</td>
+              <td>{{ contact.address }}</td>
+              <td>{{ contact.email }}</td>
+            </tr>
+            <tr v-if="!contactsByCompany.length">
+              <td colspan="4">No se encontraron Contactos</td>
+            </tr>
+          </tbody>
+        </v-table>
+
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="blue darken-1" text @click="dialogContacts = false">Cerrar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    
     <v-card>
       <v-card-title>
         <v-row>
@@ -55,6 +92,7 @@
               <th>Dirección</th>
               <th>Email</th>
               <th>Telefono</th>
+              <th>Contactos</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -66,8 +104,11 @@
               <td>{{ company.address }}</td>
               <td>{{ company.email }}</td>
               <td>{{ company.phone }}</td>
+              <td>{{ company.contacts.length }}</td>
               <td>
+                <v-icon @click="getContactsByCompany(company.contacts)" color="primary">mdi-eye</v-icon>
                 <v-icon @click="editCompany(company)" color="primary">mdi-pencil</v-icon>
+                <v-icon @click="deleteCompany(company)" color="primary">mdi-delete</v-icon>
               </td>
             </tr>
             <tr v-if="!filteredCompanies.length">
@@ -94,6 +135,7 @@ import { useCompanyStore } from '../../stores/companyStore';
 export default {
   name: 'CompanyDataTable',
   setup() {
+    const contactsByCompany = ref([]);
     const currentPage = ref(1); // Página actual
     const itemsPerPage = 10; // Número de usuarios por página
     const companyStore = useCompanyStore();
@@ -108,6 +150,7 @@ export default {
     });
     const selectedCompany = ref(null);
     const dialog = ref(false);
+    const dialogContacts = ref(false);
 
     const totalCompanies = computed(() => companyStore.listCompanies.length);
     const totalPages = computed(() => Math.ceil(totalCompanies.value / itemsPerPage));
@@ -181,6 +224,14 @@ export default {
       dialog.value = true;
     };
 
+    const deleteCompany = (company) =>{
+        companyStore.deleteCompany(company).then((response) => {
+          companyStore.getCompanies();
+        }).catch((e)=>{
+          console.log("------------------------------------------",e)
+        });   
+    } 
+
     const closeModal = () => {
       dialog.value = false;
       selectedCompany.value = null;
@@ -189,6 +240,11 @@ export default {
       newCompany.address = '';
       newCompany.email = '';
       newCompany.phone = '';
+    };
+
+    const getContactsByCompany = (data) => {
+      dialogContacts.value = true;
+      contactsByCompany.value = data;
     };
 
     return {
@@ -200,6 +256,7 @@ export default {
       newCompany,
       successMessageVisible,
       selectedCompany,
+      deleteCompany,
       dialog,
       submitForm,
       requiredRule,
@@ -207,6 +264,9 @@ export default {
       editCompany,
       openModal,
       closeModal,
+      dialogContacts,
+      getContactsByCompany,
+      contactsByCompany,
       totalPages
     };
   },

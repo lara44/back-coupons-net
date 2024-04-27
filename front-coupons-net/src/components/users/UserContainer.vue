@@ -52,6 +52,7 @@
               <td>{{ user.email }}</td>
               <td>
                 <v-icon @click="editUser(user)" color="primary">mdi-pencil</v-icon>
+                <v-icon @click="deleteUser(user)" color="primary">mdi-delete</v-icon>
               </td>
             </tr>
             <tr v-if="!filteredUsers.length">
@@ -155,6 +156,14 @@ export default {
       dialog.value = true;
     };
 
+    const deleteUser = (state) =>{
+      userStore.deleteUser(state).then(() => {
+        userStore.getUsers();
+        }).catch((e) => {
+          console.log(e)
+        });   
+    } 
+
     const closeModal = () => {
       dialog.value = false;
       selectedUser.value = null;
@@ -168,6 +177,7 @@ export default {
       currentPage,
       itemsPerPage,
       filteredUsers,
+      deleteUser,
       newUser,
       successMessageVisible,
       selectedUser,

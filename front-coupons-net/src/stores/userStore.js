@@ -48,5 +48,17 @@ export const useUserStore = defineStore("userStore", {
         console.error(error);
       }
     },
+
+    async deleteUser(deleteUser) {
+      try {
+        const response = await axios.delete(`/api/users/${deleteUser.id}`);
+        if(response.data.success){
+          await this.getUsers();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
   },
 });

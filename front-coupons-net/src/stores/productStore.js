@@ -48,5 +48,17 @@ export const useProductStore = defineStore("productStore", {
         console.error(error);
       }
     },
+
+    async deleteProduct(deleteProduct) {
+      try {
+        const response = await axios.delete(`/api/products/${deleteProduct.id}`, deleteProduct);
+        if(response.data.success){
+          await this.getProducts();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
   },
 });
