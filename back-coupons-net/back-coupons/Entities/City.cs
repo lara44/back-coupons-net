@@ -12,5 +12,6 @@ namespace back_coupons.Entities
         public string Name { get; set; } = null!;
         public int StateId { get; set; }
         public State? States { get; set; }
+        public ICollection<User>? Users { get; set; }
     }
 }
