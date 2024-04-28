@@ -20,7 +20,6 @@ namespace back_coupons.Data
             await CheckContactsAsync();
             await CheckCountriesAsync();
             await CheckProductsAsync();
-            await CheckUsersAsync();
         }
 
         private async Task CheckCategoriesAsync()
@@ -337,17 +336,6 @@ namespace back_coupons.Data
                     Price = 3000,
                     Barcode = "1041"
                 });
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        private async Task CheckUsersAsync()
-        {
-            if (!_context.Users.Any())
-            {
-                _context.Users.Add(new Entities.User { Name = "Luis Alberto Rojas", Email = "luis.rojas@gmail.com", Password = "123456" });
-                _context.Users.Add(new Entities.User { Name = "Cristian Castillo", Email = "cristian.castillo@gmail.com", Password = "123456" });
-
                 await _context.SaveChangesAsync();
             }
         }

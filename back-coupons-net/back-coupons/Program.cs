@@ -28,7 +28,6 @@ builder.Services.AddCors(options =>
 });
 
 // Container UnitOfWork
-builder.Services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped<IProductUnitOfWork, ProductUnitOfWork>();
 builder.Services.AddScoped<ICountryUnitOfWork, CountryUnitOfWork>();
@@ -37,7 +36,6 @@ builder.Services.AddScoped<ICompanyUnitOfWork, CompanyUnitOfWork>();
 builder.Services.AddScoped<ICityUnitOfWork, CityUnitOfWork>();
 builder.Services.AddScoped<IContactUnitOfWork, ContactUnitOfWork>();
 // Container Repositories
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
