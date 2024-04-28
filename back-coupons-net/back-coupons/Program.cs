@@ -1,8 +1,10 @@
 using back_coupons.Data;
+using back_coupons.Entities;
 using back_coupons.Repositories.Implementations;
 using back_coupons.Repositories.Interfaces;
 using back_coupons.UnitsOfWork.Implementations;
 using back_coupons.UnitsOfWork.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -35,6 +37,8 @@ builder.Services.AddScoped<IStateUnitOfWork, StateUnitOfWork>();
 builder.Services.AddScoped<ICompanyUnitOfWork, CompanyUnitOfWork>();
 builder.Services.AddScoped<ICityUnitOfWork, CityUnitOfWork>();
 builder.Services.AddScoped<IContactUnitOfWork, ContactUnitOfWork>();
+builder.Services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
+
 // Container Repositories
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -43,6 +47,20 @@ builder.Services.AddScoped<IStateRepository, StateRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddIdentity<User, IdentityRole>(x =>
+{
+    x.User.RequireUniqueEmail = true;
+    x.Password.RequireDigit = false;
+    x.Password.RequiredUniqueChars = 0;
+    x.Password.RequireLowercase = false;
+    x.Password.RequireNonAlphanumeric = false;
+    x.Password.RequireUppercase = false;
+    x.Password.RequiredLength = 6;
+})
+    .AddEntityFrameworkStores<DataContext>()
+    .AddDefaultTokenProviders();
 
 
 var app = builder.Build();
