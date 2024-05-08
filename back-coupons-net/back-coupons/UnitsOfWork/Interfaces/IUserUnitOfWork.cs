@@ -1,4 +1,5 @@
-﻿using back_coupons.Entities;
+﻿using back_coupons.DTOs;
+using back_coupons.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace back_coupons.UnitsOfWork.Interfaces
@@ -10,5 +11,7 @@ namespace back_coupons.UnitsOfWork.Interfaces
         Task CheckRoleAsync(string roleName);
         Task AddUserToRoleAsync(User user, string roleName);
         Task<bool> IsUserInRoleAsync(User user, string roleName);
+        Task<SignInResult> LoginAsync(LoginDTO model);
+        Task LogoutAsync();
     }
 }
