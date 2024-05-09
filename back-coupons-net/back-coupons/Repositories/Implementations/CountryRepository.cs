@@ -70,5 +70,14 @@ namespace back_coupons.Repositories.Implementations
                     .ToListAsync()
             };
         }
+
+        public async Task<ActionResponse<IEnumerable<Country>>> GetCountryListAsync()
+        {
+            return new ActionResponse<IEnumerable<Country>>
+            {
+                Successfully = true,
+                Result = await _dbContext.Countries.OrderBy(c => c.Name).ToListAsync()
+            };
+        }
     }
 }

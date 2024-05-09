@@ -50,5 +50,16 @@ namespace back_coupons.Controllers
             }
             return NotFound();
         }
+
+        [HttpGet("GetCountryListAsync")]
+        public async Task<IActionResult> GetCountryListAsync()
+        {
+            var action = await _countryUnitOfWork.GetCountryListAsync();
+            if (action.Successfully)
+            {
+                return Ok(new { data = action.Result });
+            }
+            return BadRequest();
+        }
     }
 }
