@@ -9,5 +9,6 @@ namespace back_coupons.Repositories.Interfaces
         Task<ActionResponse<IEnumerable<State>>> GetAsyncFull();
         Task<ActionResponse<State>> GetAsync(int id);
         Task<ActionResponse<IEnumerable<State>>> GetAsync(PaginationDTO pagination);
+        Task<ActionResponse<IEnumerable<State>>> GetStatesByCountryListAsync(int country);
     }
 }

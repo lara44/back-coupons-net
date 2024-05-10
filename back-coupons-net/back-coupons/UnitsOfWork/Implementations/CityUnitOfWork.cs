@@ -17,5 +17,7 @@ namespace back_coupons.UnitsOfWork.Implementations
         public override async Task<ActionResponse<IEnumerable<City>>> GetAsyncFull() => await _cityRepository.GetAsyncFull();
         public override async Task<ActionResponse<City>> GetAsync(int id) => await _cityRepository.GetAsync(id);
         public override async Task<ActionResponse<IEnumerable<City>>> GetAsync(PaginationDTO pagination) => await _cityRepository.GetAsync(pagination);
+
+        public async Task<ActionResponse<IEnumerable<City>>> GetCitiesByStatesAsync(int state) => await _cityRepository.GetCitiesByStatesAsync(state);
     }
 }

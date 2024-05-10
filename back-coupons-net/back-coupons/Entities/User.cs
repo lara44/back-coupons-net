@@ -1,25 +1,44 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using back_coupons.Enums;
+using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace back_coupons.Entities
 {
-    public class User
+    public class User : IdentityUser
     {
-        public int Id { get; set; }
-
-        [Display(Name = "Nombre usuario")]
-        [MaxLength(100, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]
+        [Display(Name = "Documento")]
+        [MaxLength(20, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public string Name { get; set; } = null!;
+        public string Document { get; set; } = null!;
 
-        [Display(Name = "Email usuario")]
-        [MaxLength(100, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]
+        [Display(Name = "Nombres")]
+        [MaxLength(50, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public string Email { get; set; } = null!;
+        public string FirstName { get; set; } = null!;
 
-        [Display(Name = "Password usuario")]
-        [MaxLength(100, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]
+        [Display(Name = "Apellidos")]
+        [MaxLength(50, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public string Password { get; set; } = null!;
+        public string LastName { get; set; } = null!;
+
+        [Display(Name = "Dirección")]
+        [MaxLength(200, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public string Address { get; set; } = null!;
+
+        [Display(Name = "Foto")]
+        public string? Photo { get; set; }
+
+        [Display(Name = "Tipo de usuario")]
+        public UserType UserType { get; set; }
+
+        public City? City { get; set; }
+
+        [Display(Name = "Ciudad")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una {0}.")]
+        public int CityId { get; set; }
+
+        [Display(Name = "Usuario")]
+        public string FullName => $"{FirstName} {LastName}";
     }
-
 }
