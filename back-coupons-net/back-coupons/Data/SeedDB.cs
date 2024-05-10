@@ -1,14 +1,19 @@
 ﻿using back_coupons.Entities;
+using back_coupons.Enums;
+using back_coupons.UnitsOfWork.Implementations;
+using back_coupons.UnitsOfWork.Interfaces;
 
 namespace back_coupons.Data
 {
     public class SeedDB
     {
         private readonly DataContext _context;
+        private readonly IUserUnitOfWork _userUnitOfWork;
 
-        public SeedDB(DataContext context)
+        public SeedDB(DataContext context, IUserUnitOfWork userUnitOfWork)
         {
             _context = context;
+            _userUnitOfWork = userUnitOfWork;
         }
 
         public async Task SeedAsync()
@@ -20,7 +25,39 @@ namespace back_coupons.Data
             await CheckContactsAsync();
             await CheckCountriesAsync();
             await CheckProductsAsync();
-            await CheckUsersAsync();
+            await CheckRolesAsync();
+            await CheckUserAsync("1010", "Luis Alberto", "Rojas Adames", "adames.lancero@gmail.com", "3214451040", "Cll 24", UserType.Admin);
+        }
+
+        private async Task CheckRolesAsync()
+        {
+            await _userUnitOfWork.CheckRoleAsync(UserType.Admin.ToString());
+            await _userUnitOfWork.CheckRoleAsync(UserType.User.ToString());
+        }
+
+        private async Task<User> CheckUserAsync(string document, string firstName, string lastName, string email, string phone, string address, UserType userType)
+        {
+            var user = await _userUnitOfWork.GetUserAsync(email);
+            if (user == null)
+            {
+                user = new User
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Email = email,
+                    UserName = email,
+                    PhoneNumber = phone,
+                    Address = address,
+                    Document = document,
+                    City = _context.Cities.FirstOrDefault(),
+                    UserType = userType,
+                };
+
+                await _userUnitOfWork.AddUserAsync(user, "123456");
+                await _userUnitOfWork.AddUserToRoleAsync(user, userType.ToString());
+            }
+
+            return user;
         }
 
         private async Task CheckCategoriesAsync()
@@ -47,7 +84,8 @@ namespace back_coupons.Data
         {
             if (!_context.Companies.Any())
             {
-                _context.Companies.Add(new Company { 
+                _context.Companies.Add(new Company
+                {
                     Nit = "123456",
                     Name = "NeoCode",
                     Address = "Cl 22b",
@@ -337,17 +375,6 @@ namespace back_coupons.Data
                     Price = 3000,
                     Barcode = "1041"
                 });
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        private async Task CheckUsersAsync()
-        {
-            if (!_context.Users.Any())
-            {
-                _context.Users.Add(new Entities.User { Name = "Luis Alberto Rojas", Email = "luis.rojas@gmail.com", Password = "123456" });
-                _context.Users.Add(new Entities.User { Name = "Cristian Castillo", Email = "cristian.castillo@gmail.com", Password = "123456" });
-
                 await _context.SaveChangesAsync();
             }
         }
