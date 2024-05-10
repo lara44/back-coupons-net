@@ -1,5 +1,6 @@
 ﻿using back_coupons.Data;
 using back_coupons.DTOs;
+using back_coupons.Entities;
 using back_coupons.Helpers;
 using back_coupons.Repositories.Interfaces;
 using back_coupons.Responses;
@@ -65,6 +66,20 @@ namespace back_coupons.Repositories.Implementations
                     .OrderBy(x => x.Name)
                     .Paginate(pagination)
                     .ToListAsync()
+            };
+        }
+
+        public async Task<ActionResponse<IEnumerable<State>>> GetStatesByCountryListAsync(int country)
+        {
+            var result = await _dbContext.States
+                    .Where(s => s.CountryId == country)
+                    .OrderBy(s => s.Name)
+                    .ToListAsync();
+
+            return new ActionResponse<IEnumerable<State>>
+            {
+                Successfully = true,
+                Result = result
             };
         }
     }
