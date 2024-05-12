@@ -1,5 +1,6 @@
 using back_coupons.Data;
 using back_coupons.Entities;
+using back_coupons.Helpers;
 using back_coupons.Repositories.Implementations;
 using back_coupons.Repositories.Interfaces;
 using back_coupons.UnitsOfWork.Implementations;
@@ -50,9 +51,6 @@ builder.Services.AddSwaggerGen(c =>
         });
 });
 
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
-builder.Services.AddTransient<SeedDB>();
-
 // Add CORS services
 builder.Services.AddCors(options =>
 {
@@ -64,6 +62,10 @@ builder.Services.AddCors(options =>
                    .AllowAnyHeader();
         });
 });
+
+builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
+builder.Services.AddTransient<SeedDB>();
+builder.Services.AddScoped<IFileStorage, FileStorage>();
 
 // Container UnitOfWork
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));

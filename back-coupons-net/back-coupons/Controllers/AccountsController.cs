@@ -1,5 +1,6 @@
 ﻿using back_coupons.DTOs;
 using back_coupons.Entities;
+using back_coupons.Helpers;
 using back_coupons.UnitsOfWork.Implementations;
 using back_coupons.UnitsOfWork.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -17,20 +18,30 @@ namespace back_coupons.Controllers
     {
         private readonly IUserUnitOfWork _userUnitOfWork;
         private readonly IConfiguration _configuration;
+        private readonly IFileStorage _fileStorage;
+        private readonly string _container;
 
         public AccountsController(
             IUserUnitOfWork userUnitOfWork,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IFileStorage fileStorage
         )
         {
             _userUnitOfWork = userUnitOfWork;
             _configuration = configuration;
+            _fileStorage = fileStorage;
+            _container = "users";
         }
 
         [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] UserDTO model)
         {
             User user = model;
+            if (!string.IsNullOrEmpty(model.Photo))
+            {
+                var photoUser = Convert.FromBase64String(model.Photo);
+                model.Photo = await _fileStorage.SaveFileAsync(photoUser, ".jpg", _container);
+            }
 
             var result = await _userUnitOfWork.AddUserAsync(user, model.Password);
             if (result.Succeeded)
