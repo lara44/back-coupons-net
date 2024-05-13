@@ -27,6 +27,16 @@ namespace back_coupons.Repositories.Implementations
             _signInManager = signInManager;
         }
 
+        public async Task<IdentityResult> ConfirmEmailAsync(User user, string token)
+        {
+            return await _userManager.ConfirmEmailAsync(user, token);
+        }
+
+        public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
+        {
+            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        }
+
         public async Task<IdentityResult> AddUserAsync(User user, string password)
         {
             return await _userManager.CreateAsync(user, password);
@@ -35,6 +45,11 @@ namespace back_coupons.Repositories.Implementations
         public async Task AddUserToRoleAsync(User user, string roleName)
         {
             await _userManager.AddToRoleAsync(user, roleName);
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
         }
 
         public async Task CheckRoleAsync(string roleName)
@@ -59,6 +74,16 @@ namespace back_coupons.Repositories.Implementations
             return user!;
         }
 
+        public async Task<User> GetUserAsync(Guid userId)
+        {
+            var user = await _dbContext.Users
+                .Include(u => u.City!)
+                .ThenInclude(c => c.States!)
+                .ThenInclude(s => s.Country)
+                .FirstOrDefaultAsync(x => x.Id == userId.ToString());
+            return user!;
+        }
+
         public async Task<bool> IsUserInRoleAsync(User user, string roleName)
         {
             return await _userManager.IsInRoleAsync(user, roleName);
@@ -66,12 +91,17 @@ namespace back_coupons.Repositories.Implementations
 
         public async Task<SignInResult> LoginAsync(LoginDTO model)
         {
-            return await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+            return await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
         }
 
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _userManager.UpdateAsync(user);
         }
     }
 }
