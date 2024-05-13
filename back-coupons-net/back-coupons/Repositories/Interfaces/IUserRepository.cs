@@ -6,6 +6,8 @@ namespace back_coupons.Repositories.Interfaces
 {
     public interface IUserRepository
     {
+        Task<string> GenerateEmailConfirmationTokenAsync(User user);
+        Task<IdentityResult> ConfirmEmailAsync(User user, string token);
         Task<User> GetUserAsync(string email);
         Task<User> GetUserAsync(Guid userId);
         Task<IdentityResult> AddUserAsync(User user, string password);
