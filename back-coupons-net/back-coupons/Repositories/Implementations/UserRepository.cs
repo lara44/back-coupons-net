@@ -37,6 +37,11 @@ namespace back_coupons.Repositories.Implementations
             await _userManager.AddToRoleAsync(user, roleName);
         }
 
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        }
+
         public async Task CheckRoleAsync(string roleName)
         {
             var roleExists = await _roleManager.RoleExistsAsync(roleName);
@@ -59,6 +64,16 @@ namespace back_coupons.Repositories.Implementations
             return user!;
         }
 
+        public async Task<User> GetUserAsync(Guid userId)
+        {
+            var user = await _dbContext.Users
+                .Include(u => u.City!)
+                .ThenInclude(c => c.States!)
+                .ThenInclude(s => s.Country)
+                .FirstOrDefaultAsync(x => x.Id == userId.ToString());
+            return user!;
+        }
+
         public async Task<bool> IsUserInRoleAsync(User user, string roleName)
         {
             return await _userManager.IsInRoleAsync(user, roleName);
@@ -72,6 +87,11 @@ namespace back_coupons.Repositories.Implementations
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _userManager.UpdateAsync(user);
         }
     }
 }

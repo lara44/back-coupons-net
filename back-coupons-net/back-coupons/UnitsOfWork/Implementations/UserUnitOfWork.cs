@@ -1,5 +1,6 @@
 ﻿using back_coupons.DTOs;
 using back_coupons.Entities;
+using back_coupons.Repositories.Implementations;
 using back_coupons.Repositories.Interfaces;
 using back_coupons.UnitsOfWork.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -22,5 +23,8 @@ namespace back_coupons.UnitsOfWork.Implementations
         public async Task<bool> IsUserInRoleAsync(User user, string roleName) => await _userRepository.IsUserInRoleAsync(user, roleName);
         public async Task<SignInResult> LoginAsync(LoginDTO model) => await _userRepository.LoginAsync(model);
         public async Task LogoutAsync() => await _userRepository.LogoutAsync();
+        public async Task<User> GetUserAsync(Guid userId) => await _userRepository.GetUserAsync(userId);
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword) => await _userRepository.ChangePasswordAsync(user, currentPassword, newPassword);
+        public async Task<IdentityResult> UpdateUserAsync(User user) => await _userRepository.UpdateUserAsync(user);
     }
 }
