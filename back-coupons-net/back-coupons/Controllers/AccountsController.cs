@@ -2,6 +2,7 @@
 using back_coupons.Entities;
 using back_coupons.Helpers;
 using back_coupons.Responses;
+using back_coupons.UnitsOfWork.Implementations;
 using back_coupons.UnitsOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -221,6 +222,24 @@ namespace back_coupons.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpPost("ResedToken")]
+        public async Task<IActionResult> ResedTokenAsync([FromBody] EmailDTO model)
+        {
+            var user = await _userUnitOfWork.GetUserAsync(model.Email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var response = await SendConfirmationEmailAsync(user);
+            if (response.Successfully)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(response.Message);
         }
     }
 }
