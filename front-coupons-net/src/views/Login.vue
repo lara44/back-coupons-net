@@ -10,19 +10,19 @@
                     <v-card-text>
                         <v-form>
                             <v-text-field label="Email" name="email" prepend-icon="mdi-account" type="text"
-                                v-model="loginStore.user.username"></v-text-field>
+                                v-model="loginStore.user.email"></v-text-field>
 
                             <v-text-field label="Password" name="password" prepend-icon="mdi-lock" type="password"
                                 v-model="loginStore.user.password"></v-text-field>
-                            <div style="color: red; text-align: center" v-for="error in loginStore.errorLoginMessages"
-                                :key="error">
-                                <span>{{ error }}</span><br />
+                            
+                            
+                            <div v-if="loginStore.errorLoginMessages.length > 0" style="color: red; text-align: center">
+                            <ul>
+                                <li v-for="error in loginStore.errorLoginMessages" :key="error">
+                                {{ error }}
+                                </li>
+                            </ul>
                             </div>
-
-                            <!-- <pre>{{ loginStore.user }}</pre> -->
-                            <!-- <pre>{{ loginStore.token }}</pre>-->
-                            <pre>{{ loginStore.errorLoginMessages }}</pre>
-
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
@@ -37,33 +37,42 @@
     </v-container>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { useRouter } from 'vue-router'
 import { useLoginStore } from '../stores/loginStore';
 
 const loginStore = useLoginStore();
-const router = useRouter()
+const router = useRouter();
+
+const validarEmail = (email) => {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
 
 const validateCredentials = () => {
     loginStore.cleanLogin()
-    if (!loginStore.user?.username) loginStore.errorLoginMessages.push("Ingrese email");
+    if (!loginStore.user?.email) loginStore.errorLoginMessages.push("Ingrese email");
     if (!loginStore.user?.password) loginStore.errorLoginMessages.push("Ingrese password");
+    if (!validarEmail(loginStore.user.email)) loginStore.errorLoginMessages.push("Ingrese un correo electrónico válido");
     if (loginStore.errorLoginMessages.length > 0) loginStore.errorLogin = true;
     return loginStore.errorLogin;
 };
 
 const onLogin = async () => {
+    console.log (loginStore.errorLogin);
     if (validateCredentials()) {
         return
     }
 
-    loginStore.login().then((response: any) => {
-        if (response.status === 201) {
+   loginStore.login(loginStore.user).then((response) => {
+        if (response.status === 200) {
             router.push({
                 name: 'home'
             })
+        }else{
+            loginStore.errorLoginMessages.push(response.response.data);
         }
-    })
+    });
 }
 </script>
 

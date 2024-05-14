@@ -8,11 +8,11 @@ export const useLoginStore = defineStore('login', {
           errorLogin: false,
           errorLoginMessages: [],
           message: '',
-          token:   '', 
-          user:    {
-            username: 'adames.lancero@gmail.com', 
-            password: '123456',
-          }
+          token: '',
+          user:{
+            email: '',
+            password: '',
+          }          
         }
     },
 
@@ -21,21 +21,15 @@ export const useLoginStore = defineStore('login', {
         this.errorLoginMessages = []
       },
 
-      async login() {
+      async login($user) {
         try {
-          const axiosInstance = axios.create({
-            headers: {
-              "Access-Control-Allow-Origin": "*"
-            }
-          });
-
-          const response = await axiosInstance.post('http://localhost:8000/laravel9/public/api/login', {
-              email: this.user.username,
-              password: this.user.password
-          })
           
-          if(response.data.access_token) {
-            this.token = response.data.access_token
+          console.log($user);
+
+          const response = await axios.post('/api/users/Login', $user)
+          
+          if(response.data.token) {
+            this.token = response.data.token
             localStorage.setItem('spa_token', this.token)
             this.setHeaders();
             axios.defaults.headers.common['X-Requested-With'] = 'XMLHtpRequest'
@@ -48,7 +42,6 @@ export const useLoginStore = defineStore('login', {
       },
 
       async getAuth(token) {
-        console.log("entro getAuth",token)
         if (token) {
             this.token = token
         }
@@ -59,8 +52,6 @@ export const useLoginStore = defineStore('login', {
 
         try {
             this.setHeaders();
-            const response = await axios.get('http://localhost:8000/laravel9/public/api/auth/me')
-            this.user = response.data.user
         } catch (e) {
             console.log("error: ", e)
         }

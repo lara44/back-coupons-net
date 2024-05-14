@@ -6,9 +6,16 @@ export const useUserStore = defineStore("userStore", {
     return {
       listUsers: [],
       user: {
-        id: "",
-        name: "",
+        userName: "",
+        normalizedUserName: "",
         email: "",
+        normalizedEmail: "",
+        document: "",
+        firstName: "",
+        lastName: "",
+        address: "",
+        userType: "",
+        cityId: "",
       },
     };
   },

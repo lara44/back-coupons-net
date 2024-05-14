@@ -18,8 +18,7 @@ const requiredAuth = async() =>{
     const authToken = await localStorage.getItem('spa_token')
     if(authToken) {
         loginStore.token = authToken
-        const auth = await loginStore.getAuth(loginStore.token)
-        console.log("entró", auth, loginStore.token)
+        await loginStore.getAuth(loginStore.token)
     } else {
         router.push('/login');
     }
@@ -45,55 +44,55 @@ const routes = [
                 path: '/users',
                 name: 'users',
                 component: user,
-                //beforeEnter: requiredAuth
+                beforeEnter: requiredAuth
             },
             {
                 path: '/products',
                 name: 'products',
                 component: product,
-                //beforeEnter: requiredAuth
+                beforeEnter: requiredAuth
             },
             {
                 path: '/categories',
                 name: 'categories',
                 component: category,
-                //beforeEnter: requiredAuth
+                beforeEnter: requiredAuth
             },
             {
                 path: '/cities',
                 name: 'cities',
                 component: city,
-                //beforeEnter: requiredAuth
+                beforeEnter: requiredAuth
             },
             {
                 path: '/contacts',
                 name: 'contacts',
                 component: contact,
-                //beforeEnter: requiredAuth
+                beforeEnter: requiredAuth
             },
             {
                 path: '/companies',
                 name: 'companies',
                 component: company,
-                //beforeEnter: requiredAuth
+                beforeEnter: requiredAuth
             },
             {
                 path: '/countries',
                 name: 'countries',
                 component: country,
-                //beforeEnter: requiredAuth
+                beforeEnter: requiredAuth
             },
             {
                 path: '/states',
                 name: 'states',
                 component: state,
-                //beforeEnter: requiredAuth
+                beforeEnter: requiredAuth
             },
             {
                 path: '/roles',
                 name: 'roles',
                 component: role,
-                //beforeEnter: requiredAuth
+                beforeEnter: requiredAuth
             },
 
         ]

@@ -40,7 +40,7 @@ export const useProductStore = defineStore("productStore", {
     
     async updateProduct(updatedProduct) {
       try {
-        const response = await axios.put(`/api/products/${updatedProduct.id}`, updatedProduct);
+        const response = await axios.put(`/api/products/${updatedProduct.id}`);
         if(response.data.success){
           await this.getProducts();
         }
@@ -51,7 +51,7 @@ export const useProductStore = defineStore("productStore", {
 
     async deleteProduct(deleteProduct) {
       try {
-        const response = await axios.delete(`/api/products/${deleteProduct.id}`, deleteProduct);
+        const response = await axios.delete(`/api/products/${deleteProduct.id}`);
         if(response.data.success){
           await this.getProducts();
         }
