@@ -5,11 +5,6 @@ export const useStateStore = defineStore("stateStore", {
   state: () => {
     return {
       listStates: [],
-      state: {
-        id: "",
-        name: "",
-        countryId: "",
-      },
     };
   },
 
@@ -20,7 +15,17 @@ export const useStateStore = defineStore("stateStore", {
         const response = await axios.get('/api/states/full');
         if (response.data.data) {
           this.listStates =  response.data.data
-          console.log("respuesta", response.data.data, this.listCites)
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async getStatesByCountry(countryId) {
+      try {
+        const response = await axios.get(`/api/states/countries/${countryId}/states`);
+        if (response.data.data) {
+          this.listStates =  response.data.data
         }
       } catch (error) {
         console.error(error);
@@ -51,7 +56,7 @@ export const useStateStore = defineStore("stateStore", {
 
     async deleteState(deleteState) {
       try {
-        const response = await axios.delete(`/api/states/${deleteState.id}`, deleteState);
+        const response = await axios.delete(`/api/states/${deleteState.id}`);
         if(response.data.success){
           await this.getStates();
         }

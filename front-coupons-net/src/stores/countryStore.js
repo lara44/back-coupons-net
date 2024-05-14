@@ -13,13 +13,11 @@ export const useCountryStore = defineStore("countryStore", {
   },
 
   actions: {
-
     async getCountries() {
       try {
-        const response = await axios.get('/api/countries/full');
+        const response = await axios.get("/api/countries/full");
         if (response.data.data) {
-          this.listCountries =  response.data.data
-          console.log("respuesta", response.data.data, this.listCites)
+          this.listCountries = response.data.data;
         }
       } catch (error) {
         console.error(error);
@@ -28,20 +26,23 @@ export const useCountryStore = defineStore("countryStore", {
 
     async createCountry(newCountry) {
       try {
-        const response = await axios.post('/api/countries', newCountry);
-        if(response.data.success){
-          await this.getCountrys(); 
+        const response = await axios.post("/api/countries", newCountry);
+        if (response.data.success) {
+          await this.getCountries();
         }
       } catch (error) {
         console.error(error);
       }
     },
-    
+
     async updateCountry(updatedCountry) {
       try {
-        const response = await axios.put(`/api/countries/${updatedCountry.id}`, updatedCountry);
-        if(response.data.success){
-          await this.getCountrys();
+        const response = await axios.put(
+          `/api/countries/${updatedCountry.id}`,
+          updatedCountry
+        );
+        if (response.data.success) {
+          await this.getCountries();
         }
       } catch (error) {
         console.error(error);

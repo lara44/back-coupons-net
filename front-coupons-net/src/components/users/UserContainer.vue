@@ -3,21 +3,60 @@
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline">{{ selectedUser ? 'Editar Usuario' : 'Crear Usuario' }}</span>
+          <span class="headline">{{
+            selectedUser ? "Editar Usuario" : "Crear Usuario"
+          }}</span>
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="submitForm">
-            <v-text-field v-model="newUser.name" label="Nombre" 
-              :rules="[requiredRule('Nombre')]" required></v-text-field>
+
+            <v-text-field v-model="newUser.username" label="Nombre de Usuario" :rules="[requiredRule('Nombre')]"
+              required></v-text-field>
+
             <v-text-field v-model="newUser.email" label="Correo electrónico"
-              :rules="[requiredRule('Correo electrónico'), emailRule]" required></v-text-field>
-            <v-text-field v-model="newUser.password" label="Contraseña"
+              :rules="[requiredRule('Correo electrónico'), emailRule]" required>
+            </v-text-field>
+
+            <v-text-field v-model="newUser.document" label="Identificación" :rules="[requiredRule('Nombre')]" required>
+            </v-text-field>
+
+            <v-text-field v-model="newUser.firstName" label="Primer Nombre" :rules="[requiredRule('Nombre')]"
+              required></v-text-field>
+
+            <v-text-field v-model="newUser.lastName" label="Segundo Nombre" :rules="[requiredRule('Nombre')]"
+              required></v-text-field>
+
+            <v-text-field v-model="newUser.address" label="dirección" :rules="[requiredRule('Nombre')]"
+              required></v-text-field>
+
+            <v-select v-if="countries.length > 0" v-model="newUser.countryId" :items="countries" item-title="name"
+              item-value="id" @update:modelValue="getStates" label="País" :rules="[requiredRule('País')]" required>
+            </v-select>
+
+            <v-select v-if="states.length > 0" v-model="newUser.stateId" :items="states" item-title="name"
+              item-value="id" @update:modelValue="getCities" label="Departamento"
+              :rules="[requiredRule('Departamento')]" required>
+            </v-select>
+
+            <v-select v-if="cities.length > 0" v-model="newUser.cityId" :items="cities" item-title="name"
+              item-value="id" @update:modelValue="getCities" label="Ciudad" :rules="[requiredRule('Ciudad')]" required>
+            </v-select>
+
+            <v-text-field v-model="newUser.password" label="Contraseña" type="password"
               :rules="[requiredRule('Contraseña'), passwordRule]" required></v-text-field>
+
+            <v-text-field v-model="newUser.passwordConfirm" label="Contraseña" type="password"
+              :rules="[requiredRule('Contraseña'), passwordRule]" required></v-text-field>
+
+            <pre>{{ newUser }}</pre>
+
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="blue darken-1" text @click="closeModal">Cancelar</v-btn>
-          <v-btn color="primary" @click="submitForm">{{ selectedUser ? 'Actualizar' : 'Guardar' }}</v-btn>
+          <v-btn color="primary" @click="submitForm">{{
+            selectedUser ? "Actualizar" : "Guardar"
+          }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -34,7 +73,7 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <v-btn class="ma-2" color="primary" dark @click="openModal" >Nuevo</v-btn>
+      <v-btn class="ma-2" color="primary" dark @click="openModal">Nuevo</v-btn>
       <v-card-text>
         <v-table density="compact">
           <thead>
@@ -61,146 +100,193 @@
           </tbody>
         </v-table>
       </v-card-text>
-      <v-pagination v-model="currentPage" rounded="circle" :length="totalPages" style="box-shadow: none !important;"></v-pagination>
+      <v-pagination v-model="currentPage" rounded="circle" :length="totalPages"
+        style="box-shadow: none !important"></v-pagination>
     </v-card>
 
     <!-- Snackbar para mostrar el mensaje de éxito -->
     <v-snackbar v-model="successMessageVisible" timeout="3000">
-      {{ selectedUser ? 'Usuario actualizado exitosamente' : 'Usuario creado exitosamente' }}
+      {{
+        selectedUser
+          ? "Usuario actualizado exitosamente"
+          : "Usuario creado exitosamente"
+      }}
     </v-snackbar>
   </v-container>
 </template>
 
-<script>
-import { ref, reactive, computed } from 'vue';
-import { useUserStore } from '../../stores/userStore';
+<script setup>
+import { ref, reactive, computed, onMounted } from "vue";
+import { useUserStore } from "../../stores/userStore";
+import { useCountryStore } from "../../stores/countryStore";
+import { useStateStore } from "../../stores/stateStore";
+import { useCityStore } from "../../stores/cityStore";
 
-export default {
-  name: 'UserDataTable',
-  setup() {
-    const currentPage = ref(1); // Página actual
-    const itemsPerPage = 10; // Número de usuarios por página
-    const userStore = useUserStore();
-    const successMessageVisible = ref(false);
-    const search = ref('');
-    const newUser = reactive({
-      name: '',
-      email: '',
-      password: '',
-    });
-    const selectedUser = ref(null);
-    const dialog = ref(false);
 
-    const totalUsers = computed(() => userStore.listUsers.length);
-    const totalPages = computed(() => Math.ceil(totalUsers.value / itemsPerPage));
+const userStore = useUserStore();
+const countryStore = useCountryStore();
+const stateStore = useStateStore();
+const cityStore = useCityStore();
 
-    const filteredUsers = computed(() => {
-      const startIndex = (currentPage.value - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      const userList = userStore.listUsers;
-      return userList
-        .filter(user => user.name.toLowerCase().includes(search.value.toLowerCase()))
-        .slice(startIndex, endIndex);
-    });
+const countries = computed(() => countryStore.listCountries);
+const states = computed(() => stateStore.listStates);
+const cities = computed(() => cityStore.listCities);
 
-    const requiredRule = (fieldName) => (value) => !!value || `El campo "${fieldName}" es obligatorio`;
+const newUser = reactive({
+  username: "",
+  email: "",
+  document: "",
+  firstName: "",
+  lastName: "",
+  address: "",
+  countryId: "",
+  stateId: "",
+  cityId: "",
+  password: "",
+  passwordConfirm: "",
+});
 
-    const emailRule = (value) => {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(value) || 'El campo "Correo electrónico" debe ser un correo electrónico válido';
-    };
+const selectedUser = ref(null);
+const currentPage = ref(1); // Página actual
+const itemsPerPage = 10; // Número de usuarios por página
+const successMessageVisible = ref(false);
+const search = ref("");
+const dialog = ref(false);
+const totalUsers = computed(() => userStore.listUsers.length);
+const totalPages = computed(() => Math.ceil(totalUsers.value / itemsPerPage));
 
-    const passwordRule = (value) => {
-      return value.length >= 8 || 'La contraseña debe tener al menos 8 caracteres';
-    };
+const filteredUsers = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const userList = userStore.listUsers;
+  return userList.filter((user) => user.name.toLowerCase().includes(search.value.toLowerCase())).slice(startIndex, endIndex);
+});
 
- 
+const requiredRule = (fieldName) => (value) =>
+  !!value || `El campo "${fieldName}" es obligatorio`;
 
-    const openModal = () => {
-      dialog.value = true;
-      selectedUser.value = null;
-      newUser.name = '';
-      newUser.email = '';
-      newUser.password = '';
-    };
-
-    const submitForm = async () => {
-      if (!newUser.name || !newUser.email) {
-        return;
-      }
-      if (selectedUser.value) {
-        await userStore.updateUser({ ...selectedUser.value, ...newUser });
-      } else {
-        await userStore.createUser(newUser);
-      }
-
-      await userStore.getUsers();
-
-      newUser.name = '';
-      newUser.email = '';
-      newUser.password = '';
-
-      successMessageVisible.value = true;
-
-      setTimeout(() => {
-        successMessageVisible.value = false;
-      }, 3000);
-
-      dialog.value = false;
-    };
-
-    const editUser = (user) => {
-      selectedUser.value = { ...user };
-      newUser.name = selectedUser.value.name;
-      newUser.email = selectedUser.value.email;
-      dialog.value = true;
-    };
-
-    const deleteUser = (state) =>{
-      userStore.deleteUser(state).then(() => {
-        userStore.getUsers();
-        }).catch((e) => {
-          console.log(e)
-        });   
-    } 
-
-    const closeModal = () => {
-      dialog.value = false;
-      selectedUser.value = null;
-      newUser.name = '';
-      newUser.email = '';
-      newUser.password = '';
-    };
-
-    return {
-      search,
-      currentPage,
-      itemsPerPage,
-      filteredUsers,
-      deleteUser,
-      newUser,
-      successMessageVisible,
-      selectedUser,
-      dialog,
-      submitForm,
-      requiredRule,
-      emailRule,
-      passwordRule,
-      editUser,
-      openModal,
-      closeModal,
-      totalPages
-    };
-  },
-
-  async mounted() {
-    try {
-      await useUserStore().getUsers();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      this.loading = false;
-    }
-  },
+const emailRule = (value) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return (
+    emailRegex.test(value) ||
+    'El campo "Correo electrónico" debe ser un correo electrónico válido'
+  );
 };
+
+const passwordRule = (value) => {
+  return value.length >= 8 || "La contraseña debe tener al menos 8 caracteres";
+};
+
+const submitForm = async () => {
+  if (
+    !newUser.username ||
+    !newUser.email ||
+    !newUser.document ||
+    !newUser.firstName ||
+    !newUser.lastName ||
+    !newUser.address ||
+    !newUser.countryId ||
+    !newUser.stateId ||
+    !newUser.cityId ||
+    !newUser.password ||
+    !newUser.passwordConfirm
+  ) {
+    return;
+  }
+
+  if (selectedUser.value) {
+    await userStore.updateUser({ ...selectedUser.value, ...newUser });
+  } else {
+    await userStore.createUser(newUser);
+  }
+
+  newUser.username = "";
+  newUser.email = "";
+  newUser.document = "";
+  newUser.firstName = "";
+  newUser.lastName = "";
+  newUser.address = "";
+  newUser.countryId= "";
+  newUser.stateId= "";
+  newUser.cityId = "";
+  newUser.password = "";
+  newUser.passwordConfirm = "";
+
+  successMessageVisible.value = true;
+
+  setTimeout(() => {
+    successMessageVisible.value = false;
+  }, 3000);
+
+  dialog.value = false;
+};
+
+const editUser = (user) => {
+  selectedUser.value = { ...user };
+  newUser.username = selectedUser.value.name;
+  newUser.email = selectedUser.value.name;
+  newUser.document = selectedUser.value.name;
+  newUser.firstName = selectedUser.value.name;
+  newUser.lastName = selectedUser.value.name;
+  newUser.address = selectedUser.value.name;
+  newUser.cityId = selectedUser.value.name;
+  dialog.value = true;
+};
+
+const deleteUser = (state) => {
+  userStore
+    .deleteUser(state)
+    .then(() => {
+      userStore.getUsers();
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+};
+
+const openModal = () => {
+  dialog.value = true;
+  selectedUser.value = null;
+  newUser.username = "";
+  newUser.email = "";
+  newUser.document = "";
+  newUser.firstName = "";
+  newUser.lastName = "";
+  newUser.address = "";
+  newUser.countryId= "";
+  newUser.stateId= "";
+  newUser.cityId = "";
+  newUser.password = "";
+  newUser.passwordConfirm = "";
+};
+
+const closeModal = () => {
+  dialog.value = false;
+  selectedUser.value = null;
+  newUser.username = "";
+  newUser.email = "";
+  newUser.document = "";
+  newUser.firstName = "";
+  newUser.lastName = "";
+  newUser.address = "";
+  newUser.countryId= "";
+  newUser.stateId= "";
+  newUser.cityId = "";
+  newUser.password = "";
+  newUser.passwordConfirm = "";
+};
+
+const getStates = () => {
+  stateStore.getStatesByCountry(newUser.countryId);
+};
+
+const getCities = () => {
+  cityStore.getCitieByStates(newUser.stateId);
+};
+
+onMounted(() => {
+  countryStore.getCountries();
+  userStore.getUsers();
+});
+
 </script>
