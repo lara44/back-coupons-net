@@ -55,6 +55,9 @@ namespace back_coupons.Data
 
                 await _userUnitOfWork.AddUserAsync(user, "123456");
                 await _userUnitOfWork.AddUserToRoleAsync(user, userType.ToString());
+
+                var token = await _userUnitOfWork.GenerateEmailConfirmationTokenAsync(user);
+                await _userUnitOfWork.ConfirmEmailAsync(user, token);
             }
 
             return user;
