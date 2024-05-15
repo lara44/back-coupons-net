@@ -18,5 +18,7 @@ namespace back_coupons.UnitsOfWork.Interfaces
         Task<IdentityResult> UpdateUserAsync(User user);
         Task<string> GenerateEmailConfirmationTokenAsync(User user);
         Task<IdentityResult> ConfirmEmailAsync(User user, string token);
+        Task<string> GeneratePasswordResetTokenAsync(User user);
+        Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
     }
 }
