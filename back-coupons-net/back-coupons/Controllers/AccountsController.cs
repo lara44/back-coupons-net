@@ -38,6 +38,17 @@ namespace back_coupons.Controllers
             _container = "users";
         }
 
+        [HttpGet("GetUserPaginationAsync")]
+        public async Task<IActionResult> GetUserPaginationAsync([FromQuery] PaginationDTO pagination)
+        {
+            var response = await _userUnitOfWork.GetUserPaginationAsync(pagination);
+            if (response.Successfully)
+            {
+                return Ok(new { data = response.Result });
+            }
+            return BadRequest();
+        }
+
         [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] UserDTO model)
         {

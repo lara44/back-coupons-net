@@ -1,5 +1,6 @@
 ﻿using back_coupons.DTOs;
 using back_coupons.Entities;
+using back_coupons.Responses;
 using Microsoft.AspNetCore.Identity;
 
 namespace back_coupons.Repositories.Interfaces
@@ -20,5 +21,6 @@ namespace back_coupons.Repositories.Interfaces
         Task<bool> IsUserInRoleAsync(User user, string roleName);
         Task<SignInResult> LoginAsync(LoginDTO model);
         Task LogoutAsync();
+        Task<ActionResponse<IEnumerable<User>>> GetUserPaginationAsync(PaginationDTO pagination);
     }
 }

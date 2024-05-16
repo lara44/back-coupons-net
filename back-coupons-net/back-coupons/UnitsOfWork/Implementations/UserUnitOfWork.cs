@@ -2,6 +2,7 @@
 using back_coupons.Entities;
 using back_coupons.Repositories.Implementations;
 using back_coupons.Repositories.Interfaces;
+using back_coupons.Responses;
 using back_coupons.UnitsOfWork.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -30,6 +31,6 @@ namespace back_coupons.UnitsOfWork.Implementations
         public async Task<IdentityResult> ConfirmEmailAsync(User user, string token) => await _userRepository.ConfirmEmailAsync(user, token);
         public async Task<string> GeneratePasswordResetTokenAsync(User user) => await _userRepository.GeneratePasswordResetTokenAsync(user);
         public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password) => await _userRepository.ResetPasswordAsync(user, token, password);
-
+        public async Task<ActionResponse<IEnumerable<User>>> GetUserPaginationAsync(PaginationDTO pagination) => await _userRepository.GetUserPaginationAsync(pagination);
     }
 }
