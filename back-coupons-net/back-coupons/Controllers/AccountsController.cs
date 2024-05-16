@@ -39,6 +39,7 @@ namespace back_coupons.Controllers
         }
 
         [HttpGet("GetUserPaginationAsync")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetUserPaginationAsync([FromQuery] PaginationDTO pagination)
         {
             var response = await _userUnitOfWork.GetUserPaginationAsync(pagination);
@@ -50,6 +51,7 @@ namespace back_coupons.Controllers
         }
 
         [HttpPost("CreateUser")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateUser([FromBody] UserDTO model)
         {
             User user = model;
@@ -81,7 +83,7 @@ namespace back_coupons.Controllers
         {
             try
             {
-                var currentUser = await _userUnitOfWork.GetUserAsync(User.Identity!.Name!);
+                var currentUser = await _userUnitOfWork.GetUserAsync(user.Email!);
                 if (currentUser == null)
                 {
                     return NotFound();
@@ -146,6 +148,13 @@ namespace back_coupons.Controllers
             return Ok(await _userUnitOfWork.GetUserAsync(User.Identity!.Name!));
         }
 
+        [HttpPost("GetUserByEmailAsync")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetUserByEmailAsync([FromBody] EmailDTO model)
+        {
+            return Ok(await _userUnitOfWork.GetUserAsync(model.Email));
+        }
+
         [HttpPost("Login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginDTO model)
         {
@@ -207,7 +216,7 @@ namespace back_coupons.Controllers
             {
                 userid = user.Id,
                 token = myToken
-            }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
+            }, HttpContext.Request.Scheme, _configuration["UrlFrontend"]);
 
             return _mailHelper.SendMail(user.FullName, user.Email!,
                 $"Orders - Confirmación de cuenta",
@@ -267,7 +276,7 @@ namespace back_coupons.Controllers
             {
                 userid = user.Id,
                 token = myToken
-            }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
+            }, HttpContext.Request.Scheme, _configuration["UrlFrontend"]);
 
             var response = _mailHelper.SendMail(user.FullName, user.Email!,
                 $"Orders - Recuperación de contraseña",
