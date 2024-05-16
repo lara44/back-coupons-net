@@ -2,6 +2,7 @@
 using back_coupons.Entities;
 using back_coupons.Helpers;
 using back_coupons.Responses;
+using back_coupons.UnitsOfWork.Implementations;
 using back_coupons.UnitsOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -35,6 +36,17 @@ namespace back_coupons.Controllers
             _fileStorage = fileStorage;
             _mailHelper = mailHelper;
             _container = "users";
+        }
+
+        [HttpGet("GetUserPaginationAsync")]
+        public async Task<IActionResult> GetUserPaginationAsync([FromQuery] PaginationDTO pagination)
+        {
+            var response = await _userUnitOfWork.GetUserPaginationAsync(pagination);
+            if (response.Successfully)
+            {
+                return Ok(new { data = response.Result });
+            }
+            return BadRequest();
         }
 
         [HttpPost("CreateUser")]
@@ -221,6 +233,72 @@ namespace back_coupons.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpPost("ResedToken")]
+        public async Task<IActionResult> ResedTokenAsync([FromBody] EmailDTO model)
+        {
+            var user = await _userUnitOfWork.GetUserAsync(model.Email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var response = await SendConfirmationEmailAsync(user);
+            if (response.Successfully)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(response.Message);
+        }
+
+        [HttpPost("RecoverPassword")]
+        public async Task<IActionResult> RecoverPasswordAsync([FromBody] EmailDTO model)
+        {
+            var user = await _userUnitOfWork.GetUserAsync(model.Email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var myToken = await _userUnitOfWork.GeneratePasswordResetTokenAsync(user);
+            var tokenLink = Url.Action("ResetPassword", "accounts", new
+            {
+                userid = user.Id,
+                token = myToken
+            }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
+
+            var response = _mailHelper.SendMail(user.FullName, user.Email!,
+                $"Orders - Recuperación de contraseña",
+                $"<h1>Orders - Recuperación de contraseña</h1>" +
+                $"<p>Para recuperar su contraseña, por favor hacer clic 'Recuperar Contraseña':</p>" +
+                $"<b><a href ={tokenLink}>Recuperar Contraseña</a></b>");
+
+            if (response.Successfully)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(response.Message);
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordDTO model)
+        {
+            var user = await _userUnitOfWork.GetUserAsync(model.Email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userUnitOfWork.ResetPasswordAsync(user, model.Token, model.Password);
+            if (result.Succeeded)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(result.Errors.FirstOrDefault()!.Description);
         }
     }
 }

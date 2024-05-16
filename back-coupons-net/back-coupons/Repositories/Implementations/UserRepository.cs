@@ -1,7 +1,11 @@
 ﻿using back_coupons.Data;
 using back_coupons.DTOs;
 using back_coupons.Entities;
+using back_coupons.Enums;
+using back_coupons.Helpers;
+using back_coupons.Migrations;
 using back_coupons.Repositories.Interfaces;
+using back_coupons.Responses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +29,16 @@ namespace back_coupons.Repositories.Implementations
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(User user)
+        {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
+        {
+            return await _userManager.ResetPasswordAsync(user, token, password);
         }
 
         public async Task<IdentityResult> ConfirmEmailAsync(User user, string token)
@@ -102,6 +116,41 @@ namespace back_coupons.Repositories.Implementations
         public async Task<IdentityResult> UpdateUserAsync(User user)
         {
             return await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<ActionResponse<IEnumerable<User>>> GetUserPaginationAsync(PaginationDTO pagination)
+        {
+            var queryable = _dbContext.Users
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
+            {
+                queryable = queryable.Where(u => u.Email.ToLower().Contains(pagination.Filter.ToLower()));
+            }
+
+            // Proyecta los resultados a una entidad UserDTO con los campos deseados
+            var users = await queryable
+                .OrderBy(u => u.Email)
+                .Paginate(pagination)
+                .Select(u => new User
+                {
+                    Id = u.Id,
+                    Document = u.Document,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Address = u.Address,
+                    Photo = u.Photo,
+                    Email = u.Email,
+                    UserType = u.UserType,
+                    CityId = u.CityId
+                })
+                .ToListAsync();
+
+            return new ActionResponse<IEnumerable<User>>
+            {
+                Successfully = true,
+                Result = users
+            };
         }
     }
 }

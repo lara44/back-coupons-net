@@ -1,11 +1,14 @@
 ﻿using back_coupons.DTOs;
 using back_coupons.Entities;
+using back_coupons.Responses;
 using Microsoft.AspNetCore.Identity;
 
 namespace back_coupons.Repositories.Interfaces
 {
     public interface IUserRepository
     {
+        Task<string> GeneratePasswordResetTokenAsync(User user);
+        Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
         Task<string> GenerateEmailConfirmationTokenAsync(User user);
         Task<IdentityResult> ConfirmEmailAsync(User user, string token);
         Task<User> GetUserAsync(string email);
@@ -18,5 +21,6 @@ namespace back_coupons.Repositories.Interfaces
         Task<bool> IsUserInRoleAsync(User user, string roleName);
         Task<SignInResult> LoginAsync(LoginDTO model);
         Task LogoutAsync();
+        Task<ActionResponse<IEnumerable<User>>> GetUserPaginationAsync(PaginationDTO pagination);
     }
 }
