@@ -5,6 +5,11 @@
             <v-img max-height="50" max-width="90" src="../src/assets/neocode.png" alt="Vuetify"></v-img>
             <!-- <v-toolbar-title class="title">NEW SPA</v-toolbar-title> -->
             <v-spacer></v-spacer>
+            
+            <p style=" margin-right: 20px;"> Bienvenido {{ user.fullName }}</p>
+
+
+
         </v-app-bar>
 
         <v-navigation-drawer v-model="drawer" floating permanent>
@@ -86,6 +91,11 @@
                         to="/users"
                     ></v-list-item>
                 </v-list-group>
+                <v-list-item 
+                    link prepend-icon="mdi-account-key mdi-18px" 
+                    title="Cambiar Contraseña"
+                    to="/user/updatePassword"
+                ></v-list-item>
                 <v-list-item link prepend-icon="mdi-logout-variant mdi-18px" title="Logout" @click="loginStore.logout"></v-list-item>
             </v-list>
         </v-navigation-drawer>
@@ -116,6 +126,7 @@ import { useLoginStore } from '../stores/loginStore'
 const loginStore = useLoginStore();
 
 const user = reactive({
+    fullName: '',
     authToken : '',
     decodedToken: '',
     role: '',
@@ -134,6 +145,7 @@ onMounted(() => {
   user.authToken = localStorage.getItem('spa_token');
   user.decodedToken = loginStore.decodeToken(user.authToken);
   user.role = user.decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+  user.fullName = user.decodedToken["FirstName"] +" "+ user.decodedToken["LastName"];
 });
 
 </script>

@@ -35,9 +35,6 @@ export const useLoginStore = defineStore('login', {
 
       async login($user) {
         try {
-          
-          console.log($user);
-
           const response = await axios.post('/api/users/Login', $user)
           
           if(response.data.token) {

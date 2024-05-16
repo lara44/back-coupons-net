@@ -2,6 +2,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import home from '../views/Home.vue';
 import login from '../views/Login.vue';
+import updatePassword from '../components/users/updatePasswordContainer.vue';
+import forgotPasword from '../components/users/forgotPasswordContainer.vue';
+import resetPassword from '../components/users/resetPasswordContainer.vue';
 import user from '../components/users/UserContainer.vue';
 import product from '../components/products/ProductContainer.vue';
 import category from '../components/categories/CategoryContainer.vue';
@@ -46,11 +49,22 @@ const routes = [
     {
         path: '/',
         redirect: 'login',
+        component: login
     },
     {
         path: '/login',
         name: 'login',
         component: login
+    },
+    {
+        path: '/forgotPasword',
+        name: 'forgotPasword',
+        component: forgotPasword
+    },
+    {
+        path: '/ResetPassword/',
+        name: 'resetPassword',
+        component: resetPassword
     },
     {
         path: '/home',
@@ -111,6 +125,12 @@ const routes = [
                 name: 'roles',
                 component: role,
                 beforeEnter: requiredAuthAdmin
+            },
+            {
+                path: '/user/updatePassword',
+                name: 'updatePassword',
+                component: updatePassword,
+                beforeEnter: requiredAuth
             },
 
         ]
