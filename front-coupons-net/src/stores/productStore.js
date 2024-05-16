@@ -20,7 +20,6 @@ export const useProductStore = defineStore("productStore", {
         const response = await axios.get('/api/products/full');
         if (response.data.data) {
           this.listProducts =  response.data.data
-          console.log("respuesta", response.data.data, this.listProducts)
         }
       } catch (error) {
         console.error(error);

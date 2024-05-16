@@ -15,8 +15,8 @@
                         <v-list-item
                             v-bind="props"
                             prepend-icon="mdi-account mdi-18px"
-                            title="Admin"
-                            value="Admin"
+                            title="Empresa"
+                            value="Empresa"
                         ></v-list-item>
                     </template>
                     <v-list-item
@@ -33,6 +33,16 @@
                         title="Categorias"
                         to="/categories"
                     ></v-list-item>
+                </v-list-group>
+                <v-list-group v-if=" user.role === 'Admin'"  dense>
+                    <template v-slot:activator="{ props }">
+                        <v-list-item
+                            v-bind="props"
+                            prepend-icon="mdi-account mdi-18px"
+                            title="Admin"
+                            value="Admin"
+                        ></v-list-item>
+                    </template>
                     <v-list-item
                         link
                         style="font-size: 10px !important"
@@ -100,10 +110,17 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, ref } from 'vue'
+import { watch, ref, reactive, computed, onMounted } from "vue";
 import { useLoginStore } from '../stores/loginStore'
 
 const loginStore = useLoginStore();
+
+const user = reactive({
+    authToken : '',
+    decodedToken: '',
+    role: '',
+});
+
 const drawer = ref(true)
 
 watch(
@@ -112,6 +129,13 @@ watch(
         drawer.value = false
     }
 )
+
+onMounted(() => {
+  user.authToken = localStorage.getItem('spa_token');
+  user.decodedToken = loginStore.decodeToken(user.authToken);
+  user.role = user.decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+});
+
 </script>
 
 <style scoped>
