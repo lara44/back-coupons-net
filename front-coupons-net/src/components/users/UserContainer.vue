@@ -3,72 +3,144 @@
     <v-dialog v-model="dialog" max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">{{ selectedUser ? "Editar Usuario" : "Crear Usuario" }}</span>
+          <span class="headline">{{
+            selectedUser ? "Editar Usuario" : "Crear Usuario"
+          }}</span>
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="submitForm">
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6">
-                  <v-text-field v-model="newUser.email" label="Correo electrónico"
-                    :rules="[requiredRule('Correo electrónico'), emailRule]" required></v-text-field>
+                  <v-text-field
+                    v-model="newUser.email"
+                    label="Correo electrónico"
+                    :rules="[requiredRule('Correo electrónico'), emailRule]"
+                    required
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6">
-                  <v-text-field v-model="newUser.document" label="Identificación"
-                    :rules="[requiredRule('Identificación')]" required></v-text-field>
+                  <v-text-field
+                    v-model="newUser.document"
+                    label="Identificación"
+                    :rules="[requiredRule('Identificación')]"
+                    required
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6">
-                  <v-text-field v-model="newUser.firstName" label="Nombres" :rules="[requiredRule('Nombres')]"
-                    required></v-text-field>
+                  <v-text-field
+                    v-model="newUser.firstName"
+                    label="Nombres"
+                    :rules="[requiredRule('Nombres')]"
+                    required
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6">
-                  <v-text-field v-model="newUser.lastName" label="Apellidos" :rules="[requiredRule('Apellidos')]"
-                    required></v-text-field>
+                  <v-text-field
+                    v-model="newUser.lastName"
+                    label="Apellidos"
+                    :rules="[requiredRule('Apellidos')]"
+                    required
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6">
-                  <v-text-field v-model="newUser.address" label="Dirección" :rules="[requiredRule('Dirección')]"
-                    required></v-text-field>
+                  <v-text-field
+                    v-model="newUser.address"
+                    label="Dirección"
+                    :rules="[requiredRule('Dirección')]"
+                    required
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6">
-                  <v-text-field v-model="newUser.phoneNumber" label="Teléfono"
-                    :rules="[requiredRule('Teléfono'), numberRule, phoneRule]" required></v-text-field>
+                  <v-text-field
+                    v-model="newUser.phoneNumber"
+                    label="Teléfono"
+                    :rules="[requiredRule('Teléfono'), numberRule, phoneRule]"
+                    required
+                  ></v-text-field>
                 </v-col>
                 <v-col v-if="countries.length > 0" cols="12" sm="6">
-                  <v-select  v-model="newUser.countryId" :items="countries" item-title="name"
-                    item-value="id" @update:modelValue="getStates" label="País" :rules="[requiredRule('País')]"
-                    required></v-select>
+                  <v-select
+                    v-model="newUser.countryId"
+                    :items="countries"
+                    item-title="name"
+                    item-value="id"
+                    @update:modelValue="getStates"
+                    label="País"
+                    :rules="[requiredRule('País')]"
+                    required
+                  ></v-select>
                 </v-col>
                 <v-col v-if="states.length > 0" cols="12" sm="6">
-                  <v-select  v-model="newUser.stateId" :items="states" item-title="name"
-                    item-value="id" @update:modelValue="getCities" label="Departamento"
-                    :rules="[requiredRule('Departamento')]" required></v-select>
+                  <v-select
+                    v-model="newUser.stateId"
+                    :items="states"
+                    item-title="name"
+                    item-value="id"
+                    @update:modelValue="getCities"
+                    label="Departamento"
+                    :rules="[requiredRule('Departamento')]"
+                    required
+                  ></v-select>
                 </v-col>
                 <v-col v-if="cities.length > 0" cols="12" sm="6">
-                  <v-select  v-model="newUser.cityId" :items="cities" item-title="name"
-                    item-value="id" label="Ciudad" :rules="[requiredRule('Ciudad')]" required></v-select>
+                  <v-select
+                    v-model="newUser.cityId"
+                    :items="cities"
+                    item-title="name"
+                    item-value="id"
+                    label="Ciudad"
+                    :rules="[requiredRule('Ciudad')]"
+                    required
+                  ></v-select>
                 </v-col>
                 <v-col v-if="!editScenario" cols="12" sm="6">
-                  <v-text-field  v-model="newUser.password" label="Contraseña" type="password"
-                    :rules="[requiredRule('Contraseña'), passwordRule]" required></v-text-field>
+                  <v-text-field
+                    v-model="newUser.password"
+                    label="Contraseña"
+                    type="password"
+                    :rules="[requiredRule('Contraseña'), passwordRule]"
+                    required
+                  ></v-text-field>
                 </v-col>
-                <v-col v-if="!editScenario"  cols="12" sm="6">
-                  <v-text-field v-model="newUser.passwordConfirm" label="Confirmar Contraseña" type="password"
-                    :rules="[requiredRule('Confirmar Contraseña'), passwordRule, passwordMatchRule]"
-                    required></v-text-field>
+                <v-col v-if="!editScenario" cols="12" sm="6">
+                  <v-text-field
+                    v-model="newUser.passwordConfirm"
+                    label="Confirmar Contraseña"
+                    type="password"
+                    :rules="[
+                      requiredRule('Confirmar Contraseña'),
+                      passwordRule,
+                      passwordMatchRule,
+                    ]"
+                    required
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6">
-                  <v-text-field v-model="newUser.photoFile" @change="handleFileSelect" label="Foto" type="file"
-                    :rules="[requiredRule('Foto')]" required></v-text-field>
+                  <v-text-field
+                    v-model="newUser.photoFile"
+                    @change="handleFileSelect"
+                    label="Foto"
+                    type="file"
+                    :rules="[requiredRule('Foto')]"
+                    required
+                  ></v-text-field>
                 </v-col>
                 <v-col v-if="newUser.photoPreview" cols="12" sm="6">
-                  <img :src="`data:image/png;base64,${newUser.photoPreview}`"
-                    alt="Vista previa de la imagen" width="100">
+                  <img
+                    :src="`data:image/png;base64,${newUser.photoPreview}`"
+                    alt="Vista previa de la imagen"
+                    width="100"
+                  />
                 </v-col>
-                <v-col v-if="editScenario" cols="12" sm="6">
-                  <img :src="newUser.photoPreviewEdit" width="100">
+                <v-col v-if="showPhoto" cols="12" sm="6">
+                  <img :src="newUser.photoPreviewEdit" width="100" />
                 </v-col>
                 <v-col cols="12">
-                  <div v-if="errorMessages.length > 0" style="color: red; text-align: center">
+                  <div
+                    v-if="errorMessages.length > 0"
+                    style="color: red; text-align: center"
+                  >
                     <ul>
                       <li v-for="error in errorMessages" :key="error">
                         {{ error }}
@@ -82,7 +154,9 @@
         </v-card-text>
         <v-card-actions>
           <v-btn color="blue darken-1" text @click="closeModal">Cancelar</v-btn>
-          <v-btn color="primary" @click="submitForm">{{ selectedUser ? "Actualizar" : "Guardar" }}</v-btn>
+          <v-btn color="primary" @click="submitForm">{{
+            selectedUser ? "Actualizar" : "Guardar"
+          }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -94,8 +168,14 @@
             <span class="headline">Lista de usuarios registrados</span>
           </v-col>
           <v-col md="6" sm="6" cols="12">
-            <v-text-field v-model="search" append-icon="mdi-magnify" label="Buscar Usuario" single-line hide-details
-              variant="underlined"></v-text-field>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Buscar Usuario"
+              single-line
+              hide-details
+              variant="underlined"
+            ></v-text-field>
           </v-col>
         </v-row>
       </v-card-title>
@@ -116,10 +196,18 @@
               <td>{{ user.fullName }}</td>
               <td>{{ user.email }}</td>
               <td>
-                <v-icon @click="editUser(user)" color="primary">mdi-pencil</v-icon>
-                <v-icon @click="deleteUser(user)" color="primary">mdi-delete</v-icon>
-                <v-icon @click="emailConfirmation(user.email)" color="primary"
-                  title=" Enviar Correo de Confirmanción">mdi-email</v-icon>
+                <v-icon @click="editUser(user)" color="primary"
+                  >mdi-pencil</v-icon
+                >
+                <v-icon @click="deleteUser(user)" color="primary"
+                  >mdi-delete</v-icon
+                >
+                <v-icon
+                  @click="emailConfirmation(user.email)"
+                  color="primary"
+                  title=" Enviar Correo de Confirmanción"
+                  >mdi-email</v-icon
+                >
               </td>
             </tr>
             <tr v-if="!filteredUsers.length">
@@ -128,8 +216,12 @@
           </tbody>
         </v-table>
       </v-card-text>
-      <v-pagination v-model="currentPage" rounded="circle" :length="totalPages"
-        style="box-shadow: none !important"></v-pagination>
+      <v-pagination
+        v-model="currentPage"
+        rounded="circle"
+        :length="totalPages"
+        style="box-shadow: none !important"
+      ></v-pagination>
     </v-card>
 
     <!-- Snackbar para mostrar el mensaje de éxito -->
@@ -146,7 +238,6 @@ import { useCountryStore } from "../../stores/countryStore";
 import { useStateStore } from "../../stores/stateStore";
 import { useCityStore } from "../../stores/cityStore";
 
-
 const userStore = useUserStore();
 const countryStore = useCountryStore();
 const stateStore = useStateStore();
@@ -156,7 +247,8 @@ const countries = computed(() => countryStore.listCountries);
 const states = computed(() => stateStore.listStates);
 const cities = computed(() => cityStore.listCities);
 const editScenario = ref(false);
-console.log(editScenario.value);
+const showPhoto = ref(true);
+
 const newUser = reactive({
   username: "",
   email: "",
@@ -176,7 +268,7 @@ const newUser = reactive({
 });
 
 const errorMessages = ref([]);
-const notification = ref('');
+const notification = ref("");
 const selectedUser = ref(null);
 const currentPage = ref(1); // Página actual
 const itemsPerPage = 10; // Número de usuarios por página
@@ -190,7 +282,11 @@ const filteredUsers = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const userList = userStore.listUsers;
-  return userList.filter((user) => user.fullName.toLowerCase().includes(search.value.toLowerCase())).slice(startIndex, endIndex);
+  return userList
+    .filter((user) =>
+      user.fullName.toLowerCase().includes(search.value.toLowerCase())
+    )
+    .slice(startIndex, endIndex);
 });
 
 const requiredRule = (fieldName) => (value) =>
@@ -206,7 +302,7 @@ const emailRule = (value) => {
 
 const numberRule = (value) => {
   const numberRegex = /^[0-9]+$/;
-  return numberRegex.test(value) || 'El campo debe ser un número válido';
+  return numberRegex.test(value) || "El campo debe ser un número válido";
 };
 
 const phoneRule = (value) => {
@@ -219,22 +315,23 @@ const passwordRule = (value) => {
 
 const passwordMatchRule = (value) => {
   return value === newUser.password || "Las contraseñas no coinciden";
-}
+};
 
 const submitForm = () => {
-
   if (selectedUser.value) {
-    userStore.updateUser({ ...selectedUser.value, ...newUser }).then(response => {
-      if (response.status === 400) {
-        userStore.errorMessages.push(response.response.data);
-      } else {
-        notification.value = "Usuario actualizado exitosamente";
-        onSave();
-      }
-    });
+    userStore
+      .updateUser({ ...selectedUser.value, ...newUser })
+      .then((response) => {
+        if (response.status === 400) {
+          userStore.errorMessages.push(response.response.data);
+        } else {
+          notification.value = "Usuario actualizado exitosamente";
+          onSave();
+        }
+      });
   } else {
     newUser.username = newUser.email;
-    userStore.createUser(newUser).then(response => {
+    userStore.createUser(newUser).then((response) => {
       if (response.status === 400) {
         userStore.errorMessages.push(response.response.data);
       } else {
@@ -243,7 +340,7 @@ const submitForm = () => {
       }
     });
   }
-}
+};
 
 const onSave = () => {
   clearForm();
@@ -274,6 +371,7 @@ const deleteUser = (state) => {
 };
 
 const openModal = () => {
+  editScenario.value = false;
   dialog.value = true;
   selectedUser.value = null;
   clearForm();
@@ -289,17 +387,15 @@ const handleFileSelect = (event) => {
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      console.log(editScenario.value);
-      if (editScenario.value === true) {
-        newUser.photo = e.target.result.split(',')[1];
-        newUser.photoPreview = e.target.result.split(',')[1];
-        editScenario.value = false;
+      if (editScenario) {
+        newUser.photo = e.target.result.split(",")[1];
+        newUser.photoPreview = e.target.result.split(",")[1];
+        showPhoto.value = false;
       } else {
-        newUser.photo = e.target.result.split(',')[1];
-        newUser.photoPreview = e.target.result.split(',')[1];
+        newUser.photo = e.target.result.split(",")[1];
+        newUser.photoPreview = e.target.result.split(",")[1];
       }
     };
-    console.log(editScenario.value);
     reader.readAsDataURL(file);
   }
 };
@@ -310,7 +406,7 @@ const successMessage = () => {
   setTimeout(() => {
     successMessageVisible.value = false;
   }, 3000);
-}
+};
 
 const clearForm = () => {
   newUser.phoneNumber = "";
@@ -329,14 +425,14 @@ const clearForm = () => {
   newUser.photoPreview = "";
   newUser.photo = "";
   userStore.cleanErrors();
-}
+};
 
 const emailConfirmation = (email) => {
   const user = { email: email };
   userStore.resedToken(user);
   notification.value = "Email enviado exitosamente";
   successMessage();
-}
+};
 
 const getStates = () => {
   stateStore.getStatesByCountry(newUser.countryId);
@@ -350,5 +446,4 @@ onMounted(() => {
   countryStore.getCountries();
   userStore.getUsers();
 });
-
 </script>

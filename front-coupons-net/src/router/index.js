@@ -5,6 +5,7 @@ import login from '../views/Login.vue';
 import updatePassword from '../components/users/updatePasswordContainer.vue';
 import forgotPasword from '../components/users/forgotPasswordContainer.vue';
 import resetPassword from '../components/users/resetPasswordContainer.vue';
+import confirmEmail from '../components/users/confirmEmailContainer.vue';
 import user from '../components/users/UserContainer.vue';
 import product from '../components/products/ProductContainer.vue';
 import category from '../components/categories/CategoryContainer.vue';
@@ -62,9 +63,14 @@ const routes = [
         component: forgotPasword
     },
     {
-        path: '/ResetPassword/',
+        path: '/ResetPassword',
         name: 'resetPassword',
         component: resetPassword
+    },
+    {
+        path: '/ConfirmEmail',
+        name: 'confirmEmail',
+        component: confirmEmail
     },
     {
         path: '/home',

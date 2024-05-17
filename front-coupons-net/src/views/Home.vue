@@ -5,6 +5,12 @@
             <v-img max-height="50" max-width="90" src="../src/assets/neocode.png" alt="Vuetify"></v-img>
             <!-- <v-toolbar-title class="title">NEW SPA</v-toolbar-title> -->
             <v-spacer></v-spacer>
+            <v-avatar>
+                <v-img
+                    alt="User Photo"
+                    :src="user.photo"
+                ></v-img>
+            </v-avatar>
             
             <p style=" margin-right: 20px;"> Bienvenido {{ user.fullName }}</p>
 
@@ -130,6 +136,7 @@ const user = reactive({
     authToken : '',
     decodedToken: '',
     role: '',
+    photo: '',
 });
 
 const drawer = ref(true)
@@ -146,6 +153,7 @@ onMounted(() => {
   user.decodedToken = loginStore.decodeToken(user.authToken);
   user.role = user.decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
   user.fullName = user.decodedToken["FirstName"] +" "+ user.decodedToken["LastName"];
+  user.photo = user.decodedToken["Photo"];
 });
 
 </script>

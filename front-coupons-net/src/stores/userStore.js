@@ -53,6 +53,15 @@ export const useUserStore = defineStore("userStore", {
       }
     },
 
+    async confirmEmail(user) {
+      try {
+        const response = await axios.get(`/api/users/ConfirmEmail?userId=${user.userid}&token=${user.token}`);
+        return response;
+      } catch (error) {
+        return error.response;
+      }
+    },
+
     async resetPassword(user) {
       try {
         const response = await axios.post('/api/users/ResetPassword', user);
