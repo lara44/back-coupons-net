@@ -63,12 +63,12 @@ const routes = [
         component: forgotPasword
     },
     {
-        path: '/ResetPassword',
+        path: '/api/users/ResetPassword',
         name: 'resetPassword',
         component: resetPassword
     },
     {
-        path: '/ConfirmEmail',
+        path: '/api/users/ConfirmEmail',
         name: 'confirmEmail',
         component: confirmEmail
     },
