@@ -4,51 +4,87 @@ import axios from "axios";
 export const useUserStore = defineStore("userStore", {
   state: () => {
     return {
+      issetErrorMessages:false,
       listUsers: [],
-      user: {
-        userName: "",
-        normalizedUserName: "",
-        email: "",
-        normalizedEmail: "",
-        document: "",
-        firstName: "",
-        lastName: "",
-        address: "",
-        userType: "",
-        cityId: "",
-      },
+      errorMessages:[],
+      user: [],
     };
   },
 
   actions: {
-
+    
     async getUsers() {
       try {
-        const response = await axios.get('/api/users');
-        if (response.data.users) {
-          this.listUsers =  response.data.users
-          console.log("respuesta", response.data.users, this.listUsers)
+        const response = await axios.get("/api/users/GetUserPaginationAsync");
+        if (response.data.data) {
+          this.listUsers = response.data.data;
         }
+        console.log(response.data.data);
+        return response;
       } catch (error) {
-        console.error(error);
+        return error.response
       }
     },
 
     async createUser(newUser) {
       try {
-        const response = await axios.post('/api/users', newUser);
-        if(response.data.success){
-          await this.getUsers(); 
-        }
+        const response = await axios.post("/api/users/CreateUser", newUser);
+        return response;
       } catch (error) {
-        console.error(error);
+        return error.response;
       }
     },
-    
+
     async updateUser(updatedUser) {
       try {
-        const response = await axios.put(`/api/users/${updatedUser.id}`, updatedUser);
-        if(response.data.success){
+        const response = await axios.put('/api/users/', updatedUser);
+        return response;
+      } catch (error) {
+        return error.response;
+      }
+    },
+
+    async changePassword(user) {
+      try {
+        const response = await axios.post('/api/users/changePassword', user);
+        return response;
+      } catch (error) {
+        return error.response;
+      }
+    },
+
+    async confirmEmail(user) {
+      try {
+        const response = await axios.get(`/api/users/ConfirmEmail?userId=${user.userid}&token=${user.token}`);
+        return response;
+      } catch (error) {
+        return error.response;
+      }
+    },
+
+    async resetPassword(user) {
+      try {
+        const response = await axios.post('/api/users/ResetPassword', user);
+        return response;
+      } catch (error) {
+        return error.response;
+      }
+    },
+
+    async recoverPassword(user) {
+      try {
+        const response = await axios.post('/api/users/RecoverPassword', user);
+        return response;
+      } catch (error) {
+        return error.response;
+      }
+    },
+
+
+    async deleteUser(deleteUser) {
+      try {
+        const response = await axios.delete(`/api/users/${deleteUser.id}`);
+        if (response.data.success) {
           await this.getUsers();
         }
       } catch (error) {
@@ -56,15 +92,16 @@ export const useUserStore = defineStore("userStore", {
       }
     },
 
-    async deleteUser(deleteUser) {
+    async resedToken(user) {
       try {
-        const response = await axios.delete(`/api/users/${deleteUser.id}`);
-        if(response.data.success){
-          await this.getUsers();
-        }
+        await axios.post('/api/users/ResedToken', user);
       } catch (error) {
         console.error(error);
       }
+    },
+
+    cleanErrors(){
+      this.errorMessages = []
     },
 
   },

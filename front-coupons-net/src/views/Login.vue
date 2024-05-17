@@ -24,6 +24,17 @@
                             </ul>
                             </div>
                         </v-form>
+                        
+                        <v-btn
+                            class="font-weight-bold" 
+                            color="#324c6e" 
+                            text
+                            to="/forgotPasword"
+                        >
+                        Olvidé mi contraseña
+                        </v-btn>
+
+
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
@@ -59,7 +70,6 @@ const validateCredentials = () => {
 };
 
 const onLogin = async () => {
-    console.log (loginStore.errorLogin);
     if (validateCredentials()) {
         return
     }

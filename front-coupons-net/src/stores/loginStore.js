@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import router from '../router'
+import { jwtDecode } from "jwt-decode";
 
 export const useLoginStore = defineStore('login', {
     state: () => {
@@ -9,6 +10,7 @@ export const useLoginStore = defineStore('login', {
           errorLoginMessages: [],
           message: '',
           token: '',
+          role: '',
           user:{
             email: '',
             password: '',
@@ -21,11 +23,18 @@ export const useLoginStore = defineStore('login', {
         this.errorLoginMessages = []
       },
 
+      decodeToken (token) {
+        try {
+            const response = jwtDecode(token);
+            return response;
+        } catch (error) {
+            console.error('Error decodificando el token:', error);
+            return null;
+        }
+      },
+
       async login($user) {
         try {
-          
-          console.log($user);
-
           const response = await axios.post('/api/users/Login', $user)
           
           if(response.data.token) {

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-dialog v-model="dialog" max-width="500px">
+    <v-dialog v-model="dialog" max-width="600px">
       <v-card>
         <v-card-title>
           <span class="headline">{{
@@ -9,47 +9,147 @@
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="submitForm">
-
-            <v-text-field v-model="newUser.username" label="Nombre de Usuario" :rules="[requiredRule('Nombre')]"
-              required></v-text-field>
-
-            <v-text-field v-model="newUser.email" label="Correo electrónico"
-              :rules="[requiredRule('Correo electrónico'), emailRule]" required>
-            </v-text-field>
-
-            <v-text-field v-model="newUser.document" label="Identificación" :rules="[requiredRule('Nombre')]" required>
-            </v-text-field>
-
-            <v-text-field v-model="newUser.firstName" label="Primer Nombre" :rules="[requiredRule('Nombre')]"
-              required></v-text-field>
-
-            <v-text-field v-model="newUser.lastName" label="Segundo Nombre" :rules="[requiredRule('Nombre')]"
-              required></v-text-field>
-
-            <v-text-field v-model="newUser.address" label="dirección" :rules="[requiredRule('Nombre')]"
-              required></v-text-field>
-
-            <v-select v-if="countries.length > 0" v-model="newUser.countryId" :items="countries" item-title="name"
-              item-value="id" @update:modelValue="getStates" label="País" :rules="[requiredRule('País')]" required>
-            </v-select>
-
-            <v-select v-if="states.length > 0" v-model="newUser.stateId" :items="states" item-title="name"
-              item-value="id" @update:modelValue="getCities" label="Departamento"
-              :rules="[requiredRule('Departamento')]" required>
-            </v-select>
-
-            <v-select v-if="cities.length > 0" v-model="newUser.cityId" :items="cities" item-title="name"
-              item-value="id" @update:modelValue="getCities" label="Ciudad" :rules="[requiredRule('Ciudad')]" required>
-            </v-select>
-
-            <v-text-field v-model="newUser.password" label="Contraseña" type="password"
-              :rules="[requiredRule('Contraseña'), passwordRule]" required></v-text-field>
-
-            <v-text-field v-model="newUser.passwordConfirm" label="Contraseña" type="password"
-              :rules="[requiredRule('Contraseña'), passwordRule]" required></v-text-field>
-
-            <pre>{{ newUser }}</pre>
-
+            <v-container>
+              <v-row>
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    v-model="newUser.email"
+                    label="Correo electrónico"
+                    :rules="[requiredRule('Correo electrónico'), emailRule]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    v-model="newUser.document"
+                    label="Identificación"
+                    :rules="[requiredRule('Identificación')]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    v-model="newUser.firstName"
+                    label="Nombres"
+                    :rules="[requiredRule('Nombres')]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    v-model="newUser.lastName"
+                    label="Apellidos"
+                    :rules="[requiredRule('Apellidos')]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    v-model="newUser.address"
+                    label="Dirección"
+                    :rules="[requiredRule('Dirección')]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    v-model="newUser.phoneNumber"
+                    label="Teléfono"
+                    :rules="[requiredRule('Teléfono'), numberRule, phoneRule]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col v-if="countries.length > 0" cols="12" sm="6">
+                  <v-select
+                    v-model="newUser.countryId"
+                    :items="countries"
+                    item-title="name"
+                    item-value="id"
+                    @update:modelValue="getStates"
+                    label="País"
+                    :rules="[requiredRule('País')]"
+                    required
+                  ></v-select>
+                </v-col>
+                <v-col v-if="states.length > 0" cols="12" sm="6">
+                  <v-select
+                    v-model="newUser.stateId"
+                    :items="states"
+                    item-title="name"
+                    item-value="id"
+                    @update:modelValue="getCities"
+                    label="Departamento"
+                    :rules="[requiredRule('Departamento')]"
+                    required
+                  ></v-select>
+                </v-col>
+                <v-col v-if="cities.length > 0" cols="12" sm="6">
+                  <v-select
+                    v-model="newUser.cityId"
+                    :items="cities"
+                    item-title="name"
+                    item-value="id"
+                    label="Ciudad"
+                    :rules="[requiredRule('Ciudad')]"
+                    required
+                  ></v-select>
+                </v-col>
+                <v-col v-if="!editScenario" cols="12" sm="6">
+                  <v-text-field
+                    v-model="newUser.password"
+                    label="Contraseña"
+                    type="password"
+                    :rules="[requiredRule('Contraseña'), passwordRule]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col v-if="!editScenario" cols="12" sm="6">
+                  <v-text-field
+                    v-model="newUser.passwordConfirm"
+                    label="Confirmar Contraseña"
+                    type="password"
+                    :rules="[
+                      requiredRule('Confirmar Contraseña'),
+                      passwordRule,
+                      passwordMatchRule,
+                    ]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    v-model="newUser.photoFile"
+                    @change="handleFileSelect"
+                    label="Foto"
+                    type="file"
+                    :rules="[requiredRule('Foto')]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col v-if="newUser.photoPreview" cols="12" sm="6">
+                  <img
+                    :src="`data:image/png;base64,${newUser.photoPreview}`"
+                    alt="Vista previa de la imagen"
+                    width="100"
+                  />
+                </v-col>
+                <v-col v-if="showPhoto" cols="12" sm="6">
+                  <img :src="newUser.photoPreviewEdit" width="100" />
+                </v-col>
+                <v-col cols="12">
+                  <div
+                    v-if="errorMessages.length > 0"
+                    style="color: red; text-align: center"
+                  >
+                    <ul>
+                      <li v-for="error in errorMessages" :key="error">
+                        {{ error }}
+                      </li>
+                    </ul>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-container>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -68,8 +168,14 @@
             <span class="headline">Lista de usuarios registrados</span>
           </v-col>
           <v-col md="6" sm="6" cols="12">
-            <v-text-field v-model="search" append-icon="mdi-magnify" label="Buscar Usuario" single-line hide-details
-              variant="underlined"></v-text-field>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Buscar Usuario"
+              single-line
+              hide-details
+              variant="underlined"
+            ></v-text-field>
           </v-col>
         </v-row>
       </v-card-title>
@@ -78,7 +184,7 @@
         <v-table density="compact">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Documento</th>
               <th>Nombre</th>
               <th>Correo</th>
               <th>Acciones</th>
@@ -86,12 +192,22 @@
           </thead>
           <tbody>
             <tr v-for="user in filteredUsers" :key="user.id">
-              <td>{{ user.id }}</td>
-              <td>{{ user.name }}</td>
+              <td>{{ user.document }}</td>
+              <td>{{ user.fullName }}</td>
               <td>{{ user.email }}</td>
               <td>
-                <v-icon @click="editUser(user)" color="primary">mdi-pencil</v-icon>
-                <v-icon @click="deleteUser(user)" color="primary">mdi-delete</v-icon>
+                <v-icon @click="editUser(user)" color="primary"
+                  >mdi-pencil</v-icon
+                >
+                <v-icon @click="deleteUser(user)" color="primary"
+                  >mdi-delete</v-icon
+                >
+                <v-icon
+                  @click="emailConfirmation(user.email)"
+                  color="primary"
+                  title=" Enviar Correo de Confirmanción"
+                  >mdi-email</v-icon
+                >
               </td>
             </tr>
             <tr v-if="!filteredUsers.length">
@@ -100,17 +216,17 @@
           </tbody>
         </v-table>
       </v-card-text>
-      <v-pagination v-model="currentPage" rounded="circle" :length="totalPages"
-        style="box-shadow: none !important"></v-pagination>
+      <v-pagination
+        v-model="currentPage"
+        rounded="circle"
+        :length="totalPages"
+        style="box-shadow: none !important"
+      ></v-pagination>
     </v-card>
 
     <!-- Snackbar para mostrar el mensaje de éxito -->
     <v-snackbar v-model="successMessageVisible" timeout="3000">
-      {{
-        selectedUser
-          ? "Usuario actualizado exitosamente"
-          : "Usuario creado exitosamente"
-      }}
+      {{ notification }}
     </v-snackbar>
   </v-container>
 </template>
@@ -122,7 +238,6 @@ import { useCountryStore } from "../../stores/countryStore";
 import { useStateStore } from "../../stores/stateStore";
 import { useCityStore } from "../../stores/cityStore";
 
-
 const userStore = useUserStore();
 const countryStore = useCountryStore();
 const stateStore = useStateStore();
@@ -131,14 +246,20 @@ const cityStore = useCityStore();
 const countries = computed(() => countryStore.listCountries);
 const states = computed(() => stateStore.listStates);
 const cities = computed(() => cityStore.listCities);
+const editScenario = ref(false);
+const showPhoto = ref(true);
 
 const newUser = reactive({
   username: "",
   email: "",
+  phoneNumber: "",
   document: "",
   firstName: "",
   lastName: "",
+  fullName: "",
   address: "",
+  photoFile: "",
+  photo: "",
   countryId: "",
   stateId: "",
   cityId: "",
@@ -146,6 +267,8 @@ const newUser = reactive({
   passwordConfirm: "",
 });
 
+const errorMessages = ref([]);
+const notification = ref("");
 const selectedUser = ref(null);
 const currentPage = ref(1); // Página actual
 const itemsPerPage = 10; // Número de usuarios por página
@@ -159,7 +282,11 @@ const filteredUsers = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const userList = userStore.listUsers;
-  return userList.filter((user) => user.name.toLowerCase().includes(search.value.toLowerCase())).slice(startIndex, endIndex);
+  return userList
+    .filter((user) =>
+      user.fullName.toLowerCase().includes(search.value.toLowerCase())
+    )
+    .slice(startIndex, endIndex);
 });
 
 const requiredRule = (fieldName) => (value) =>
@@ -173,107 +300,138 @@ const emailRule = (value) => {
   );
 };
 
-const passwordRule = (value) => {
-  return value.length >= 8 || "La contraseña debe tener al menos 8 caracteres";
+const numberRule = (value) => {
+  const numberRegex = /^[0-9]+$/;
+  return numberRegex.test(value) || "El campo debe ser un número válido";
 };
 
-const submitForm = async () => {
-  if (
-    !newUser.username ||
-    !newUser.email ||
-    !newUser.document ||
-    !newUser.firstName ||
-    !newUser.lastName ||
-    !newUser.address ||
-    !newUser.countryId ||
-    !newUser.stateId ||
-    !newUser.cityId ||
-    !newUser.password ||
-    !newUser.passwordConfirm
-  ) {
-    return;
-  }
+const phoneRule = (value) => {
+  return value.length >= 10 || "El teléfono debe tener al menos 10 caracteres";
+};
 
+const passwordRule = (value) => {
+  return value.length >= 6 || "La contraseña debe tener al menos 6 caracteres";
+};
+
+const passwordMatchRule = (value) => {
+  return value === newUser.password || "Las contraseñas no coinciden";
+};
+
+const submitForm = () => {
   if (selectedUser.value) {
-    await userStore.updateUser({ ...selectedUser.value, ...newUser });
+    userStore
+      .updateUser({ ...selectedUser.value, ...newUser })
+      .then((response) => {
+        if (response.status === 400) {
+          userStore.errorMessages.push(response.response.data);
+        } else {
+          notification.value = "Usuario actualizado exitosamente";
+          onSave();
+        }
+      });
   } else {
-    await userStore.createUser(newUser);
+    newUser.username = newUser.email;
+    userStore.createUser(newUser).then((response) => {
+      if (response.status === 400) {
+        userStore.errorMessages.push(response.response.data);
+      } else {
+        notification.value = "Usuario Creado exitosamente";
+        onSave();
+      }
+    });
   }
+};
 
-  newUser.username = "";
-  newUser.email = "";
-  newUser.document = "";
-  newUser.firstName = "";
-  newUser.lastName = "";
-  newUser.address = "";
-  newUser.countryId= "";
-  newUser.stateId= "";
-  newUser.cityId = "";
-  newUser.password = "";
-  newUser.passwordConfirm = "";
+const onSave = () => {
+  clearForm();
+  userStore.getUsers();
+  successMessage();
+  dialog.value = false;
+};
 
+const editUser = (user) => {
+  clearForm();
+  editScenario.value = true;
+  selectedUser.value = { ...user };
+  newUser.phoneNumber = selectedUser.value.phoneNumber;
+  newUser.email = selectedUser.value.email;
+  newUser.username = selectedUser.value.email;
+  newUser.document = selectedUser.value.document;
+  newUser.firstName = selectedUser.value.firstName;
+  newUser.lastName = selectedUser.value.lastName;
+  newUser.address = selectedUser.value.address;
+  newUser.cityId = selectedUser.value.cityId;
+  newUser.photoPreviewEdit = selectedUser.value.photo;
+  dialog.value = true;
+};
+
+const deleteUser = (state) => {
+  userStore.deleteUser(state);
+  notification.value = "Usuario eliminado";
+};
+
+const openModal = () => {
+  editScenario.value = false;
+  dialog.value = true;
+  selectedUser.value = null;
+  clearForm();
+};
+
+const closeModal = () => {
+  dialog.value = false;
+  clearForm();
+};
+
+const handleFileSelect = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (editScenario) {
+        newUser.photo = e.target.result.split(",")[1];
+        newUser.photoPreview = e.target.result.split(",")[1];
+        showPhoto.value = false;
+      } else {
+        newUser.photo = e.target.result.split(",")[1];
+        newUser.photoPreview = e.target.result.split(",")[1];
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const successMessage = () => {
   successMessageVisible.value = true;
 
   setTimeout(() => {
     successMessageVisible.value = false;
   }, 3000);
-
-  dialog.value = false;
 };
 
-const editUser = (user) => {
-  selectedUser.value = { ...user };
-  newUser.username = selectedUser.value.name;
-  newUser.email = selectedUser.value.name;
-  newUser.document = selectedUser.value.name;
-  newUser.firstName = selectedUser.value.name;
-  newUser.lastName = selectedUser.value.name;
-  newUser.address = selectedUser.value.name;
-  newUser.cityId = selectedUser.value.name;
-  dialog.value = true;
-};
-
-const deleteUser = (state) => {
-  userStore
-    .deleteUser(state)
-    .then(() => {
-      userStore.getUsers();
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-};
-
-const openModal = () => {
-  dialog.value = true;
-  selectedUser.value = null;
+const clearForm = () => {
+  newUser.phoneNumber = "";
   newUser.username = "";
   newUser.email = "";
   newUser.document = "";
   newUser.firstName = "";
   newUser.lastName = "";
   newUser.address = "";
-  newUser.countryId= "";
-  newUser.stateId= "";
+  newUser.countryId = "";
+  newUser.stateId = "";
   newUser.cityId = "";
   newUser.password = "";
   newUser.passwordConfirm = "";
+  newUser.photoFile = "";
+  newUser.photoPreview = "";
+  newUser.photo = "";
+  userStore.cleanErrors();
 };
 
-const closeModal = () => {
-  dialog.value = false;
-  selectedUser.value = null;
-  newUser.username = "";
-  newUser.email = "";
-  newUser.document = "";
-  newUser.firstName = "";
-  newUser.lastName = "";
-  newUser.address = "";
-  newUser.countryId= "";
-  newUser.stateId= "";
-  newUser.cityId = "";
-  newUser.password = "";
-  newUser.passwordConfirm = "";
+const emailConfirmation = (email) => {
+  const user = { email: email };
+  userStore.resedToken(user);
+  notification.value = "Email enviado exitosamente";
+  successMessage();
 };
 
 const getStates = () => {
@@ -288,5 +446,4 @@ onMounted(() => {
   countryStore.getCountries();
   userStore.getUsers();
 });
-
 </script>
