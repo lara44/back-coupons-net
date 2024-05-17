@@ -6,7 +6,7 @@
           append-icon="mdi-open-in-new"
           to="/login"
           max-width="700"
-          prepend-icon="mdi-mail"
+          prepend-icon="mdi-check-decagram"
           rel="noopener"
           subtitle="Click para volver al login"
           :title="notification"

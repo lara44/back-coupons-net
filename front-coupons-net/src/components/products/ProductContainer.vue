@@ -3,21 +3,37 @@
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline">{{ selectedProduct ? 'Editar Producto' : 'Crear Producto' }}</span>
+          <span class="headline">{{
+            selectedProduct ? "Editar Producto" : "Crear Producto"
+          }}</span>
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="submitForm">
-            <v-text-field v-model="newProduct.name" label="Nombre" 
-              :rules="[requiredRule('Nombre')]" required></v-text-field>
-            <v-text-field v-model="newProduct.price" label="Precio" 
-              :rules="[requiredRule('Precio'), priceRule]" required></v-text-field>
-            <v-text-field v-model="newProduct.barcode" label="Código de barras"
-              :rules="[requiredRule('Código de Barras'), barcodeRule]" required></v-text-field>
+            <v-text-field
+              v-model="newProduct.name"
+              label="Nombre"
+              :rules="[requiredRule('Nombre')]"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="newProduct.price"
+              label="Precio"
+              :rules="[requiredRule('Precio'), priceRule]"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="newProduct.barcode"
+              label="Código de barras"
+              :rules="[requiredRule('Código de Barras'), barcodeRule]"
+              required
+            ></v-text-field>
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="blue darken-1" text @click="closeModal">Cancelar</v-btn>
-          <v-btn color="primary" @click="submitForm">{{ selectedProduct ? 'Actualizar' : 'Guardar' }}</v-btn>
+          <v-btn color="primary" @click="submitForm">{{
+            selectedProduct ? "Actualizar" : "Guardar"
+          }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -29,12 +45,18 @@
             <span class="headline">Lista de Productos registrados</span>
           </v-col>
           <v-col md="6" sm="6" cols="12">
-            <v-text-field v-model="search" append-icon="mdi-magnify" label="Buscar Producto" single-line hide-details
-              variant="underlined"></v-text-field>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Buscar Producto"
+              single-line
+              hide-details
+              variant="underlined"
+            ></v-text-field>
           </v-col>
         </v-row>
       </v-card-title>
-      <v-btn class="ma-2" color="primary" dark @click="openModal" >Nuevo</v-btn>
+      <v-btn class="ma-2" color="primary" dark @click="openModal">Nuevo</v-btn>
       <v-card-text>
         <v-table density="compact">
           <thead>
@@ -53,8 +75,12 @@
               <td>{{ product.price }}</td>
               <td>{{ product.barcode }}</td>
               <td>
-                <v-icon @click="editProduct(product)" color="primary">mdi-pencil</v-icon>
-                <v-icon @click="deleteProduct(product)" color="primary">mdi-delete</v-icon>
+                <v-icon @click="editProduct(product)" color="primary"
+                  >mdi-pencil</v-icon
+                >
+                <v-icon @click="deleteProduct(product)" color="primary"
+                  >mdi-delete</v-icon
+                >
               </td>
             </tr>
             <tr v-if="!filteredProducts.length">
@@ -63,83 +89,102 @@
           </tbody>
         </v-table>
       </v-card-text>
-      <v-pagination v-model="currentPage" rounded="circle" :length="totalPages" style="box-shadow: none !important;"></v-pagination>
+      <v-pagination
+        v-model="currentPage"
+        rounded="circle"
+        :length="totalPages"
+        style="box-shadow: none !important"
+      ></v-pagination>
     </v-card>
 
     <!-- Snackbar para mostrar el mensaje de éxito -->
     <v-snackbar v-model="successMessageVisible" timeout="3000">
-      {{ selectedProduct ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente' }}
+      {{
+        selectedProduct
+          ? "Producto actualizado exitosamente"
+          : "Producto creado exitosamente"
+      }}
     </v-snackbar>
   </v-container>
 </template>
 
 <script>
-import { ref, reactive, computed } from 'vue';
-import { useProductStore } from '../../stores/productStore';
+import { ref, reactive, computed } from "vue";
+import { useProductStore } from "../../stores/productStore";
 
 export default {
-  name: 'ProductDataTable',
+  name: "ProductDataTable",
   setup() {
     const currentPage = ref(1); // Página actual
     const itemsPerPage = 10; // Número de usuarios por página
     const productStore = useProductStore();
     const successMessageVisible = ref(false);
-    const search = ref('');
+    const search = ref("");
     const newProduct = reactive({
-      name: '',
-      email: '',
-      password: '',
+      name: "",
+      email: "",
+      password: "",
     });
     const selectedProduct = ref(null);
     const dialog = ref(false);
 
     const totalProducts = computed(() => productStore.listProducts.length);
-    const totalPages = computed(() => Math.ceil(totalProducts.value / itemsPerPage));
+    const totalPages = computed(() =>
+      Math.ceil(totalProducts.value / itemsPerPage)
+    );
 
     const filteredProducts = computed(() => {
       const startIndex = (currentPage.value - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
       const productList = productStore.listProducts;
       return productList
-        .filter(product => product.name.toLowerCase().includes(search.value.toLowerCase()))
+        .filter((product) =>
+          product.name.toLowerCase().includes(search.value.toLowerCase())
+        )
         .slice(startIndex, endIndex);
     });
 
-    const requiredRule = (fieldName) => (value) => !!value || `El campo "${fieldName}" es obligatorio`;
+    const requiredRule = (fieldName) => (value) =>
+      !!value || `El campo "${fieldName}" es obligatorio`;
 
     const priceRule = (value) => {
       const numberRegex = /^[0-9]+$/;
-      return numberRegex.test(value) || 'El campo debe ser un número válido';
+      return numberRegex.test(value) || "El campo debe ser un número válido";
     };
 
     const barcodeRule = (value) => {
-      return value.length >= 8 || 'El código de Barras debe tener al menos 8 caracteres';
+      return (
+        value.length >= 8 ||
+        "El código de Barras debe tener al menos 8 caracteres"
+      );
     };
-
 
     const openModal = () => {
       dialog.value = true;
       selectedProduct.value = null;
-      newProduct.name = '';
-      newProduct.price = '';
-      newProduct.barcode = '';
+      newProduct.name = "";
+      newProduct.price = "";
+      newProduct.barcode = "";
     };
 
     const submitForm = async () => {
-      if (!newProduct.name || !newProduct.price || !newProduct.barcode ) {
+      if (!newProduct.name || !newProduct.price || !newProduct.barcode) {
         return;
       }
       if (selectedProduct.value) {
-        await productStore.updateProduct({ ...selectedProduct.value, ...newProduct });
+        await productStore.updateProduct({
+          ...selectedProduct.value,
+          ...newProduct,
+        });
       } else {
         await productStore.createProduct(newProduct);
       }
 
       await productStore.getProducts();
 
-      newProduct.name = '';
-      newProduct.price = '';
-      newProduct.barcode = '';
+      newProduct.name = "";
+      newProduct.price = "";
+      newProduct.barcode = "";
 
       successMessageVisible.value = true;
 
@@ -150,11 +195,11 @@ export default {
       dialog.value = false;
     };
 
-    const deleteProduct = (product) =>{
-        productStore.deleteProduct(product).then(() => {
-          productStore.getProducts();
-        });   
-    } 
+    const deleteProduct = (product) => {
+      productStore.deleteProduct(product).then(() => {
+        productStore.getProducts();
+      });
+    };
 
     const editProduct = (product) => {
       selectedProduct.value = { ...product };
@@ -167,9 +212,9 @@ export default {
     const closeModal = () => {
       dialog.value = false;
       selectedProduct.value = null;
-      newProduct.name = '';
-      newProduct.price = '';
-      newProduct.barcode = '';
+      newProduct.name = "";
+      newProduct.price = "";
+      newProduct.barcode = "";
     };
 
     return {
@@ -189,7 +234,7 @@ export default {
       deleteProduct,
       openModal,
       closeModal,
-      totalPages
+      totalPages,
     };
   },
 
