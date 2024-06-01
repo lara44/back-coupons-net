@@ -2,6 +2,8 @@
 using back_coupons.Enums;
 using back_coupons.UnitsOfWork.Implementations;
 using back_coupons.UnitsOfWork.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 namespace back_coupons.Data
 {
@@ -26,6 +28,7 @@ namespace back_coupons.Data
             await CheckCountriesAsync();
             await CheckProductsAsync();
             await CheckRolesAsync();
+            await CheckCouponsAsync();
             await CheckUserAsync("1010", "Luis Alberto", "Rojas Adames", "adames.lancero@gmail.com", "3214451040", "Cll 24", UserType.Admin);
         }
 
@@ -380,6 +383,61 @@ namespace back_coupons.Data
                 });
                 await _context.SaveChangesAsync();
             }
+        }
+        private async Task CheckCouponsAsync()
+        {
+            if (!_context.Coupons.Any())
+            {
+                await AddProductAsync(
+                   "CUPON MEMBRESIA 1",
+                   new DateTime(2024, 06, 01),
+                   new DateTime(2024, 06, 30),
+                   100,
+                   100,
+                   1,
+                   "2030",
+                   new List<string>() { "Sundae Arequipe" }
+                );
+
+                await AddProductAsync(
+                    "CUPON MEMBRESIA 2",
+                    new DateTime(2024, 06, 01),
+                    new DateTime(2024, 06, 15),
+                    50,
+                    50,
+                    1,
+                    "2031",
+                    new List<string>() { "Combo Alitas x 2", "Mr Tea" }
+                );
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task AddProductAsync(string name, DateTime startDate, DateTime expiryDate, int quantityInitial, int quantityActual, int companyId, string couponCode,  List<string> products)
+        {
+            Coupon coupon = new()
+            {
+                Name = name,
+                StartDate = startDate,
+                ExpiryDate = expiryDate,
+                QuantityInitial = quantityInitial,
+                QuantityActual = quantityActual,
+                CompanyId = companyId,
+                CouponCode = couponCode,
+                DetailCoupons = new List<DetailCoupon>(),
+            };
+
+            foreach (var productName in products)
+            {
+                var product = await _context.Products.FirstOrDefaultAsync(p => p.Name == productName);
+                if (product != null)
+                {
+                    coupon.DetailCoupons.Add(new DetailCoupon { Product = product });
+                }
+            }
+
+            _context.Coupons.Add(coupon);
         }
     }
 }
