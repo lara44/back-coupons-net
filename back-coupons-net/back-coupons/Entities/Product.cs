@@ -23,6 +23,6 @@ namespace back_coupons.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Barcode { get; set; } = null!;
 
-        //public ICollection<ProductCategory>? ProductCategories { get; set; }
+        public ICollection<DetailCoupon> DetailCoupons { get; set; }
     }
 }
