@@ -15,6 +15,6 @@ namespace back_coupons.UnitsOfWork.Implementations
 
         public override async Task<ActionResponse<IEnumerable<Coupon>>> GetAsyncFull() => await _couponRepository.GetAsyncFull();
         public override async Task<ActionResponse<IEnumerable<Coupon>>> GetAsync(PaginationDTO pagination) => await _couponRepository.GetAsync(pagination);
-        public async Task<ActionResponse<IEnumerable<Coupon>>> GetCouponByCodeAsync(string code) => await _couponRepository.GetCouponByCodeAsync(code);
+        public async Task<ActionResponse<Coupon>> RedeemCouponAsync(string code) => await _couponRepository.RedeemCouponAsync(code);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using back_coupons.Data;
 using back_coupons.DTOs;
+using back_coupons.Entities;
 using back_coupons.Helpers;
 using back_coupons.Repositories.Interfaces;
 using back_coupons.Responses;
@@ -45,17 +46,41 @@ namespace back_coupons.Repositories.Implementations
             };
         }
 
-        public async Task<ActionResponse<IEnumerable<Entities.Coupon>>> GetCouponByCodeAsync(string code)
+        public async Task<ActionResponse<Entities.Coupon>> RedeemCouponAsync(string code)
         {
-            var result = await _dbContext.Coupons
+            var coupon = await _dbContext.Coupons
+                   .Include(dc => dc.DetailCoupons!)
+                   .ThenInclude(p => p.Product)
                    .Where(c => c.CouponCode == code)
                    .OrderBy(s => s.Name)
-                   .ToListAsync();
+                   .FirstOrDefaultAsync();
 
-            return new ActionResponse<IEnumerable<Entities.Coupon>>
+            if (coupon != null)
             {
-                Successfully = true,
-                Result = result
+                if (coupon.QuantityActual > 0)
+                {
+                    coupon.QuantityActual--;
+                }
+                else
+                {
+                    return new ActionResponse<Coupon>
+                    {
+                        Successfully = false,
+                        Message = "No more coupons available."
+                    };
+                }
+
+                await _dbContext.SaveChangesAsync();
+                return new ActionResponse<Entities.Coupon>
+                {
+                    Successfully = true,
+                    Result = coupon
+                };
+            }
+            return new ActionResponse<Entities.Coupon>
+            {
+                Successfully = false,
+                Message = "Registro no encontrado"
             };
         }
     }

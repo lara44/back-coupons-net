@@ -40,15 +40,15 @@ namespace back_coupons.Controllers
         }
 
 
-        [HttpPost("GetCouponByCodeAsync")]
-        public async Task<IActionResult> GetCouponByCodeAsync([FromQuery] string code)
+        [HttpPost("redeem")]
+        public async Task<IActionResult> redeem([FromQuery] string code)
         {
-            var response = await _couponUnitOfWork.GetCouponByCodeAsync(code);
+            var response = await _couponUnitOfWork.RedeemCouponAsync(code);
             if (response.Successfully)
             {
                 return Ok(new { data = response.Result });
             }
-            return NotFound();
+            return NotFound(new { message = response.Message });
         }
     }
 }
