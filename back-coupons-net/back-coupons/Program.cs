@@ -77,7 +77,7 @@ builder.Services.AddScoped<ICompanyUnitOfWork, CompanyUnitOfWork>();
 builder.Services.AddScoped<ICityUnitOfWork, CityUnitOfWork>();
 builder.Services.AddScoped<IContactUnitOfWork, ContactUnitOfWork>();
 builder.Services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
-
+builder.Services.AddScoped<ICouponUnitOfWork, CouponUnitOfWork>();
 // Container Repositories
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -87,6 +87,7 @@ builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 
 builder.Services.AddIdentity<User, IdentityRole>(x =>
 {
