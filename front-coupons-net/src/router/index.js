@@ -8,6 +8,7 @@ import resetPassword from '../components/users/resetPasswordContainer.vue';
 import confirmEmail from '../components/users/confirmEmailContainer.vue';
 import user from '../components/users/UserContainer.vue';
 import product from '../components/products/ProductContainer.vue';
+import coupon from '../components/coupons/CouponsContainer.vue';
 import category from '../components/categories/CategoryContainer.vue';
 import city from '../components/cities/CityContainer.vue';
 import country from '../components/countries/CountryContainer.vue';
@@ -88,6 +89,12 @@ const routes = [
                 path: '/products',
                 name: 'products',
                 component: product,
+                beforeEnter: requiredAuth
+            },
+            {
+                path: '/coupons',
+                name: 'coupons',
+                component: coupon,
                 beforeEnter: requiredAuth
             },
             {

@@ -44,6 +44,13 @@
                         title="Categorias"
                         to="/categories"
                     ></v-list-item>
+                    <v-list-item
+                        link
+                        style="font-size: 10px !important"
+                        prepend-icon="mdi-account-group-outline mdi-18px"
+                        title="Cupones"
+                        to="/coupons"
+                    ></v-list-item>
                 </v-list-group>
                 <v-list-group v-if=" user.role === 'Admin'"  dense>
                     <template v-slot:activator="{ props }">
