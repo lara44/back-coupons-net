@@ -6,6 +6,7 @@ import updatePassword from '../components/users/updatePasswordContainer.vue';
 import forgotPasword from '../components/users/forgotPasswordContainer.vue';
 import resetPassword from '../components/users/resetPasswordContainer.vue';
 import confirmEmail from '../components/users/confirmEmailContainer.vue';
+import redeemCoupon from '../components/coupons/RedeemCuponContainer.vue';
 import user from '../components/users/UserContainer.vue';
 import product from '../components/products/ProductContainer.vue';
 import coupon from '../components/coupons/CouponsContainer.vue';
@@ -73,6 +74,14 @@ const routes = [
         name: 'confirmEmail',
         component: confirmEmail
     },
+
+    {
+        path: '/coupons/redeem',
+        name: 'redeemCoupon',
+        component: redeemCoupon,
+        beforeEnter: requiredAuth,
+    },
+
     {
         path: '/home',
         name: 'home',

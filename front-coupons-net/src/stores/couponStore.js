@@ -4,10 +4,7 @@ import axios from "axios";
 export const useCouponStore = defineStore("couponStore", {
   state: () => {
     return {
-      listCoupons: [
-        {id:1, nombre:"cupon prueba1", fechainicio:"22/02/1992", fechafin:"22/02/2300", estado: "activo", cantidad:"20", porcentaje:"16"},
-        
-      ],
+      listCoupons: [],
       coupon: {
         id: "",
         name: "",
@@ -18,11 +15,11 @@ export const useCouponStore = defineStore("couponStore", {
   actions: {
     async getCoupons() {
       try {
-        // const response = await axios.get("/api/coupons/full");
-        // if (response.data.data) {
-        //   this.listCoupons = response.data.data;
-          console.log("respuesta correcta de cupones");
-        //}
+        const response = await axios.get("/api/coupons/full");
+          if (response.data.data) {
+            this.listCoupons = response.data.data;
+            console.log("aqui");
+          }
       } catch (error) {
         console.error(error);
       }
@@ -66,5 +63,15 @@ export const useCouponStore = defineStore("couponStore", {
         console.error(error);
       }
     },
+
+    async redeemCoupon(redeem) {
+      try {
+        const response = await axios.get(`/api/coupons/redeem?code=${redeem.code}`);
+        return response;
+      } catch (error) {
+        return error.response;
+      }
+    },
+
   },
 });
