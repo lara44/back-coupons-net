@@ -3,6 +3,7 @@ import router from './router'
 import { createPinia } from 'pinia'
 import axios from 'axios';
 
+
 // Configurar baseURL para Axios
 axios.defaults.baseURL = 'https://localhost:7097';
 
