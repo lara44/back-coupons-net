@@ -1,7 +1,6 @@
 ﻿using back_coupons.DTOs;
 using back_coupons.Entities;
 using back_coupons.Repositories.Interfaces;
-using back_coupons.UnitsOfWork.Implementations;
 using back_coupons.UnitsOfWork.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
