@@ -39,8 +39,19 @@ namespace back_coupons.Controllers
             return BadRequest();
         }
 
+        [HttpGet("{id}")]
+        public override async Task<IActionResult> GetAsync(int id)
+        {
+            var response = await _couponUnitOfWork.GetAsync(id);
+            if (response.Successfully)
+            {
+                return Ok(new { data = response.Result });
+            }
+            return NotFound();
+        }
 
-        [HttpPost("redeem")]
+
+        [HttpGet("redeem")]
         public async Task<IActionResult> redeem([FromQuery] string code)
         {
             var response = await _couponUnitOfWork.RedeemCouponAsync(code);

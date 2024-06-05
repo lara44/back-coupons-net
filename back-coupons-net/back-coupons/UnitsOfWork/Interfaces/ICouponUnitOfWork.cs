@@ -8,6 +8,7 @@ namespace back_coupons.Repositories.Interfaces
     {
         Task<ActionResponse<IEnumerable<Coupon>>> GetAsyncFull();
         Task<ActionResponse<IEnumerable<Coupon>>> GetAsync(PaginationDTO pagination);
+        Task<ActionResponse<Coupon>> GetAsync(int id);
         Task<ActionResponse<Coupon>> RedeemCouponAsync(string codeCoupon);
     }
 }

@@ -46,6 +46,29 @@ namespace back_coupons.Repositories.Implementations
             };
         }
 
+        public override async Task<ActionResponse<Entities.Coupon>> GetAsync(int id)
+        {
+            var row = await _dbContext.Coupons
+                   .Include(dc => dc.DetailCoupons!)
+                   .ThenInclude(p => p.Product)
+                   .OrderBy(s => s.Name)
+                   .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (row != null)
+            {
+                return new ActionResponse<Entities.Coupon>
+                {
+                    Successfully = true,
+                    Result = row
+                };
+            }
+            return new ActionResponse<Entities.Coupon>
+            {
+                Successfully = false,
+                Message = "Registro no encontrado"
+            };
+        }
+
         public async Task<ActionResponse<Entities.Coupon>> RedeemCouponAsync(string code)
         {
             var coupon = await _dbContext.Coupons
