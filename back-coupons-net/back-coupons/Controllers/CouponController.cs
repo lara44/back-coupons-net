@@ -1,6 +1,7 @@
 ﻿using back_coupons.DTOs;
 using back_coupons.Entities;
 using back_coupons.Repositories.Interfaces;
+using back_coupons.UnitsOfWork.Implementations;
 using back_coupons.UnitsOfWork.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,8 +40,19 @@ namespace back_coupons.Controllers
             return BadRequest();
         }
 
+        [HttpGet("{id}")]
+        public override async Task<IActionResult> GetAsync(int id)
+        {
+            var response = await _couponUnitOfWork.GetAsync(id);
+            if (response.Successfully)
+            {
+                return Ok(new { data = response.Result });
+            }
+            return NotFound();
+        }
 
-        [HttpPost("redeem")]
+
+        [HttpGet("redeem")]
         public async Task<IActionResult> redeem([FromQuery] string code)
         {
             var response = await _couponUnitOfWork.RedeemCouponAsync(code);
