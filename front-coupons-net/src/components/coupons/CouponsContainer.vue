@@ -52,6 +52,15 @@
               required
             >
             </v-select>
+            <v-select
+              v-model="newCoupon.companyId"
+              :items="companies"
+              item-title="name"
+              item-value="id"
+              label="Empresa"
+              :rules="[requiredRule('Empresa')]"
+              required
+            ></v-select>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -148,9 +157,12 @@ import QRCode from "qrcode";
 import { saveAs } from "file-saver";
 import { useCouponStore } from "../../stores/couponStore";
 import { useProductStore } from "../../stores/productStore";
+import { useCompanyStore} from "../../stores/companyStore";
 
 const productStore = useProductStore();
+const companyStore = useCompanyStore();
 const products = computed(() => productStore.listProducts);
+const companies = computed(() => companyStore.listCompanies);
 
 const currentPage = ref(1); // Página actual
 const itemsPerPage = 10; // Número de usuarios por página
@@ -164,6 +176,7 @@ const newCoupon = reactive({
   expiryDate: "",
   quantityInitial: "",
   quantityActual: "",
+  companyId: "",
   detailCoupons: [],
 });
 
@@ -214,6 +227,7 @@ const openModal = () => {
   newCoupon.startDate = "";
   newCoupon.expiryDate = "";
   newCoupon.quantityInitial = "";
+  newCoupon.companyId= "",
   selectedProducts.value = [];
 };
 
@@ -222,7 +236,7 @@ const submitForm = async () => {
     return;
   }
 
-  newCoupon.detailCoupons = selectedProducts.value.map(id => ({ coupon: newCoupon.couponCode, productId: id }));
+  newCoupon.detailCoupons = selectedProducts.value.map(id => ({ productId: id }));
 
   if (selectedCoupon.value) {
     await couponStore.updateCoupon({
@@ -241,6 +255,7 @@ const submitForm = async () => {
   newCoupon.startDate = "";
   newCoupon.expiryDate = "";
   newCoupon.quantityInitial = "";
+  newCoupon.companyId= "",
   selectedProducts.value = [];
 
   successMessageVisible.value = true;
@@ -259,6 +274,7 @@ const editCoupon = (coupon) => {
   newCoupon.startDate = selectedCoupon.value.startDate;
   newCoupon.expiryDate = selectedCoupon.value.expiryDate;
   newCoupon.quantityInitial = selectedCoupon.value.quantityInitial;
+  newCoupon.companyId = selectedCoupon.value.companyId;
   selectedProducts.value = selectedCoupon.value.detailCoupons.map(dc => dc.productId);
   dialog.value = true;
 };
@@ -282,7 +298,7 @@ const closeModal = () => {
 
 const QrCoupon = async (coupon) => {
   try {
-    const url = `https://localhost:5173/coupons/redeem?code=${coupon.couponCode}`;
+    const url = `http://localhost:5173/coupons/redeem?code=${coupon.couponCode}`;
     const qrCodeDataUrl = await QRCode.toDataURL(url);
     const blob = await (await fetch(qrCodeDataUrl)).blob();
     saveAs(blob, `${coupon.couponCode}.png`);
@@ -294,5 +310,6 @@ const QrCoupon = async (coupon) => {
 onMounted(() => {
   useCouponStore().getCoupons();
   productStore.getProducts();
+  companyStore.getCompanies();
 });
 </script>
