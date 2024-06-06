@@ -13,12 +13,12 @@ namespace back_coupons.Entities
         public string Name { get; set; } = null!;
 
         [Display(Name = "Fecha inicio cupón")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public DateTime StartDate { get; set; }
 
         [Display(Name = "Fecha expiración cupón")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public DateTime ExpiryDate { get; set; }
 
