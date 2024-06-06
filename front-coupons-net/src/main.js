@@ -5,7 +5,8 @@ import axios from 'axios';
 
 
 // Configurar baseURL para Axios
-axios.defaults.baseURL = 'https://localhost:7097';
+//axios.defaults.baseURL = 'https://localhost:7097';
+axios.defaults.baseURL = 'http://48.216.136.52';
 
 import App from './App.vue'
 
