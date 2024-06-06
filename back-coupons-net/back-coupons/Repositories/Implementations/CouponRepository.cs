@@ -22,6 +22,8 @@ namespace back_coupons.Repositories.Implementations
             {
                 Successfully = true,
                 Result = await _dbContext.Coupons
+                .Include(dc => dc.DetailCoupons!)
+                .ThenInclude(p => p.Product)
                 .ToListAsync()
             };
         }
@@ -29,6 +31,8 @@ namespace back_coupons.Repositories.Implementations
         public override async Task<ActionResponse<IEnumerable<Entities.Coupon>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _dbContext.Coupons
+                .Include(dc => dc.DetailCoupons!)
+                .ThenInclude(p => p.Product)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
