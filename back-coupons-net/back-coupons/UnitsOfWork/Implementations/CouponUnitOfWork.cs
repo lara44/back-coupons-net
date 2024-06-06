@@ -1,6 +1,5 @@
 ﻿using back_coupons.DTOs;
 using back_coupons.Entities;
-using back_coupons.Repositories.Implementations;
 using back_coupons.Repositories.Interfaces;
 using back_coupons.Responses;
 
