@@ -1,6 +1,0 @@
-@back_coupons_HostAddress = http://localhost:5163
-
-GET {{back_coupons_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
