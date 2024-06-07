@@ -2,7 +2,7 @@
     <v-layout>
         <v-app-bar color="#324c6e" prominent>
             <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" color="#FDD5A8"></v-app-bar-nav-icon>
-            <v-img max-height="50" max-width="90" src="../src/assets/neocode.png" alt="Vuetify"></v-img>
+            <v-img max-height="50" max-width="90" src="/neocode.png" alt="Vuetify"></v-img>
             <!-- <v-toolbar-title class="title">NEW SPA</v-toolbar-title> -->
             <v-spacer></v-spacer>
             <v-avatar>

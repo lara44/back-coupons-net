@@ -4,7 +4,7 @@
             <v-col cols="12" sm="8" md="4">
                 <v-card>
                     <v-toolbar color="#324c6e" dark flat>
-                        <v-img style="left: 25px;" max-height="50" max-width="130" src="../src/assets/neocode.png"
+                        <v-img style="left: 25px;" max-height="50" max-width="130" src="/neocode.png"
                             alt="Vuetify"></v-img>
                     </v-toolbar>
                     <v-card-text>
