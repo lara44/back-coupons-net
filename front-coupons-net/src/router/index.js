@@ -10,6 +10,7 @@ import redeemCoupon from '../components/coupons/RedeemCuponContainer.vue';
 import user from '../components/users/UserContainer.vue';
 import product from '../components/products/ProductContainer.vue';
 import coupon from '../components/coupons/CouponsContainer.vue';
+import inicio from '../views/Index.vue';
 import category from '../components/categories/CategoryContainer.vue';
 import city from '../components/cities/CityContainer.vue';
 import country from '../components/countries/CountryContainer.vue';
@@ -51,8 +52,8 @@ const requiredAuthAdmin = async() =>{
 const routes = [
     {
         path: '/',
-        redirect: 'login',
-        component: login
+        name: 'inicio',
+        component: inicio
     },
     {
         path: '/login',
