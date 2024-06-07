@@ -37,6 +37,9 @@ namespace back_coupons.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string CouponCode { get; set; } = null!;
 
+        [Display(Name = "Foto")]
+        public string? Photo { get; set; }
+
         public ICollection<DetailCoupon> DetailCoupons { get; set; }
     }
 }
