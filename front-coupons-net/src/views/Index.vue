@@ -5,7 +5,7 @@
       <v-img
         max-height="50"
         max-width="90"
-        src="../src/assets/neocode.png"
+        src="/neocode.png"
         alt="Vuetify"
       ></v-img>
       

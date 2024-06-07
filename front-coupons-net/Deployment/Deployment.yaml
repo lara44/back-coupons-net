@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-coupons
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: front-coupons
+  template:
+    metadata:
+      labels:
+        role: front-coupons
+    spec:
+      containers:
+      - name: front-coupons
+        image: luisrojasdev/front-coupons:1.0
+        ports:
+        - containerPort: 80 # Puerto interno en el contenedor

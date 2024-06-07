@@ -389,24 +389,122 @@ namespace back_coupons.Data
             if (!_context.Coupons.Any())
             {
                 await AddProductAsync(
-                   "CUPON MEMBRESIA 1",
+                   "CUPON MEMBRESIA 31",
                    new DateTime(2024, 06, 01),
                    new DateTime(2024, 06, 30),
                    100,
                    100,
                    1,
-                   "2030",
+                   "2031",
+                   "https://creatuaplicacion.com/wp-content/uploads/2019/02/crear-cupones.png",
                    new List<string>() { "Sundae Arequipe" }
                 );
 
                 await AddProductAsync(
-                    "CUPON MEMBRESIA 2",
+                    "CUPON MEMBRESIA 32",
                     new DateTime(2024, 06, 01),
                     new DateTime(2024, 06, 15),
                     50,
                     50,
                     1,
-                    "2031",
+                    "2032",
+                    "https://tecnosoluciones.com/wp-content/uploads/2023/03/cupones-de-descuento-en-el-comercio-electronico.png",
+                    new List<string>() { "Combo Alitas x 2", "Mr Tea" }
+                );
+
+                await AddProductAsync(
+                    "CUPON MEMBRESIA 33",
+                    new DateTime(2024, 06, 01),
+                    new DateTime(2024, 06, 15),
+                    50,
+                    50,
+                    1,
+                    "2033",
+                    "https://www.actualidadecommerce.com/wp-content/uploads/2016/10/cupon-descuento-830x536.jpg",
+                    new List<string>() { "Combo Alitas x 2", "Mr Tea" }
+                );
+
+                await AddProductAsync(
+                    "CUPON MEMBRESIA 34",
+                    new DateTime(2024, 06, 01),
+                    new DateTime(2024, 06, 15),
+                    50,
+                    50,
+                    1,
+                    "2034",
+                    "https://connectif.ai/wp-content/uploads/2021/12/Imagen-destacada-cupon-1-1.png",
+                    new List<string>() { "Combo Alitas x 2", "Mr Tea" }
+                );
+
+                await AddProductAsync(
+                    "CUPON MEMBRESIA 35",
+                    new DateTime(2024, 06, 01),
+                    new DateTime(2024, 06, 15),
+                    50,
+                    50,
+                    1,
+                    "2035",
+                    "https://img.freepik.com/vector-premium/conjunto-ilustracion-centro-comercial-descuento-mitad-precio-brillante-cupon-moneda-oro-como-regalo_632180-345.jpg",
+                    new List<string>() { "Combo Alitas x 2", "Mr Tea" }
+                );
+
+                await AddProductAsync(
+                    "CUPON MEMBRESIA 36",
+                    new DateTime(2024, 06, 01),
+                    new DateTime(2024, 06, 15),
+                    50,
+                    50,
+                    1,
+                    "2036",
+                    "https://static.vecteezy.com/system/resources/thumbnails/000/271/115/small_2x/Coupon_Vector.jpg",
+                    new List<string>() { "Combo Alitas x 2", "Mr Tea" }
+                );
+
+                await AddProductAsync(
+                    "CUPON MEMBRESIA 37",
+                    new DateTime(2024, 06, 01),
+                    new DateTime(2024, 06, 15),
+                    50,
+                    50,
+                    1,
+                    "2037",
+                    "https://img.freepik.com/vector-premium/cupon-descuento-90-ciento-descuento-vale-regalo-marcas-porcentaje-codigo-qr-codigos-promocion_662353-962.jpg",
+                    new List<string>() { "Combo Alitas x 2", "Mr Tea" }
+                );
+
+                await AddProductAsync(
+                    "CUPON MEMBRESIA 38",
+                    new DateTime(2024, 06, 01),
+                    new DateTime(2024, 06, 15),
+                    50,
+                    50,
+                    1,
+                    "2038",
+                    "https://img.freepik.com/vector-premium/concepto-plantilla-moderna-cupon-o-vale_23-2147942782.jpg",
+                    new List<string>() { "Combo Alitas x 2", "Mr Tea" }
+                );
+
+                await AddProductAsync(
+                    "CUPON MEMBRESIA 39",
+                    new DateTime(2024, 06, 01),
+                    new DateTime(2024, 06, 15),
+                    50,
+                    50,
+                    1,
+                    "2039",
+                    "https://png.pngtree.com/png-vector/20211007/ourlarge/pngtree-vector-illustration-of-discount-coupon-save-10-png-image_3973391.png",
+                    new List<string>() { "Combo Alitas x 2", "Mr Tea" }
+                );
+
+                await AddProductAsync(
+                    "CUPON MEMBRESIA 40",
+                    new DateTime(2024, 06, 01),
+                    new DateTime(2024, 06, 15),
+                    50,
+                    50,
+                    1,
+                    "2040",
+                    "https://img.freepik.com/vector-premium/conjunto-cupon-descuento-codigo-promocion-cupon-descuento-cupon-devolucion-efectivo_529344-1935.jpg",
                     new List<string>() { "Combo Alitas x 2", "Mr Tea" }
                 );
 
@@ -414,7 +512,7 @@ namespace back_coupons.Data
             }
         }
 
-        private async Task AddProductAsync(string name, DateTime startDate, DateTime expiryDate, int quantityInitial, int quantityActual, int companyId, string couponCode,  List<string> products)
+        private async Task AddProductAsync(string name, DateTime startDate, DateTime expiryDate, int quantityInitial, int quantityActual, int companyId, string couponCode, string photo, List<string> products)
         {
             Coupon coupon = new()
             {
@@ -425,6 +523,7 @@ namespace back_coupons.Data
                 QuantityActual = quantityActual,
                 CompanyId = companyId,
                 CouponCode = couponCode,
+                Photo = photo,
                 DetailCoupons = new List<DetailCoupon>(),
             };
 

@@ -8,7 +8,7 @@
               style="left: 25px"
               max-height="50"
               max-width="130"
-              src="../src/assets/neocode.png"
+              src="/neocode.png"
               alt="Vuetify"
             ></v-img>
           </v-toolbar>
