@@ -48,8 +48,11 @@
     </v-main>
   </v-layout>
   <!-- <v-footer dense bottom absolute width="100%"> -->
-  <v-footer>
-    <span style="color: #324c6e !important; font-weight: 400">Neocode — &copy; {{ new Date().getFullYear() }}</span>
+  <v-footer style="background-color: #a8dadc; padding: 2% 6% 2% 6%;">
+    <span 
+      class="bold-text"
+      style="color: #1d3557 !important; margin: auto;"
+    >Neocode — &copy; {{ new Date().getFullYear() }}</span>
   </v-footer>
 </template>
 
