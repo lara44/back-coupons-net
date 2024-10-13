@@ -25,8 +25,8 @@
                   <v-col v-for="coupon in couponStore.listCoupons" :key="coupon.id" cols="12" sm="6" md="4" lg="3">
                     <v-card max-width="344" class="custom-card">
                       <v-img height="200px" :src="coupon.photo" cover></v-img>
-                      <v-card-title class="card-title regular-text">{{ coupon.name }}</v-card-title>
-                      <v-card-subtitle class="card-subtitle regular-text">Válido hasta: {{ coupon.expiryDate.substr(0,
+                      <v-card-title class="card-title">{{ coupon.name }}</v-card-title>
+                      <v-card-subtitle class="card-subtitle">Válido hasta: {{ coupon.expiryDate.substr(0,
                         10) }}</v-card-subtitle>
                       <v-card-actions style="padding: 0% 1% 5% 1%;">
                         <v-btn 

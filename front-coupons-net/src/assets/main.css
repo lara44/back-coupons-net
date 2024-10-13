@@ -40,21 +40,25 @@
   font-style: normal;
 }
 
-/* Aplicar la fuente globalmente */
 body {
   font-family: 'neue';
   font-weight: normal;
 }
 
-/* Usar variante Regular */
-.regular-text {
-  font-family: 'neue';  
-  font-weight: normal;
-}
-
-/* Usar variante Bold */
 .bold-text {
   font-family: 'neue';
   font-weight: bold; 
   text-transform: none !important; 
 } 
+
+.btn-general {
+  background-color: #457b9d !important;
+  color: #fff !important;
+  font-family: 'neue' !important;
+  font-weight: bold !important; 
+  text-transform: none !important; 
+}
+
+.btn-icon {
+  color: #457b9d !important;
+}
