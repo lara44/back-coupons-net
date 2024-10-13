@@ -3,17 +3,29 @@
         <v-row justify="center">
             <v-col cols="12" sm="8" md="4">
                 <v-card>
-                    <v-toolbar color="#324c6e" dark flat>
+                    <v-toolbar color="#1d3557" dark flat>
                         <v-img style="left: 25px;" max-height="50" max-width="130" src="/neocode.png"
                             alt="Vuetify"></v-img>
                     </v-toolbar>
                     <v-card-text>
                         <v-form>
-                            <v-text-field label="Email" name="email" prepend-icon="mdi-account" type="text"
-                                v-model="loginStore.user.email"></v-text-field>
+                            <v-text-field 
+                                label="Email" 
+                                name="email" 
+                                prepend-icon="mdi-account" 
+                                type="text"
+                                v-model="loginStore.user.email"
+                                class="regular-text" 
+                            ></v-text-field>
 
-                            <v-text-field label="Password" name="password" prepend-icon="mdi-lock" type="password"
-                                v-model="loginStore.user.password"></v-text-field>
+                            <v-text-field 
+                                label="Password" 
+                                name="password" 
+                                prepend-icon="mdi-lock" 
+                                type="password"
+                                v-model="loginStore.user.password"
+                                class="regular-text" 
+                            ></v-text-field>
                             
                             
                             <div v-if="loginStore.errorLoginMessages.length > 0" style="color: red; text-align: center">
@@ -26,8 +38,8 @@
                         </v-form>
                         
                         <v-btn
-                            class="font-weight-bold" 
-                            color="#324c6e" 
+                            class="regular-text" 
+                            color="#1d3557" 
                             text
                             to="/forgotPasword"
                         >
@@ -38,7 +50,7 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn class="font-weight-bold" color="#324c6e" text @click="onLogin()">
+                        <v-btn class="regular-text"  color="#1d3557" text @click="onLogin()">
                             <v-icon>mdi-arrow-right-bold mdi-24px</v-icon>Ingresar
                         </v-btn>
                     </v-card-actions>
