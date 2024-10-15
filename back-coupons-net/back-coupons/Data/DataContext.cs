@@ -21,6 +21,7 @@ namespace back_coupons.Data
         public DbSet<Client> Clients { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<DetailCoupon> DetailCoupons { get; set; }
+        public DbSet<RedeemCoupon> RedeemCoupons { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
