@@ -1,0 +1,64 @@
+/* src/assets/main.css */
+
+/* Helvetica Normal */
+@font-face {
+  font-family: 'Helvetica Normal';
+  src: url('./fonts/helvetica/Helvetica.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Helvetica Bold */
+@font-face {
+  font-family: 'Helvetica Bold';
+  src: url('./fonts/helvetica/Helvetica-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Helvetica Oblique */
+@font-face {
+  font-family: 'Helvetica Oblique';
+  src: url('./fonts/helvetica/Helvetica-Oblique.ttf') format('truetype');
+  font-weight: normal;
+  font-style: oblique;
+}
+
+/* Neue Montreal */
+@font-face {
+  font-family: 'neue';
+  src: url('./fonts/neue-montreal/NeueMontreal-Regular.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Neue Montreal Bold */
+@font-face {
+  font-family: 'neue';
+  src: url('./fonts/neue-montreal/NeueMontreal-Bold.otf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+body {
+  font-family: 'neue';
+  font-weight: normal;
+}
+
+.bold-text {
+  font-family: 'neue';
+  font-weight: bold; 
+  text-transform: none !important; 
+} 
+
+.btn-general {
+  background-color: #457b9d !important;
+  color: #fff !important;
+  font-family: 'neue' !important;
+  font-weight: bold !important; 
+  text-transform: none !important; 
+}
+
+.btn-icon {
+  color: #457b9d !important;
+}

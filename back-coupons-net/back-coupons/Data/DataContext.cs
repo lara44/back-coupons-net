@@ -18,8 +18,10 @@ namespace back_coupons.Data
         public DbSet<City> Cities { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Client> Clients { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<DetailCoupon> DetailCoupons { get; set; }
+        public DbSet<RedeemCoupon> RedeemCoupons { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,6 +33,7 @@ namespace back_coupons.Data
             modelBuilder.Entity<Product>().HasIndex(x => x.Name).IsUnique();
             modelBuilder.Entity<Company>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<Contact>().HasIndex(x => x.Name).IsUnique();
+            modelBuilder.Entity<Client>().HasIndex(x => x.Identification).IsUnique();
             modelBuilder.Entity<Coupon>().HasIndex(x => x.CouponCode).IsUnique();
             DisableCascadingDelete(modelBuilder);
         }

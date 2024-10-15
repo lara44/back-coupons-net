@@ -58,9 +58,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-              class="font-weight-bold"
-              color="#324c6e"
-              text
+              class="btn-general"
               @click="submitForm"
             >
               <v-icon>mdi-lock</v-icon>Cambiar Contraseña

@@ -76,8 +76,10 @@ builder.Services.AddScoped<IStateUnitOfWork, StateUnitOfWork>();
 builder.Services.AddScoped<ICompanyUnitOfWork, CompanyUnitOfWork>();
 builder.Services.AddScoped<ICityUnitOfWork, CityUnitOfWork>();
 builder.Services.AddScoped<IContactUnitOfWork, ContactUnitOfWork>();
+builder.Services.AddScoped<IClientUnitOfWork, ClientUnitOfWork>();
 builder.Services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
 builder.Services.AddScoped<ICouponUnitOfWork, CouponUnitOfWork>();
+builder.Services.AddScoped<IRedeemCouponUnitOfWork, RedeemCouponUnitOfWork>();
 // Container Repositories
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -86,8 +88,10 @@ builder.Services.AddScoped<IStateRepository, StateRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+builder.Services.AddScoped<IRedeemCouponRepository, RedeemCouponRepository>();
 
 builder.Services.AddIdentity<User, IdentityRole>(x =>
 {

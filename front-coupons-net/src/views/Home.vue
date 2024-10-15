@@ -1,8 +1,8 @@
 <template>
     <v-layout>
-        <v-app-bar color="#324c6e" prominent>
+        <v-app-bar color="#1d3557" prominent>
             <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" color="#FDD5A8"></v-app-bar-nav-icon>
-            <v-img max-height="50" max-width="90" src="/neocode.png" alt="Vuetify"></v-img>
+            <v-img max-height="80" max-width="140" src="/neocode.png" alt="Vuetify"></v-img>
             <!-- <v-toolbar-title class="title">NEW SPA</v-toolbar-title> -->
             <v-spacer></v-spacer>
             <v-avatar>
@@ -127,7 +127,7 @@
      <!-- <v-footer dense bottom absolute width="100%"> -->
         <v-footer >
                 <span
-                    style="color: #324c6e !important; font-weight: 400;"
+                    style="color: #1d3557 !important; font-weight: 400;"
                 >Neocode — &copy; {{ new Date().getFullYear() }}</span>
             </v-footer>
 </template>
