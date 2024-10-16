@@ -6,6 +6,7 @@ namespace back_coupons.Repositories.Interfaces
 {
     public interface IRedeemCouponUnitOfWork
     {
-        Task<ActionResponse<RedeemCoupon>> RedeemCouponAsync(string codeCoupon, int clientId);
+        Task<ActionResponse<RedeemCoupon>> ClaimCustomerCouponAsync(string codeCoupon, int clientId);
+        Task<ActionResponse<RedeemCoupon>> RedeemCouponAsync(int couponId, int clientId, string signature);
     }
 }

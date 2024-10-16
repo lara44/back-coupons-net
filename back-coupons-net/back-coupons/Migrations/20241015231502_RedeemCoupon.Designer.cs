@@ -12,7 +12,7 @@ using back_coupons.Data;
 namespace back_coupons.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241014231021_RedeemCoupon")]
+    [Migration("20241015231502_RedeemCoupon")]
     partial class RedeemCoupon
     {
         /// <inheritdoc />
@@ -491,6 +491,9 @@ namespace back_coupons.Migrations
 
                     b.Property<int>("State")
                         .HasColumnType("int");
+
+                    b.Property<string>("UrlCoupon")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

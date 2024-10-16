@@ -12,6 +12,7 @@ namespace back_coupons.UnitsOfWork.Implementations
         {
             _redeemCouponRepository = redeemCouponRepository;
         }
-        public async Task<ActionResponse<RedeemCoupon>> RedeemCouponAsync(string code, int clientId) => await _redeemCouponRepository.RedeemCouponAsync(code, clientId);
+        public async Task<ActionResponse<RedeemCoupon>> ClaimCustomerCouponAsync(string code, int clientId) => await _redeemCouponRepository.ClaimCustomerCouponAsync(code, clientId);
+        public async Task<ActionResponse<RedeemCoupon>> RedeemCouponAsync(int couponId, int clientId, string signature) => await _redeemCouponRepository.RedeemCouponAsync(couponId, clientId, signature);
     }
 }
