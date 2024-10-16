@@ -10,6 +10,7 @@ namespace back_coupons.Entities
         public int CouponId { get; set; }
         public Client? Client { get; set; }
         public int ClientId { get; set; }
+        public string? UrlCoupon { get; set; }
         public RedeemState State { get; set; }
     }
 }

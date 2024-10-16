@@ -1,4 +1,5 @@
 ﻿
+using back_coupons.DTOs.Request;
 using back_coupons.Entities;
 using back_coupons.Repositories.Interfaces;
 using back_coupons.UnitsOfWork.Interfaces;
@@ -17,9 +18,20 @@ namespace back_coupons.Controllers
         }
  
         [HttpPost("claimCustomerCoupon")]
-        public async Task<IActionResult> redeem([FromQuery] string code, int clientId)
+        public async Task<IActionResult> claimCustomerCoupon([FromBody] ClaimCouponRequest request)
         {
-            var response = await _redeemCouponUnitOfWork.RedeemCouponAsync(code, clientId);
+            var response = await _redeemCouponUnitOfWork.ClaimCustomerCouponAsync(request.Code, request.ClientId);
+            if (response.Successfully)
+            {
+                return Ok(new { data = response.Result });
+            }
+            return NotFound(new { message = response.Message });
+        }
+
+        [HttpPost("RedeemCoupon")]
+        public async Task<IActionResult> RedeemCoupon([FromBody] RedeemCouponRequest request)
+        {
+            var response = await _redeemCouponUnitOfWork.RedeemCouponAsync(request.CouponId, request.ClientId, request.Signature);
             if (response.Successfully)
             {
                 return Ok(new { data = response.Result });

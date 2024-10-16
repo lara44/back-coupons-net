@@ -20,6 +20,7 @@ namespace back_coupons.Migrations
                     DateRedeem = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CouponId = table.Column<int>(type: "int", nullable: false),
                     ClientId = table.Column<int>(type: "int", nullable: false),
+                    UrlCoupon = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     State = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
