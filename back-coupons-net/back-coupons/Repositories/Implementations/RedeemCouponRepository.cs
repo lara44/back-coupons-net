@@ -174,5 +174,33 @@ namespace back_coupons.Repositories.Implementations
                 };
             }
         }
+
+        public async Task<ActionResponse<IEnumerable<RedeemCoupon>>> GetCouponsByClientAsync(string identification)
+        {
+            // Realizar la consulta directamente en la tabla RedeemCoupons uniendo con Clients
+            var coupons = await _dbContext.RedeemCoupons
+                .Where(rc => rc.Client.Identification == identification) // Filtrar por identificación del cliente
+                .Include(rc => rc.Coupon) // Incluir la entidad Coupon
+                .ThenInclude(c => c.DetailCoupons) // Incluir los detalles del cupón
+                .ThenInclude(dc => dc.Product) // Incluir los productos asociados
+                .ToListAsync();
+
+            // Verificar si se encontraron cupones
+            if (coupons == null || coupons.Count == 0)
+            {
+                return new ActionResponse<IEnumerable<RedeemCoupon>>
+                {
+                    Successfully = false,
+                    Message = "No hay cupones para este cliente"
+                };
+            }
+
+            // Retornar la lista de cupones
+            return new ActionResponse<IEnumerable<RedeemCoupon>>
+            {
+                Successfully = true,
+                Result = coupons
+            };
+        }
     }
 }
