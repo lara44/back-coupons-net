@@ -8,5 +8,6 @@ namespace back_coupons.Repositories.Interfaces
     {
         Task<ActionResponse<RedeemCoupon>> ClaimCustomerCouponAsync(string codeCoupon, int clientId);
         Task<ActionResponse<RedeemCoupon>> RedeemCouponAsync(int couponId, int clientId, string signature);
+        Task<ActionResponse<IEnumerable<RedeemCoupon>>> GetCouponsByClientAsync(string identification);
     }
 }
