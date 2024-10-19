@@ -40,5 +40,10 @@ namespace back_coupons.Entities
 
         [Display(Name = "Usuario")]
         public string FullName => $"{FirstName} {LastName}";
+
+        [Display(Name = "Empresa")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una {0}.")]
+        public int CompanyId { get; set; }
+        public Company? Company { get; set; }
     }
 }

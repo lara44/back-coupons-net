@@ -32,5 +32,6 @@ namespace back_coupons.Entities
         public string Phone { get; set; } = null!;
         public ICollection<Contact>? Contacts { get; set; }
         public ICollection<Coupon>? Coupons { get; set; }
+        public ICollection<User>? Users { get; set; } 
     }
 }

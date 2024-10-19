@@ -1,9 +1,7 @@
 ﻿using back_coupons.Entities;
 using back_coupons.Enums;
-using back_coupons.UnitsOfWork.Implementations;
 using back_coupons.UnitsOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.InteropServices;
 
 namespace back_coupons.Data
 {
@@ -54,6 +52,7 @@ namespace back_coupons.Data
                     Document = document,
                     City = _context.Cities.FirstOrDefault(),
                     UserType = userType,
+                    Company = _context.Companies.FirstOrDefault()
                 };
 
                 await _userUnitOfWork.AddUserAsync(user, "123456");
