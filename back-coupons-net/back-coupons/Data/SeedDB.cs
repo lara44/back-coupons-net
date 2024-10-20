@@ -1,9 +1,8 @@
 ﻿using back_coupons.Entities;
 using back_coupons.Enums;
-using back_coupons.UnitsOfWork.Implementations;
 using back_coupons.UnitsOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.InteropServices;
+using Org.BouncyCastle.Utilities;
 
 namespace back_coupons.Data
 {
@@ -29,7 +28,9 @@ namespace back_coupons.Data
             await CheckProductsAsync();
             await CheckRolesAsync();
             await CheckCouponsAsync();
-            await CheckUserAsync("1010", "Luis Alberto", "Rojas Adames", "adames.lancero@gmail.com", "3214451040", "Cll 24", UserType.Admin);
+            await CheckUserAsync("1010", "Luis Alberto", "Rojas Adames", "adames.lancero@gmail.com", "3214451040", "Cll 24", UserType.Admin, 1);
+            await CheckUserAsync("1010", "Carlos Andres", "Cuellar Roso", "carlos.andres@gmail.com", "3214451040", "Cll 25", UserType.User, 1);
+            await CheckUserAsync("1010", "Daniel", "Espinoza", "daniel.espinoza@gmail.com", "3214451040", "Cll 26", UserType.User, 2);
         }
 
         private async Task CheckRolesAsync()
@@ -38,7 +39,7 @@ namespace back_coupons.Data
             await _userUnitOfWork.CheckRoleAsync(UserType.User.ToString());
         }
 
-        private async Task<User> CheckUserAsync(string document, string firstName, string lastName, string email, string phone, string address, UserType userType)
+        private async Task<User> CheckUserAsync(string document, string firstName, string lastName, string email, string phone, string address, UserType userType, int companyId)
         {
             var user = await _userUnitOfWork.GetUserAsync(email);
             if (user == null)
@@ -54,6 +55,7 @@ namespace back_coupons.Data
                     Document = document,
                     City = _context.Cities.FirstOrDefault(),
                     UserType = userType,
+                    CompanyId = companyId
                 };
 
                 await _userUnitOfWork.AddUserAsync(user, "123456");
@@ -92,11 +94,20 @@ namespace back_coupons.Data
             {
                 _context.Companies.Add(new Company
                 {
-                    Nit = "123456",
+                    Nit = "500001",
                     Name = "NeoCode",
                     Address = "Cl 22b",
                     Phone = "1234567890",
                     Email = "neocode.gmail.com"
+                });
+
+                _context.Companies.Add(new Company
+                {
+                    Nit = "500002",
+                    Name = "La Granja",
+                    Address = "Cl 23b",
+                    Phone = "1234567890",
+                    Email = "lagranja.gmail.com"
                 });
                 await _context.SaveChangesAsync();
             }

@@ -81,6 +81,7 @@ namespace back_coupons.Repositories.Implementations
         public async Task<User> GetUserAsync(string email)
         {
             var user = await _dbContext.Users
+                .Include(u => u.Company)
                 .Include(u => u.City!)
                 .ThenInclude(c => c.States!)
                 .ThenInclude(s => s.Country)
