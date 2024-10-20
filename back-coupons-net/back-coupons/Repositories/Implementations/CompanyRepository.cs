@@ -18,13 +18,28 @@ namespace back_coupons.Repositories.Implementations
 
         public async Task<ActionResponse<Company>> GetCompanyByUserAsync(string userId)
         {
+            var company = await _dbContext.Users
+                    .Where(u => u.Id == userId)
+                    .Include(u => u.Company!) 
+                    .ThenInclude(c => c.Contacts)
+                    .Include(u => u.Company!) 
+                    .ThenInclude(c => c.Coupons) 
+                    .Select(u => u.Company)
+                    .FirstOrDefaultAsync();
+
+            if (company == null)
+            {
+                return new ActionResponse<Company>
+                {
+                    Successfully = false,
+                    Message = "No se encontró la empresa asociada a este usuario."
+                };
+            }
+
             return new ActionResponse<Company>
             {
                 Successfully = true,
-                Result = await _dbContext.Users
-                    .Where(u => u.Id == userId)
-                    .Select(u => u.Company)
-                    .FirstOrDefaultAsync()
+                Result =  company
             };
         }
 
