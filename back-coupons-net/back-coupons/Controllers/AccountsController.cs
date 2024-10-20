@@ -189,7 +189,9 @@ namespace back_coupons.Controllers
                 new("LastName", user.LastName),
                 new("Address", user.Address),
                 new("Photo", user.Photo ?? string.Empty),
-                new("CityId", user.CityId.ToString())
+                new("CityId", user.CityId.ToString()),
+                new("CompanyId", user.CompanyId.ToString()),
+                new("Id", user.Id)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["jwtKey"]!));

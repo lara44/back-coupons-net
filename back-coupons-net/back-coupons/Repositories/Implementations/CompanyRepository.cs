@@ -16,6 +16,18 @@ namespace back_coupons.Repositories.Implementations
             _dbContext = dbContext;
         }
 
+        public async Task<ActionResponse<Company>> GetCompanyByUserAsync(string userId)
+        {
+            return new ActionResponse<Company>
+            {
+                Successfully = true,
+                Result = await _dbContext.Users
+                    .Where(u => u.Id == userId)
+                    .Select(u => u.Company)
+                    .FirstOrDefaultAsync()
+            };
+        }
+
         public override async Task<ActionResponse<Company>> GetAsync(int id)
         {
             var row = await _dbContext.Companies
