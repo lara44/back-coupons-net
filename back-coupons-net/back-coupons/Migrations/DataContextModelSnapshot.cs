@@ -200,6 +200,51 @@ namespace back_coupons.Migrations
                     b.ToTable("Cities");
                 });
 
+            modelBuilder.Entity("back_coupons.Entities.Client", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Identification")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Identification")
+                        .IsUnique();
+
+                    b.ToTable("Clients");
+                });
+
             modelBuilder.Entity("back_coupons.Entities.Company", b =>
                 {
                     b.Property<int>("Id")
@@ -327,6 +372,9 @@ namespace back_coupons.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Photo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("QuantityActual")
                         .HasColumnType("int");
 
@@ -366,7 +414,7 @@ namespace back_coupons.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("DetailCoupon");
+                    b.ToTable("DetailCoupons");
                 });
 
             modelBuilder.Entity("back_coupons.Entities.Product", b =>
@@ -421,6 +469,38 @@ namespace back_coupons.Migrations
                     b.ToTable("ProductCategories");
                 });
 
+            modelBuilder.Entity("back_coupons.Entities.RedeemCoupon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CouponId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateRedeem")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UrlCoupon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("CouponId");
+
+                    b.ToTable("RedeemCoupons");
+                });
+
             modelBuilder.Entity("back_coupons.Entities.State", b =>
                 {
                     b.Property<int>("Id")
@@ -459,6 +539,9 @@ namespace back_coupons.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -529,6 +612,8 @@ namespace back_coupons.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
+
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -663,6 +748,25 @@ namespace back_coupons.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("back_coupons.Entities.RedeemCoupon", b =>
+                {
+                    b.HasOne("back_coupons.Entities.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("back_coupons.Entities.Coupon", "Coupon")
+                        .WithMany()
+                        .HasForeignKey("CouponId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Coupon");
+                });
+
             modelBuilder.Entity("back_coupons.Entities.State", b =>
                 {
                     b.HasOne("back_coupons.Entities.Country", "Country")
@@ -682,7 +786,15 @@ namespace back_coupons.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("back_coupons.Entities.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("City");
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("back_coupons.Entities.City", b =>

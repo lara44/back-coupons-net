@@ -24,8 +24,8 @@
           </v-form>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="blue darken-1" text @click="closeModal">Cancelar</v-btn>
-          <v-btn color="primary" @click="submitForm">{{
+          <v-btn size="small" class="btn-general" text @click="closeModal">Cancelar</v-btn>
+          <v-btn size="small" class="mr-4 btn-general" @click="submitForm">{{
             selectedState ? "Actualizar" : "Guardar"
           }}</v-btn>
         </v-card-actions>
@@ -82,7 +82,7 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <v-btn class="ma-2" color="primary" dark @click="openModal">Nuevo</v-btn>
+      <v-btn size="small" class="ma-2 btn-general" dark @click="openModal">Nuevo</v-btn>
       <v-card-text>
         <v-table density="compact">
           <thead>
@@ -99,13 +99,13 @@
               <td>{{ state.name }}</td>
               <td>{{ state.citiesNumber }}</td>
               <td>
-                <v-icon @click="getCityByState(state.cities)" color="primary"
+                <v-icon @click="getCityByState(state.cities)" class="btn-icon"
                   >mdi-eye</v-icon
                 >
-                <v-icon @click="editState(state)" color="primary"
+                <v-icon @click="editState(state)" class="btn-icon"
                   >mdi-pencil</v-icon
                 >
-                <v-icon @click="deleteState(state)" color="primary"
+                <v-icon @click="deleteState(state)" class="btn-icon"
                   >mdi-delete</v-icon
                 >
               </td>
