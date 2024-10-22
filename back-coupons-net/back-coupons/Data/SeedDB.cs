@@ -324,73 +324,85 @@ namespace back_coupons.Data
                 {
                     Name = "Combo Alitas x 2",
                     Price = 30000,
-                    Barcode = "1030"
+                    Barcode = "1030",
+                    Company = _context.Companies.FirstOrDefault()
                 });
                 _context.Products.Add(new Product
                 {
                     Name = "Combo Alitas x 3",
                     Price = 30000,
-                    Barcode = "1031"
+                    Barcode = "1031",
+                    Company = _context.Companies.FirstOrDefault()
                 });
                 _context.Products.Add(new Product
                 {
                     Name = "Combo Alitas x 4",
                     Price = 40000,
-                    Barcode = "1032"
+                    Barcode = "1032",
+                    Company = _context.Companies.FirstOrDefault()
                 });
                 _context.Products.Add(new Product
                 {
                     Name = "Combo Mega Familiar S",
                     Price = 60000,
-                    Barcode = "1033"
+                    Barcode = "1033",
+                    Company = _context.Companies.FirstOrDefault()
                 });
                 _context.Products.Add(new Product
                 {
                     Name = "Combo Mega Familiar M",
                     Price = 70000,
-                    Barcode = "1034"
+                    Barcode = "1034",
+                    Company = _context.Companies.FirstOrDefault()
                 });
                 _context.Products.Add(new Product
                 {
                     Name = "Combo Mega Familiar L",
                     Price = 80000,
-                    Barcode = "1035"
+                    Barcode = "1035",
+                    Company = _context.Companies.FirstOrDefault()
                 });
                 _context.Products.Add(new Product
                 {
                     Name = "Combo Mega Familiar XL",
                     Price = 90000,
-                    Barcode = "1036"
+                    Barcode = "1036",
+                    Company = _context.Companies.FirstOrDefault()
                 });
                 _context.Products.Add(new Product
                 {
                     Name = "Sundae Arequipe",
                     Price = 5500,
-                    Barcode = "1037"
+                    Barcode = "1037",
+                    Company = _context.Companies.FirstOrDefault()
                 });
                 _context.Products.Add(new Product
                 {
                     Name = "Sundae Vainilla",
                     Price = 5500,
-                    Barcode = "1038"
+                    Barcode = "1038",
+                    Company = _context.Companies.FirstOrDefault()
                 });
                 _context.Products.Add(new Product
                 {
                     Name = "Sundae Chocolate",
                     Price = 5500,
-                    Barcode = "1039"
+                    Barcode = "1039",
+                    Company = _context.Companies.FirstOrDefault()
                 });
                 _context.Products.Add(new Product
                 {
                     Name = "Agua Cristal",
                     Price = 4000,
-                    Barcode = "1040"
+                    Barcode = "1040",
+                    Company = _context.Companies.FirstOrDefault()
                 });
                 _context.Products.Add(new Product
                 {
                     Name = "Mr Tea",
                     Price = 3000,
-                    Barcode = "1041"
+                    Barcode = "1041",
+                    Company = _context.Companies.FirstOrDefault()
                 });
                 await _context.SaveChangesAsync();
             }

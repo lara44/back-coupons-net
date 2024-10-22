@@ -23,6 +23,11 @@ namespace back_coupons.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Barcode { get; set; } = null!;
 
+        [Display(Name = "Empresa")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public int CompanyId { get; set; }
+        public Company? Company { get; set; }
+
         public ICollection<DetailCoupon> DetailCoupons { get; set; }
     }
 }
