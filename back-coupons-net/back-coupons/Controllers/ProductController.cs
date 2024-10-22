@@ -1,4 +1,5 @@
 ﻿
+using back_coupons.DTOs;
 using back_coupons.Entities;
 using back_coupons.UnitsOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,10 +20,22 @@ namespace back_coupons.Controllers
         }
 
         [HttpGet("GetProductsByCompany")]
-        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAllAsync(int CompanyId)
         {
             var response = await _productUnitOfWork.GetAllAsync(CompanyId);
+            if (response.Successfully)
+            {
+                return Ok(new { data = response.Result });
+            }
+            return BadRequest();
+        }
+
+        [HttpGet("GetProductsByCompanyPagination")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetAllPaginationAsync([FromQuery] int CompanyId, [FromQuery] PaginationDTO pagination)
+        {
+            var response = await _productUnitOfWork.GetAllPaginationAsync(CompanyId, pagination);
             if (response.Successfully)
             {
                 return Ok(new { data = response.Result });

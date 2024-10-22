@@ -1,6 +1,7 @@
 ﻿using back_coupons.Data;
+using back_coupons.DTOs;
 using back_coupons.Entities;
-using back_coupons.Exceptions;
+using back_coupons.Helpers;
 using back_coupons.Repositories.Interfaces;
 using back_coupons.Responses;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,27 @@ namespace back_coupons.Repositories.Implementations
             };
         }
 
+        public async Task<ActionResponse<IEnumerable<Product>>> GetAllPaginationAsync(int CompanyId, PaginationDTO pagination)
+        {
+            var queryable = _dbContext.Products
+                .Where(p => p.CompanyId == CompanyId)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
+            {
+                queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
+            }
+
+            return new ActionResponse<IEnumerable<Product>>
+            {
+                Successfully = true,
+                Result = await queryable
+                    .OrderBy(x => x.Name)
+                    .Paginate(pagination)
+                    .ToListAsync()
+            };
+        }
+
         public async Task<ActionResponse<Product>> GetByIdAsync(int id)
         {
             var response = await _dbContext.Products.FindAsync(id);
@@ -39,7 +61,6 @@ namespace back_coupons.Repositories.Implementations
                     Successfully = false,
                     Message = $"Product con ID {id} no encontrado"
                 };
-
             }
 
             return new ActionResponse<Product>
