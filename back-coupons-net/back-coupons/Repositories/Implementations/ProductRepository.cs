@@ -1,7 +1,9 @@
 ﻿using back_coupons.Data;
+using back_coupons.DTOs;
 using back_coupons.Entities;
-using back_coupons.Exceptions;
+using back_coupons.Helpers;
 using back_coupons.Repositories.Interfaces;
+using back_coupons.Responses;
 using Microsoft.EntityFrameworkCore;
 
 namespace back_coupons.Repositories.Implementations
@@ -15,21 +17,57 @@ namespace back_coupons.Repositories.Implementations
             _dbContext = context;
         }
 
-        public async Task<ICollection<Product>> GetAllAsync()
+        public async Task<ActionResponse<IEnumerable<Product>>> GetAllAsync(int CompanyId)
         {
-            return await _dbContext.Products
+            var response = await _dbContext.Products
+                .Where(p => p.CompanyId == CompanyId)
                 .ToListAsync();
+
+            return new ActionResponse<IEnumerable<Product>>
+            {
+                Successfully = true,
+                Result = response
+            };
         }
 
-        public async Task<Product> GetByIdAsync(int id)
+        public async Task<ActionResponse<IEnumerable<Product>>> GetAllPaginationAsync(int CompanyId, PaginationDTO pagination)
+        {
+            var queryable = _dbContext.Products
+                .Where(p => p.CompanyId == CompanyId)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
+            {
+                queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
+            }
+
+            return new ActionResponse<IEnumerable<Product>>
+            {
+                Successfully = true,
+                Result = await queryable
+                    .OrderBy(x => x.Name)
+                    .Paginate(pagination)
+                    .ToListAsync()
+            };
+        }
+
+        public async Task<ActionResponse<Product>> GetByIdAsync(int id)
         {
             var response = await _dbContext.Products.FindAsync(id);
             if (response == null)
             {
-                throw new NotFoundException($"Product con ID {id} no encontrado");
+                return new ActionResponse<Product>
+                {
+                    Successfully = false,
+                    Message = $"Product con ID {id} no encontrado"
+                };
             }
 
-            return response;
+            return new ActionResponse<Product>
+            {
+                Successfully = true,
+                Result = response
+            };
         }
     }
 }
