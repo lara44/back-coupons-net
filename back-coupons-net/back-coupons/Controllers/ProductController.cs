@@ -21,9 +21,9 @@ namespace back_coupons.Controllers
 
         [HttpGet("GetProductsByCompany")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetAllAsync(int CompanyId)
+        public async Task<IActionResult> GetAllFullAsync(int CompanyId)
         {
-            var response = await _productUnitOfWork.GetAllAsync(CompanyId);
+            var response = await _productUnitOfWork.GetAllFullAsync(CompanyId);
             if (response.Successfully)
             {
                 return Ok(new { data = response.Result });
@@ -33,14 +33,26 @@ namespace back_coupons.Controllers
 
         [HttpGet("GetProductsByCompanyPagination")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetAllPaginationAsync([FromQuery] int CompanyId, [FromQuery] PaginationDTO pagination)
+        public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
-            var response = await _productUnitOfWork.GetAllPaginationAsync(CompanyId, pagination);
+            var response = await _productUnitOfWork.GetAsync(pagination);
             if (response.Successfully)
             {
                 return Ok(new { data = response.Result });
             }
             return BadRequest();
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public override async Task<IActionResult> GetAsync(int id)
+        {
+            var response = await _productUnitOfWork.GetAsync(id);
+            if (response.Successfully)
+            {
+                return Ok(new { data = response.Result });
+            }
+            return NotFound();
         }
     }
 }

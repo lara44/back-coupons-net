@@ -15,8 +15,8 @@ namespace back_coupons.UnitsOfWork.Implementations
             _repository = repository;
         }
 
-        public async Task<ActionResponse<IEnumerable<Product>>> GetAllAsync(int CompanyId) => await _repository.GetAllAsync(CompanyId);
-        public async Task<ActionResponse<IEnumerable<Product>>> GetAllPaginationAsync(int CompanyId, PaginationDTO pagination) => await _repository.GetAllPaginationAsync(CompanyId, pagination);
-        public async Task<ActionResponse<Product>> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
+        public async Task<ActionResponse<IEnumerable<Product>>> GetAllFullAsync(int CompanyId) => await _repository.GetAllFullAsync(CompanyId);
+        public async Task<ActionResponse<IEnumerable<Product>>> GetAsync(PaginationDTO pagination) => await _repository.GetAsync(pagination);
+        public async Task<ActionResponse<Product>> GetAsync(int id) => await _repository.GetAsync(id);
     }
 }

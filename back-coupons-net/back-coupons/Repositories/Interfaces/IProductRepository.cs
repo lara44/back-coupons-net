@@ -6,8 +6,8 @@ namespace back_coupons.Repositories.Interfaces
 {
     public interface IProductRepository
     {
-        Task<ActionResponse<IEnumerable<Product>>> GetAllAsync(int CompanyId);
-        Task<ActionResponse<IEnumerable<Product>>> GetAllPaginationAsync(int CompanyId, PaginationDTO pagination);
-        Task<ActionResponse<Product>> GetByIdAsync(int id);
+        Task<ActionResponse<IEnumerable<Product>>> GetAllFullAsync(int CompanyId);
+        Task<ActionResponse<IEnumerable<Product>>> GetAsync(PaginationDTO pagination);
+        Task<ActionResponse<Product>> GetAsync(int id);
     }
 }

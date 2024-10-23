@@ -8,16 +8,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace back_coupons.Repositories.Implementations
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
         private readonly DataContext _dbContext;
 
-        public ProductRepository(DataContext context)
+        public ProductRepository(DataContext context) : base(context)
         {
             _dbContext = context;
         }
 
-        public async Task<ActionResponse<IEnumerable<Product>>> GetAllAsync(int CompanyId)
+        public async Task<ActionResponse<IEnumerable<Product>>> GetAllFullAsync(int CompanyId)
         {
             var response = await _dbContext.Products
                 .Where(p => p.CompanyId == CompanyId)
@@ -30,10 +30,10 @@ namespace back_coupons.Repositories.Implementations
             };
         }
 
-        public async Task<ActionResponse<IEnumerable<Product>>> GetAllPaginationAsync(int CompanyId, PaginationDTO pagination)
+        public override async Task<ActionResponse<IEnumerable<Product>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _dbContext.Products
-                .Where(p => p.CompanyId == CompanyId)
+                .Where(p => !pagination.Id.HasValue || p.CompanyId == pagination.Id)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
@@ -51,7 +51,7 @@ namespace back_coupons.Repositories.Implementations
             };
         }
 
-        public async Task<ActionResponse<Product>> GetByIdAsync(int id)
+        public override async Task<ActionResponse<Product>> GetAsync(int id)
         {
             var response = await _dbContext.Products.FindAsync(id);
             if (response == null)
