@@ -48,6 +48,7 @@ namespace back_coupons.Repositories.Implementations
         public override async Task<ActionResponse<IEnumerable<Contact>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _dbContext.Contacts
+                .Where(c => !pagination.Id.HasValue || c.CompanyId == pagination.Id)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
