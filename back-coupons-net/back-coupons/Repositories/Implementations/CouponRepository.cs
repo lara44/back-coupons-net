@@ -31,6 +31,7 @@ namespace back_coupons.Repositories.Implementations
         public override async Task<ActionResponse<IEnumerable<Entities.Coupon>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _dbContext.Coupons
+                .Where(c => !pagination.Id.HasValue || c.CompanyId == pagination.Id)
                 .Include(dc => dc.DetailCoupons!)
                 .ThenInclude(p => p.Product)
                 .AsQueryable();
