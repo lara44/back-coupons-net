@@ -21,6 +21,6 @@ namespace back_coupons.Repositories.Interfaces
         Task<bool> IsUserInRoleAsync(User user, string roleName);
         Task<SignInResult> LoginAsync(LoginDTO model);
         Task LogoutAsync();
-        Task<ActionResponse<IEnumerable<User>>> GetUserPaginationAsync(PaginationDTO pagination);
+        Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination);
     }
 }

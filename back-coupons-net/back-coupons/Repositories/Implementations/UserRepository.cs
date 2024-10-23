@@ -119,7 +119,7 @@ namespace back_coupons.Repositories.Implementations
             return await _userManager.UpdateAsync(user);
         }
 
-        public async Task<ActionResponse<IEnumerable<User>>> GetUserPaginationAsync(PaginationDTO pagination)
+        public async Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _dbContext.Users
                 .AsQueryable();
@@ -128,6 +128,9 @@ namespace back_coupons.Repositories.Implementations
             {
                 queryable = queryable.Where(u => u.Email.ToLower().Contains(pagination.Filter.ToLower()));
             }
+
+            var count = await queryable.CountAsync();
+            int totalPages = (int)Math.Ceiling((double)count / pagination.RecordsNumber);
 
             // Proyecta los resultados a una entidad UserDTO con los campos deseados
             var users = await queryable
@@ -150,7 +153,8 @@ namespace back_coupons.Repositories.Implementations
             return new ActionResponse<IEnumerable<User>>
             {
                 Successfully = true,
-                Result = users
+                Result = users,
+                TotalPage = totalPages
             };
         }
     }

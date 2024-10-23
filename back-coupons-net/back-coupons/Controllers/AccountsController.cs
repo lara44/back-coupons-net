@@ -40,12 +40,12 @@ namespace back_coupons.Controllers
 
         [HttpGet("GetUserPaginationAsync")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetUserPaginationAsync([FromQuery] PaginationDTO pagination)
+        public async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
-            var response = await _userUnitOfWork.GetUserPaginationAsync(pagination);
+            var response = await _userUnitOfWork.GetAsync(pagination);
             if (response.Successfully)
             {
-                return Ok(new { data = response.Result });
+                return Ok(new { data = response.Result, totalPages = response.TotalPage });
             }
             return BadRequest();
         }

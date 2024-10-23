@@ -55,13 +55,17 @@ namespace back_coupons.Repositories.Implementations
                 queryable = queryable.Where(x => x.LastName.ToLower().Contains(pagination.Filter.ToLower()));
             }
 
+            var count = await queryable.CountAsync();
+            int totalPages = (int)Math.Ceiling((double)count / pagination.RecordsNumber);
+
             return new ActionResponse<IEnumerable<Client>>
             {
                 Successfully = true,
                 Result = await queryable
                     .OrderBy(x => x.FirstName)
                     .Paginate(pagination)
-                    .ToListAsync()
+                    .ToListAsync(),
+                TotalPage = totalPages
             };
         }
     }
