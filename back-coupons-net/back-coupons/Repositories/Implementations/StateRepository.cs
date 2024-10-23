@@ -51,6 +51,7 @@ namespace back_coupons.Repositories.Implementations
         public override async Task<ActionResponse<IEnumerable<Entities.State>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _dbContext.States
+                .Where(s => !pagination.Id.HasValue || s.CountryId == pagination.Id)
                 .Include(s => s.Cities!)
                 .AsQueryable();
 
@@ -59,13 +60,17 @@ namespace back_coupons.Repositories.Implementations
                 queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }
 
+            var count = await queryable.CountAsync();
+            int totalPages = (int)Math.Ceiling((double)count / pagination.RecordsNumber);
+
             return new ActionResponse<IEnumerable<Entities.State>>
             {
                 Successfully = true,
                 Result = await queryable
                     .OrderBy(x => x.Name)
                     .Paginate(pagination)
-                    .ToListAsync()
+                    .ToListAsync(),
+                TotalPage = totalPages
             };
         }
 

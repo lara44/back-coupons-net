@@ -49,24 +49,15 @@ namespace back_coupons.Repositories.Implementations
         public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _entity.AsQueryable();
+            var count = await queryable.CountAsync();
+            int totalPages = (int)Math.Ceiling((double)count / pagination.RecordsNumber);
             return new ActionResponse<IEnumerable<T>>
             {
                 Successfully = true,
                 Result = await queryable
                     .Paginate(pagination)
-                    .ToListAsync()
-            };
-        }
-
-        public virtual async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
-        {
-            var queryable = _entity.AsQueryable();
-            var count = await queryable.CountAsync();
-            int totalPages = (int)Math.Ceiling((double)count / pagination.RecordsNumber);
-            return new ActionResponse<int>
-            {
-                Successfully = true,
-                Result = totalPages
+                    .ToListAsync(),
+                TotalPage = totalPages
             };
         }
 

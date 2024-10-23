@@ -8,7 +8,6 @@ namespace back_coupons.Repositories.Interfaces
         Task<ActionResponse<IEnumerable<T>>> GetAsyncFull();
         Task<ActionResponse<T>> GetAsync(int id);
         Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination);
-        Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
         Task<ActionResponse<T>> AddAsync(T entity);
         Task<ActionResponse<T>> UpdateAsync(int id, T updatedEntity);
         Task<ActionResponse<T>> DeleteAsync(int id);
