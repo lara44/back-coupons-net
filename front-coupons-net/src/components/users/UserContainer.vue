@@ -211,7 +211,7 @@
               <td>{{ user.document }}</td>
               <td>{{ user.fullName }}</td>
               <td>{{ user.email }}</td>
-              <td>{{ user.company }}</td>
+              <td>{{ user.company.name }}</td>
               <td>
                 <v-icon @click="editUser(user)" color="#457b9d"
                   >mdi-pencil</v-icon

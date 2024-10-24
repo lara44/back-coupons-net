@@ -4,15 +4,27 @@ import axios from "axios";
 export const useUserStore = defineStore("userStore", {
   state: () => {
     return {
-      issetErrorMessages:false,
+      issetErrorMessages: false,
       listUsers: [],
-      errorMessages:[],
+      errorMessages: [],
       user: [],
+      fullname: null,
+      role: null,
+      email: null,
+      token: null,
+      companyId: null,
     };
   },
 
   actions: {
-    
+    setUser(userData) {
+      this.fullname = userData.fullname;
+      this.role = userData.role;
+      this.email = userData.email;
+      this.token = userData.authToken;
+      this.companyId = userData.companyId;
+    },
+
     async getUsers() {
       try {
         const response = await axios.get("/api/users/GetUserPaginationAsync");
@@ -22,7 +34,7 @@ export const useUserStore = defineStore("userStore", {
         console.log(response.data.data);
         return response;
       } catch (error) {
-        return error.response
+        return error.response;
       }
     },
 
@@ -37,7 +49,7 @@ export const useUserStore = defineStore("userStore", {
 
     async updateUser(updatedUser) {
       try {
-        const response = await axios.put('/api/users/', updatedUser);
+        const response = await axios.put("/api/users/", updatedUser);
         return response;
       } catch (error) {
         return error.response;
@@ -46,7 +58,7 @@ export const useUserStore = defineStore("userStore", {
 
     async changePassword(user) {
       try {
-        const response = await axios.post('/api/users/changePassword', user);
+        const response = await axios.post("/api/users/changePassword", user);
         return response;
       } catch (error) {
         return error.response;
@@ -55,7 +67,9 @@ export const useUserStore = defineStore("userStore", {
 
     async confirmEmail(user) {
       try {
-        const response = await axios.get(`/api/users/ConfirmEmail?userId=${user.userid}&token=${user.token}`);
+        const response = await axios.get(
+          `/api/users/ConfirmEmail?userId=${user.userid}&token=${user.token}`
+        );
         return response;
       } catch (error) {
         return error.response;
@@ -64,7 +78,7 @@ export const useUserStore = defineStore("userStore", {
 
     async resetPassword(user) {
       try {
-        const response = await axios.post('/api/users/ResetPassword', user);
+        const response = await axios.post("/api/users/ResetPassword", user);
         return response;
       } catch (error) {
         return error.response;
@@ -73,13 +87,12 @@ export const useUserStore = defineStore("userStore", {
 
     async recoverPassword(user) {
       try {
-        const response = await axios.post('/api/users/RecoverPassword', user);
+        const response = await axios.post("/api/users/RecoverPassword", user);
         return response;
       } catch (error) {
         return error.response;
       }
     },
-
 
     async deleteUser(deleteUser) {
       try {
@@ -94,15 +107,14 @@ export const useUserStore = defineStore("userStore", {
 
     async resedToken(user) {
       try {
-        await axios.post('/api/users/ResedToken', user);
+        await axios.post("/api/users/ResedToken", user);
       } catch (error) {
         console.error(error);
       }
     },
 
-    cleanErrors(){
-      this.errorMessages = []
+    cleanErrors() {
+      this.errorMessages = [];
     },
-
   },
 });

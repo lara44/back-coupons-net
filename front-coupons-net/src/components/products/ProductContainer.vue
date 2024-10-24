@@ -30,7 +30,9 @@
           </v-form>
         </v-card-text>
         <v-card-actions>
-          <v-btn size="small" class="btn-general" text @click="closeModal">Cancelar</v-btn>
+          <v-btn size="small" class="btn-general" text @click="closeModal"
+            >Cancelar</v-btn
+          >
           <v-btn size="small" class="mr-2 btn-general" @click="submitForm">{{
             selectedProduct ? "Actualizar" : "Guardar"
           }}</v-btn>
@@ -56,7 +58,9 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <v-btn size="small" class="ma-2 btn-general" dark @click="openModal">Nuevo</v-btn>
+      <v-btn size="small" class="ma-2 btn-general" dark @click="openModal"
+        >Nuevo</v-btn
+      >
       <v-card-text>
         <v-table density="compact">
           <thead>
@@ -111,6 +115,7 @@
 <script>
 import { ref, reactive, computed } from "vue";
 import { useProductStore } from "../../stores/productStore";
+import { useUserStore } from "../../stores/userStore";
 
 export default {
   name: "ProductDataTable",
@@ -240,7 +245,10 @@ export default {
 
   async mounted() {
     try {
-      await useProductStore().getProducts();
+      const userStore = useUserStore();
+      userStore.role === "Admin"
+        ? await useProductStore().getProducts()
+        : await useProductStore().getProductsByCompany(userStore.companyId);
     } catch (error) {
       console.error(error);
     } finally {
