@@ -14,12 +14,24 @@ export const useProductStore = defineStore("productStore", {
   },
 
   actions: {
-
     async getProducts() {
       try {
-        const response = await axios.get('/api/products/full');
+        const response = await axios.get("/api/products/full");
         if (response.data.data) {
-          this.listProducts =  response.data.data
+          this.listProducts = response.data.data;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async getProductsByCompany(companyId) {
+      try {
+        const response = await axios.get(
+          `/api/products/GetProductsByCompany?CompanyId=${companyId}`
+        );
+        if (response.data.data) {
+          this.listProducts = response.data.data;
         }
       } catch (error) {
         console.error(error);
@@ -28,19 +40,19 @@ export const useProductStore = defineStore("productStore", {
 
     async createProduct(newProduct) {
       try {
-        const response = await axios.post('/api/products', newProduct);
-        if(response.data.success){
-          await this.getProducts(); 
+        const response = await axios.post("/api/products", newProduct);
+        if (response.data.success) {
+          await this.getProducts();
         }
       } catch (error) {
         console.error(error);
       }
     },
-    
+
     async updateProduct(updatedProduct) {
       try {
         const response = await axios.put(`/api/products/${updatedProduct.id}`);
-        if(response.data.success){
+        if (response.data.success) {
           await this.getProducts();
         }
       } catch (error) {
@@ -50,14 +62,15 @@ export const useProductStore = defineStore("productStore", {
 
     async deleteProduct(deleteProduct) {
       try {
-        const response = await axios.delete(`/api/products/${deleteProduct.id}`);
-        if(response.data.success){
+        const response = await axios.delete(
+          `/api/products/${deleteProduct.id}`
+        );
+        if (response.data.success) {
           await this.getProducts();
         }
       } catch (error) {
         console.error(error);
       }
     },
-
   },
 });
