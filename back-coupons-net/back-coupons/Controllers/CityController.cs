@@ -7,7 +7,6 @@ namespace back_coupons.Controllers
 {
     [ApiController]
     [Route("api/cities")]
-    //[Route("api/[controller]")]
     public class CityController : GenericController<City>
     {
         private readonly ICityUnitOfWork _cityUnitOfWork;
@@ -33,7 +32,7 @@ namespace back_coupons.Controllers
             var response = await _cityUnitOfWork.GetAsync(pagination);
             if (response.Successfully)
             {
-                return Ok(new { data = response.Result });
+                return Ok(new { data = response.Result, totalPages = response.TotalPage  });
             }
             return BadRequest();
         }

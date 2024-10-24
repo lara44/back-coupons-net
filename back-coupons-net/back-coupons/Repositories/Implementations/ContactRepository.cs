@@ -48,6 +48,7 @@ namespace back_coupons.Repositories.Implementations
         public override async Task<ActionResponse<IEnumerable<Contact>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _dbContext.Contacts
+                .Where(c => !pagination.Id.HasValue || c.CompanyId == pagination.Id)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
@@ -55,13 +56,17 @@ namespace back_coupons.Repositories.Implementations
                 queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }
 
+            var count = await queryable.CountAsync();
+            int totalPages = (int)Math.Ceiling((double)count / pagination.RecordsNumber);
+
             return new ActionResponse<IEnumerable<Contact>>
             {
                 Successfully = true,
                 Result = await queryable
                     .OrderBy(x => x.Name)
                     .Paginate(pagination)
-                    .ToListAsync()
+                    .ToListAsync(),
+                TotalPage = totalPages
             };
         }
     }

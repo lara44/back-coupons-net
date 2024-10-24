@@ -31,6 +31,6 @@ namespace back_coupons.UnitsOfWork.Implementations
         public async Task<IdentityResult> ConfirmEmailAsync(User user, string token) => await _userRepository.ConfirmEmailAsync(user, token);
         public async Task<string> GeneratePasswordResetTokenAsync(User user) => await _userRepository.GeneratePasswordResetTokenAsync(user);
         public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password) => await _userRepository.ResetPasswordAsync(user, token, password);
-        public async Task<ActionResponse<IEnumerable<User>>> GetUserPaginationAsync(PaginationDTO pagination) => await _userRepository.GetUserPaginationAsync(pagination);
+        public async Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination) => await _userRepository.GetAsync(pagination);
     }
 }

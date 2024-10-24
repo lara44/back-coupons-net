@@ -32,7 +32,7 @@ namespace back_coupons.Controllers
             var response = await _stateUnitOfWork.GetAsync(pagination);
             if (response.Successfully)
             {
-                return Ok(new { data = response.Result });
+                return Ok(new { data = response.Result, totalPages = response.TotalPage });
             }
             return BadRequest();
         }

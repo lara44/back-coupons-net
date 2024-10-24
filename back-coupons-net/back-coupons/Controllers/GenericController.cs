@@ -31,18 +31,7 @@ namespace back_coupons.Controllers
             var response = await _unitOfWork.GetAsync(pagination);
             if (response.Successfully)
             {
-                return Ok(new { data = response.Result });
-            }
-            return BadRequest();
-        }
-
-        [HttpGet("totalPages")]
-        public virtual async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
-        {
-            var response = await _unitOfWork.GetTotalPagesAsync(pagination);
-            if (response.Successfully)
-            {
-                return Ok(new { data = response.Result });
+                return Ok(new { data = response.Result, totalPage = response.TotalPage });
             }
             return BadRequest();
         }
