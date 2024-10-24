@@ -134,6 +134,7 @@ namespace back_coupons.Repositories.Implementations
 
             // Proyecta los resultados a una entidad UserDTO con los campos deseados
             var users = await queryable
+                .Include(u => u.Company)
                 .OrderBy(u => u.Email)
                 .Paginate(pagination)
                 .Select(u => new User
@@ -146,7 +147,9 @@ namespace back_coupons.Repositories.Implementations
                     Photo = u.Photo,
                     Email = u.Email,
                     UserType = u.UserType,
-                    CityId = u.CityId
+                    CityId = u.CityId,
+                    Company = u.Company,
+                    CompanyId = u.CompanyId
                 })
                 .ToListAsync();
 
