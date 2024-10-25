@@ -41,9 +41,7 @@ export const useProductStore = defineStore("productStore", {
     async createProduct(newProduct) {
       try {
         const response = await axios.post("/api/products", newProduct);
-        if (response.data.success) {
-          await this.getProducts();
-        }
+        return response;
       } catch (error) {
         console.error(error);
       }
@@ -52,9 +50,7 @@ export const useProductStore = defineStore("productStore", {
     async updateProduct(updatedProduct) {
       try {
         const response = await axios.put(`/api/products/${updatedProduct.id}`);
-        if (response.data.success) {
-          await this.getProducts();
-        }
+        return response;
       } catch (error) {
         console.error(error);
       }
@@ -65,9 +61,7 @@ export const useProductStore = defineStore("productStore", {
         const response = await axios.delete(
           `/api/products/${deleteProduct.id}`
         );
-        if (response.data.success) {
-          await this.getProducts();
-        }
+        return response;
       } catch (error) {
         console.error(error);
       }

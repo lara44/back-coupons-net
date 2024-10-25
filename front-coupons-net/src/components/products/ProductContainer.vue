@@ -200,7 +200,9 @@ const submitForm = async () => {
     await productStore.createProduct(newProduct);
   }
 
-  await productStore.getProducts();
+  userStore.role === "Admin"
+    ? useProductStore().getProducts()
+    : useProductStore().getProductsByCompany(userStore.companyId);
 
   newProduct.name = "";
   newProduct.price = "";
@@ -217,9 +219,11 @@ const submitForm = async () => {
 };
 
 const deleteProduct = (product) => {
-  productStore.deleteProduct(product).then(() => {
-    productStore.getProducts();
-  });
+  productStore.deleteProduct(product);
+
+  userStore.role === "Admin"
+    ? useProductStore().getProducts()
+    : useProductStore().getProductsByCompany(userStore.companyId);
 };
 
 const editProduct = (product) => {
@@ -242,7 +246,6 @@ const closeModal = () => {
 
 onMounted(() => {
   try {
-    const userStore = useUserStore();
     userStore.role === "Admin"
       ? useProductStore().getProducts()
       : useProductStore().getProductsByCompany(userStore.companyId);
