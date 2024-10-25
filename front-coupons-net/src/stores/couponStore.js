@@ -13,13 +13,13 @@ export const useCouponStore = defineStore("couponStore", {
   },
 
   actions: {
-    async getCoupons(user) {
+    async getCoupons(user = null) {
       try {
-        let companyId = null;
+        let companyId = "";
 
-        user && user.role === "Admin"
-          ? (companyId = "")
-          : (companyId = "?id=" + user.companyId);
+        if (user) {
+          companyId = user.role === "Admin" ? "" : `?id=${user.companyId}`;
+        }
 
         const response = await axios.get(`/api/coupons${companyId}`);
         if (response.data.data) {
