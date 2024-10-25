@@ -13,13 +13,19 @@ export const useCouponStore = defineStore("couponStore", {
   },
 
   actions: {
-    async getCoupons() {
+    async getCoupons(user) {
       try {
-        const response = await axios.get("/api/coupons/full");
-          if (response.data.data) {
-            this.listCoupons = response.data.data;
-            console.log(response.data.data);
-          }
+        let companyId = null;
+
+        user && user.role === "Admin"
+          ? (companyId = "")
+          : (companyId = "?id=" + user.companyId);
+
+        const response = await axios.get(`/api/coupons${companyId}`);
+        if (response.data.data) {
+          this.listCoupons = response.data.data;
+          console.log(response.data.data);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -28,9 +34,7 @@ export const useCouponStore = defineStore("couponStore", {
     async createCoupon(newCoupon) {
       try {
         const response = await axios.post("/api/coupons", newCoupon);
-        if (response.data.success) {
-          await this.getCoupons();
-        }
+        return response;
       } catch (error) {
         console.error(error);
       }
@@ -42,9 +46,7 @@ export const useCouponStore = defineStore("couponStore", {
           `/api/coupons/${updatedCoupon.id}`,
           updatedCoupon
         );
-        if (response.data.success) {
-          await this.getCoupons();
-        }
+        return response;
       } catch (error) {
         console.error(error);
       }
@@ -56,9 +58,7 @@ export const useCouponStore = defineStore("couponStore", {
           `/api/coupons/${deleteCoupon.id}`,
           deleteCoupon
         );
-        if (response.data.success) {
-          await this.getCoupons();
-        }
+        return response;
       } catch (error) {
         console.error(error);
       }
@@ -66,12 +66,13 @@ export const useCouponStore = defineStore("couponStore", {
 
     async redeemCoupon(redeem) {
       try {
-        const response = await axios.get(`/api/coupons/redeem?code=${redeem.code}`);
+        const response = await axios.get(
+          `/api/coupons/redeem?code=${redeem.code}`
+        );
         return response;
       } catch (error) {
         return error.response;
       }
     },
-
   },
 });
