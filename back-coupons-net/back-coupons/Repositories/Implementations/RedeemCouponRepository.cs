@@ -20,7 +20,7 @@ namespace back_coupons.Repositories.Implementations
         public string GenerateSignedUrl(int couponId, int clientId)
         {
             var secretKey = "your_secret_key";
-            var url = $"https://example.com/redeem?couponId={couponId}&clientId={clientId}";
+            var url = $"http://localhost:5173/coupons/redeem?couponId={couponId}&clientId={clientId}";
 
             using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secretKey)))
             {
@@ -42,7 +42,7 @@ namespace back_coupons.Repositories.Implementations
         public async Task<ActionResponse<RedeemCoupon>> RedeemCouponAsync(int couponId, int clientId, string signature)
         {
             // Reconstruir la URL original sin la firma para verificarla
-            var url = $"https://example.com/redeem?couponId={couponId}&clientId={clientId}";
+            var url = $"http://localhost:5173/coupons/redeem?couponId={couponId}&clientId={clientId}";
 
             // Verificar la firma
             if (!VerifySignedUrl(url, signature))
