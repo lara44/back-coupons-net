@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using back_coupons.Data;
+using back_coupons.DTOs.Response;
 using back_coupons.Entities;
 using back_coupons.Enums;
 using back_coupons.Repositories.Interfaces;
@@ -17,7 +18,7 @@ namespace back_coupons.Repositories.Implementations
             _dbContext = dbContext;
         }
 
-        public string GenerateSignedUrl(int couponId, int clientId)
+        public string GenerateSignedUrl(int couponId, int clientId) 
         {
             var secretKey = "your_secret_key";
             var url = $"http://localhost:5173/coupons/redeem?couponId={couponId}&clientId={clientId}";
@@ -175,20 +176,48 @@ namespace back_coupons.Repositories.Implementations
             }
         }
 
-        public async Task<ActionResponse<IEnumerable<RedeemCoupon>>> GetCouponsByClientAsync(string identification)
+        public async Task<ActionResponse<IEnumerable<ClaimedCouponClientDto>>> GetCouponsByClientAsync(string identification)
         {
             // Realizar la consulta directamente en la tabla RedeemCoupons uniendo con Clients
             var coupons = await _dbContext.RedeemCoupons
-                .Where(rc => rc.Client.Identification == identification) // Filtrar por identificación del cliente
-                .Include(rc => rc.Coupon) // Incluir la entidad Coupon
-                .ThenInclude(c => c.DetailCoupons) // Incluir los detalles del cupón
-                .ThenInclude(dc => dc.Product) // Incluir los productos asociados
-                .ToListAsync();
+              .Where(rc => rc.Client!.Identification == identification)
+              .Select(rc => new ClaimedCouponClientDto
+              {
+                  Id = rc.Id,
+                  Coupon = new CouponClientDto
+                  {
+                      Id = rc.Coupon!.Id,
+                      Name = rc.Coupon.Name,
+                      CouponCode = rc.Coupon.CouponCode,
+                      StartDate = rc.Coupon.StartDate,
+                      ExpiryDate = rc.Coupon.ExpiryDate,
+                      Photo = rc.Coupon.Photo,
+                      DetailCoupons = rc.Coupon.DetailCoupons!.Select(dc => new DetailCouponDto
+                      {
+                          Id = dc.Id,
+                          CouponId = dc.CouponId,
+                          Product = new ProductDto
+                          {
+                              Id = dc.Product!.Id,
+                              Name = dc.Product.Name
+                          }
+                      }).ToList()
+                  },
+                  Client = new ClientBasicDto
+                  {
+                      Id = rc.Client!.Id,
+                      FirstName = rc.Client.FirstName,
+                      LastName = rc.Client.LastName,
+                      Email = rc.Client.Email,
+                      Phone = rc.Client.Phone
+                  }
+              })
+              .ToListAsync();
 
             // Verificar si se encontraron cupones
             if (coupons == null || coupons.Count == 0)
             {
-                return new ActionResponse<IEnumerable<RedeemCoupon>>
+                return new ActionResponse<IEnumerable<ClaimedCouponClientDto>>
                 {
                     Successfully = false,
                     Message = "No hay cupones para este cliente"
@@ -196,10 +225,48 @@ namespace back_coupons.Repositories.Implementations
             }
 
             // Retornar la lista de cupones
-            return new ActionResponse<IEnumerable<RedeemCoupon>>
+            return new ActionResponse<IEnumerable<ClaimedCouponClientDto>>
             {
                 Successfully = true,
                 Result = coupons
+            };
+        }
+
+        public async Task<ActionResponse<IEnumerable<ClaimedCouponDto>>> GetClaimedCouponsByDateAndCompany(DateTime startDate, DateTime endDate, int companyId, RedeemState? state = null)
+        {
+            var claimedCoupons = await _dbContext.RedeemCoupons
+                .Include(rc => rc.Coupon)
+                .Include(rc => rc.Client)
+                .Where(rc => rc.DateRedeem >= startDate && 
+                            rc.DateRedeem < endDate.AddDays(1) && 
+                            rc.Coupon!.CompanyId == companyId &&
+                            (!state.HasValue || rc.State == state.Value))
+                .OrderBy(rc => rc.DateRedeem)
+                .Select(rc => new ClaimedCouponDto
+                {
+                    Id = rc.Id,
+                    DateRedeem = rc.DateRedeem,
+                    Coupon = new CouponBasicDto
+                    {
+                        Id = rc.Coupon!.Id,
+                        Name = rc.Coupon.Name,
+                        CouponCode = rc.Coupon.CouponCode
+                    },
+                    Client = new ClientBasicDto
+                    {
+                        Id = rc.Client!.Id,
+                        FirstName = rc.Client.FirstName,
+                        LastName = rc.Client.LastName,
+                        Email = rc.Client.Email,
+                        Phone = rc.Client.Phone
+                    }
+                })
+                .ToListAsync();
+
+            return new ActionResponse<IEnumerable<ClaimedCouponDto>>
+            {
+                Successfully = true,
+                Result = claimedCoupons
             };
         }
     }
