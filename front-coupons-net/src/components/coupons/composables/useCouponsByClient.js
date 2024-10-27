@@ -30,7 +30,7 @@ export const useCouponsByClient = () => {
 
   const searchCoupons = async () => {
     const isValid = await validateIdentification();
-    if (!isValid) return;
+    if (!isValid) return false;
 
     try {
       const { data } = await axios.get(
@@ -38,8 +38,11 @@ export const useCouponsByClient = () => {
       );
       console.log(data);
       coupons.value = data.data;
+      return false;
     } catch (error) {
       console.error("Error al buscar los cupones:", error);
+      coupons.value = [];
+      return true;
     }
   };
 

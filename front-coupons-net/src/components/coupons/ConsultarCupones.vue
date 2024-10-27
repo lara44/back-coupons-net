@@ -31,7 +31,7 @@
             <th>Cupón</th>
             <th>Código</th>
             <th>Fecha de Vencimiento</th>
-            <th>Producto</th>
+            <th>Productos</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -61,7 +61,11 @@
       </v-table>
     </v-card>
 
-    <v-alert v-else-if="searched" type="info" class="mt-6">
+    <v-alert
+      v-else-if="searched && coupons.length === 0"
+      type="info"
+      class="mt-6"
+    >
       No se encontraron cupones para esta identificación.
     </v-alert>
   </v-container>
@@ -86,8 +90,8 @@ const {
 const searched = ref(false);
 
 const searchCoupons = async () => {
-  await search();
-  searched.value = true;
+  const response = await search();
+  searched.value = response;
 };
 
 const handleAction = (coupon) => {
