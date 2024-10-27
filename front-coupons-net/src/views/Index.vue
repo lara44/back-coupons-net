@@ -1,40 +1,38 @@
 <template>
-  <v-layout>
-
-    <v-app-bar color="#1d3557">
-      <v-img max-height="80" max-width="150" src="/neocode.png" alt="Vuetify" style="margin-left: 5em;"></v-img>
-      <v-spacer></v-spacer>
-      <v-responsive max-width="200">
-        <v-text-field density="compact" label="Buscar cupones" rounded="lg" variant="solo-filled" flat hide-details
-          single-line></v-text-field>
-      </v-responsive>
-      <template v-slot:append>
-        <v-btn to="/login" style="margin-right: 6em;" class="bold-text">
-          Ingresar
-        </v-btn>
-      </template>
-    </v-app-bar>
-
-    <v-main style="background: #eceff1; min-height: 100vh">
-      <v-container fluid style="width: 100%;">
-        <v-row style="width: 100%;">
-          <v-col cols="12" style="padding: 1% 5% 5% 5%;">
-            <v-card style="background-color: #eceff1;">
+  <v-app>
+    <Header />
+    <v-main style="background: #eceff1; min-height: calc(100vh - 128px)">
+      <v-container fluid>
+        <v-row>
+          <v-col cols="12" style="padding: 1% 5% 5% 5%">
+            <v-card style="background-color: #eceff1">
               <v-card-text>
                 <v-row>
-                  <v-col v-for="coupon in couponStore.listCoupons" :key="coupon.id" cols="12" sm="6" md="4" lg="3">
+                  <v-col
+                    v-for="coupon in couponStore.listCoupons"
+                    :key="coupon.id"
+                    cols="12"
+                    sm="6"
+                    md="4"
+                    lg="3"
+                  >
                     <v-card max-width="344" class="custom-card">
                       <v-img height="200px" :src="coupon.photo" cover></v-img>
-                      <v-card-title class="card-title">{{ coupon.name }}</v-card-title>
-                      <v-card-subtitle class="card-subtitle">Válido hasta: {{ coupon.expiryDate.substr(0,
-                        10) }}</v-card-subtitle>
-                      <v-card-actions style="padding: 0% 1% 5% 1%;">
-                        <v-btn 
-                        style="font-size: 1rem !important;"
-                          class="bold-text" 
-                          color="#E63946" 
-                          text 
-                          @click="QrCoupon(coupon)">Reclamar
+                      <v-card-title class="card-title">{{
+                        coupon.name
+                      }}</v-card-title>
+                      <v-card-subtitle class="card-subtitle">
+                        Válido hasta: {{ coupon.expiryDate.substr(0, 10) }}
+                      </v-card-subtitle>
+                      <v-card-actions style="padding: 0% 1% 5% 1%">
+                        <v-btn
+                          style="font-size: 1rem !important"
+                          class="bold-text"
+                          color="#E63946"
+                          text
+                          @click="openClientForm(coupon.couponCode)"
+                        >
+                          Reclamar
                         </v-btn>
                       </v-card-actions>
                     </v-card>
@@ -46,14 +44,14 @@
         </v-row>
       </v-container>
     </v-main>
-  </v-layout>
-  <!-- <v-footer dense bottom absolute width="100%"> -->
-  <v-footer style="background-color: #a8dadc; padding: 2% 6% 2% 6%;">
-    <span 
-      class="bold-text"
-      style="color: #1d3557 !important; margin: auto;"
-    >Neocode — &copy; {{ new Date().getFullYear() }}</span>
-  </v-footer>
+    <Footer />
+    <v-dialog v-model="isClientFormOpen" width="600" max-width="600">
+      <ClientForm
+        :couponCode="selectedCouponCode"
+        @close="isClientFormOpen = false"
+      />
+    </v-dialog>
+  </v-app>
 </template>
 
 <script setup>
@@ -62,15 +60,23 @@ import { useCouponStore } from "../stores/couponStore";
 import { useRoute } from "vue-router";
 import QRCode from "qrcode";
 import { saveAs } from "file-saver";
+import ClientForm from "../components/clients/ClientForm.vue";
+import Header from "./Header.vue";
+import Footer from "./Footer.vue";
 
 const router = useRoute();
 const couponStore = useCouponStore();
-const notification = ref("");
-const successMessageVisible = ref(false);
+const isClientFormOpen = ref(false);
+const selectedCouponCode = ref(null);
 
 onMounted(() => {
   couponStore.getCoupons();
 });
+
+const openClientForm = (couponCode) => {
+  selectedCouponCode.value = couponCode;
+  isClientFormOpen.value = true;
+};
 
 const QrCoupon = async (coupon) => {
   try {
@@ -84,22 +90,10 @@ const QrCoupon = async (coupon) => {
 };
 </script>
 
-<style>
-.neocode-logo {
-  position: relative;
-  left: 25px;
-}
-
-.ingresar-btn {
-  top: 2px;
-  /* Ajusta este valor según sea necesario */
-}
-
+<style scoped>
 .custom-card {
-  -webkit-border-radius: 9px !important;
   border-radius: 9px !important;
   background: #ffffff !important;
-  -webkit-box-shadow: 8px 8px 13px #d2d2d7, -8px -8px 13px #ffffff !important;
   box-shadow: 8px 8px 13px #d2d2d7, -8px -8px 13px #ffffff !important;
 }
 
@@ -107,10 +101,9 @@ const QrCoupon = async (coupon) => {
   padding: 1% 2% 0% 2% !important;
   font-size: 1.063rem !important;
 }
+
 .card-subtitle {
   padding: 0% 2% 0% 2% !important;
-  font-size: .883rem !important;
+  font-size: 0.883rem !important;
 }
-
-
 </style>
