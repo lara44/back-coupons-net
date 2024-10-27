@@ -38,15 +38,16 @@ const successMessageVisible = ref(false);
 
 onMounted(() => {
   const redeem = {
-    code: router.query.code,
+    couponId: router.query.couponId,
+    clientId: router.query.clientId,
+    signature: router.query.signature,
   };
 
   couponStore.redeemCoupon(redeem).then((response) => {
     if (response.status == 200) {
       notification.value = "Cupón Canjeado Exitosamente";
     } else {
-      notification.value =
-        "Error Canjeado Cupón, Contacte el adminsitrador";
+      notification.value = "Error Canjeado Cupón, Contacte el adminsitrador";
       console.log(response);
     }
   });

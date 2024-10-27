@@ -66,9 +66,7 @@ export const useCouponStore = defineStore("couponStore", {
 
     async redeemCoupon(redeem) {
       try {
-        const response = await axios.get(
-          `/api/coupons/redeem?code=${redeem.code}`
-        );
+        const response = await axios.post(`/api/redeem/RedeemCoupon`, redeem);
         return response;
       } catch (error) {
         return error.response;
