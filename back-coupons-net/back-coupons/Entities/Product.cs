@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace back_coupons.Entities
 {
@@ -28,6 +29,7 @@ namespace back_coupons.Entities
         public int CompanyId { get; set; }
         public Company? Company { get; set; }
 
-        public ICollection<DetailCoupon> DetailCoupons { get; set; }
+        [JsonIgnore]
+        public ICollection<DetailCoupon>? DetailCoupons { get; set; }
     }
 }

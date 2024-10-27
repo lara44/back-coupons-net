@@ -40,6 +40,6 @@ namespace back_coupons.Entities
         [Display(Name = "Foto")]
         public string? Photo { get; set; }
 
-        public ICollection<DetailCoupon> DetailCoupons { get; set; }
+        public ICollection<DetailCoupon>? DetailCoupons { get; set; }
     }
 }
