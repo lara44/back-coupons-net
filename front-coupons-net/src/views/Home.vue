@@ -28,6 +28,12 @@
           prepend-icon="mdi-home-city mdi-18px"
           title="Home"
         ></v-list-item>
+        <v-list-item
+          link
+          prepend-icon="mdi-view-dashboard mdi-18px "
+          title="Dashboard"
+          to="/dashboard"
+        ></v-list-item>
         <v-list-group dense>
           <template v-slot:activator="{ props }">
             <v-list-item
