@@ -8,14 +8,16 @@ const validationSchema = yup.object().shape({
     .string()
     .required("La identificación es obligatoria")
     .matches(/^[0-9]+$/, "La identificación solo debe contener números")
-    .min(10, "La identificación debe tener al menos 10 caracteres"),
+    .min(10, "La identificación debe tener al menos 10 caracteres")
+    .max(10, "La identificación debe tener menos de 10 caracteres"),
   firstName: yup.string().required("El nombre es obligatorio"),
   lastName: yup.string().required("El apellido es obligatorio"),
   phone: yup
     .string()
     .required("El teléfono es obligatorio")
     .matches(/^[0-9]+$/, "El teléfono solo debe contener números")
-    .min(10, "El teléfono debe tener al menos 10 caracteres"),
+    .min(10, "El teléfono debe tener al menos 10 caracteres")
+    .max(15, "El teléfono debe tener menos de 15 caracteres"),
   email: yup
     .string()
     .email("Formato de email inválido")
@@ -29,7 +31,7 @@ export const useClientForm = () => {
     lastName: "",
     phone: "",
     email: "",
-    id: 2,
+    id: 0,
     state: "1",
   });
 
@@ -58,7 +60,7 @@ export const useClientForm = () => {
         ? `/api/clients/${form.value.id}`
         : `/api/clients`;
 
-      await axios({
+      const { data } = await axios({
         method,
         url,
         data: {
@@ -75,7 +77,7 @@ export const useClientForm = () => {
       console.log("Cliente manejado exitosamente.");
 
       // Reclama el cupón después de crear o actualizar al cliente
-      await claimCoupon(couponCode, form.value.id);
+      await claimCoupon(couponCode, data.data.id);
     } catch (error) {
       console.error("Error al manejar el cliente:", error);
     }
