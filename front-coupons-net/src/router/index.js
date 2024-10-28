@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import home from "../views/Home.vue";
 import login from "../views/Login.vue";
+import dashboard from "../views/Dashboard.vue";
 import updatePassword from "../components/users/updatePasswordContainer.vue";
 import forgotPasword from "../components/users/forgotPasswordContainer.vue";
 import resetPassword from "../components/users/resetPasswordContainer.vue";
@@ -98,6 +99,12 @@ const routes = [
     component: home,
     beforeEnter: requiredAuth,
     children: [
+      {
+        path: "/dashboard",
+        name: "dashboard",
+        component: dashboard,
+        beforeEnter: requiredAuth,
+      },
       {
         path: "/users",
         name: "users",
