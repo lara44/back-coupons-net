@@ -47,5 +47,16 @@ namespace back_coupons.Controllers
             }
             return NotFound();
         }
+
+        [HttpGet("GetClientByIdentificationAsync")]
+        public async Task<IActionResult> GetClientByIdentificationAsync([FromQuery] string identification)
+        {
+            var response = await _clientUnitOfWork.GetClientByIdentificationAsync(identification);
+            if (response.Successfully)
+            {
+                return Ok(new { data = response.Result });
+            }
+            return NotFound();
+        }
     }
 }

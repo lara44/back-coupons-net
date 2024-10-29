@@ -19,7 +19,7 @@ namespace back_coupons.Repositories.Implementations
             _dbContext = dbContext;
         }
 
-        public string GenerateSignedUrl(int couponId, int clientId) 
+        public string GenerateSignedUrl(int couponId, int clientId)
         {
             var secretKey = "your_secret_key";
             var url = $"http://localhost:5173/coupons/redeem?couponId={couponId}&clientId={clientId}";
@@ -83,8 +83,7 @@ namespace back_coupons.Repositories.Implementations
             // Actualizar el estado a Completado
             redeemCoupon.State = RedeemState.Completed;
             await _dbContext.SaveChangesAsync();
-
-            // Devolver respuesta exitosa
+            
             return new ActionResponse<RedeemCoupon>
             {
                 Successfully = true,
@@ -94,7 +93,6 @@ namespace back_coupons.Repositories.Implementations
 
         public async Task<ActionResponse<RedeemCoupon>> ClaimCustomerCouponAsync(string code, int clientId)
         {
-            // Verificar si el cliente existe
             var client = await _dbContext.Clients
                 .Where(c => c.Id == clientId)
                 .FirstOrDefaultAsync();
@@ -168,7 +166,6 @@ namespace back_coupons.Repositories.Implementations
             }
             else
             {
-                // Si no hay más cupones disponibles
                 return new ActionResponse<RedeemCoupon>
                 {
                     Successfully = false,
@@ -179,7 +176,6 @@ namespace back_coupons.Repositories.Implementations
 
         public async Task<ActionResponse<IEnumerable<ClaimedCouponClientDto>>> GetCouponsByClientAsync(string identification)
         {
-            // Realizar la consulta directamente en la tabla RedeemCoupons uniendo con Clients
             var coupons = await _dbContext.RedeemCoupons
               .Where(rc => rc.Client!.Identification == identification)
               .Select(rc => new ClaimedCouponClientDto
@@ -215,7 +211,6 @@ namespace back_coupons.Repositories.Implementations
               })
               .ToListAsync();
 
-            // Verificar si se encontraron cupones
             if (coupons == null || coupons.Count == 0)
             {
                 return new ActionResponse<IEnumerable<ClaimedCouponClientDto>>
@@ -235,8 +230,8 @@ namespace back_coupons.Repositories.Implementations
 
         public async Task<ActionResponse<IEnumerable<ClaimedCouponDto>>> GetClaimedCouponsByDateAndCompany(
             DateTime? startDate,
-            DateTime? endDate, 
-            int? companyId = 0, 
+            DateTime? endDate,
+            int? companyId = 0,
             RedeemState? state = null
         )
         {
@@ -246,7 +241,7 @@ namespace back_coupons.Repositories.Implementations
             var claimedCoupons = await _dbContext.RedeemCoupons
                 .Include(rc => rc.Coupon)
                 .Include(rc => rc.Client)
-                .Where(rc => 
+                .Where(rc =>
                     (!startDate.HasValue || rc.DateRedeem.Date >= startDate.Value.Date) &&
                     (!endDate.HasValue || rc.DateRedeem.Date <= endDate.Value.Date) &&
                     (rc.Coupon!.CompanyId == companyId || rc.Coupon!.CompanyId > 0 && companyId == 0) &&
