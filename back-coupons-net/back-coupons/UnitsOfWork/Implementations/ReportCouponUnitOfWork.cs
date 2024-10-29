@@ -13,7 +13,13 @@ namespace back_coupons.UnitsOfWork.Implementations
         {
             _reportCouponRepository = reportCouponRepository;
         }
-        public async Task<ActionResponse<IEnumerable<ClaimedCouponDto>>> GetClaimedCouponsByDateAndCompany(DateTime startDate, DateTime endDate, int companyId, RedeemState? state = null) 
-            => await _reportCouponRepository.GetClaimedCouponsByDateAndCompany(startDate, endDate, companyId, state);
+        public async Task<ActionResponse<IEnumerable<ClaimedCouponDto>>> GetRedeemedCouponsByClient(DateTime startDate, DateTime endDate, int companyId, RedeemState? state = null) 
+            => await _reportCouponRepository.GetRedeemedCouponsByClient(startDate, endDate, companyId, state);
+
+        public async Task<ActionResponse<IEnumerable<ClientRedemptionCountDto>>> GetCountRedeemedCouponsByClient(DateTime startDate, DateTime endDate, int companyId, RedeemState? state = null) 
+            => await _reportCouponRepository.GetCountRedeemedCouponsByClient(startDate, endDate, companyId, state);
+
+        public async  Task<ActionResponse<IEnumerable<CompanyRedemptionCountDto>>> GetCountRedeemedCouponsByCompany(DateTime startDate, DateTime endDate, int companyId, RedeemState? state)
+            => await _reportCouponRepository.GetCountRedeemedCouponsByCompany(startDate, endDate, companyId, state);
     }
 }
