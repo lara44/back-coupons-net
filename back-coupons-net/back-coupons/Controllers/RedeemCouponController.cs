@@ -1,8 +1,6 @@
 ﻿
 using back_coupons.DTOs.Request;
 using back_coupons.Entities;
-using back_coupons.Enums;
-using back_coupons.Repositories.Interfaces;
 using back_coupons.UnitsOfWork.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,22 +43,6 @@ namespace back_coupons.Controllers
         {
             var response = await _redeemCouponUnitOfWork.GetCouponsByClientAsync(identification);
 
-            if (response.Successfully)
-            {
-                return Ok(new { data = response.Result });
-            }
-            return NotFound(new { message = response.Message });
-        }
-
-        [HttpGet("GetClaimedCouponsByDateAndCompany")]
-        public async Task<IActionResult> GetClaimedCouponsByDateAndCompany(
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate,
-            [FromQuery] int companyId,
-            [FromQuery] RedeemState? state = null
-        )
-        {
-            var response = await _redeemCouponUnitOfWork.GetClaimedCouponsByDateAndCompany(startDate, endDate, companyId, state);
             if (response.Successfully)
             {
                 return Ok(new { data = response.Result });
