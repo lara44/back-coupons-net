@@ -80,6 +80,7 @@ builder.Services.AddScoped<IClientUnitOfWork, ClientUnitOfWork>();
 builder.Services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
 builder.Services.AddScoped<ICouponUnitOfWork, CouponUnitOfWork>();
 builder.Services.AddScoped<IRedeemCouponUnitOfWork, RedeemCouponUnitOfWork>();
+builder.Services.AddScoped<IReportCouponUnitOfWork, ReportCouponUnitOfWork>();
 // Container Repositories
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -92,6 +93,7 @@ builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 builder.Services.AddScoped<IRedeemCouponRepository, RedeemCouponRepository>();
+builder.Services.AddScoped<IReportCouponRepository, ReportCouponRepository>();
 
 builder.Services.AddIdentity<User, IdentityRole>(x =>
 {

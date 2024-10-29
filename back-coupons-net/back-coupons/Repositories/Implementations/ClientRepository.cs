@@ -35,6 +35,25 @@ namespace back_coupons.Repositories.Implementations
             };
         }
 
+        public async Task<ActionResponse<Client>> GetClientByIdentificationAsync(string identification)
+        {
+            var row = await _dbContext.Clients
+                .FirstOrDefaultAsync(c => c.Identification == identification);
+            if (row != null)
+            {
+                return new ActionResponse<Client>
+                {
+                    Successfully = true,
+                    Result = row
+                };
+            }
+            return new ActionResponse<Client>
+            {
+                Successfully = false,
+                Message = "Registro no encontrado"
+            };
+        }
+
         public override async Task<ActionResponse<IEnumerable<Client>>> GetAsyncFull()
         {
             return new ActionResponse<IEnumerable<Client>>
