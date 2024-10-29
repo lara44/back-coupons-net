@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Data;
+using System.Security.Cryptography;
 using System.Text;
 using back_coupons.Data;
 using back_coupons.DTOs.Response;
@@ -232,15 +233,24 @@ namespace back_coupons.Repositories.Implementations
             };
         }
 
-        public async Task<ActionResponse<IEnumerable<ClaimedCouponDto>>> GetClaimedCouponsByDateAndCompany(DateTime startDate, DateTime endDate, int companyId, RedeemState? state = null)
+        public async Task<ActionResponse<IEnumerable<ClaimedCouponDto>>> GetClaimedCouponsByDateAndCompany(
+            DateTime? startDate,
+            DateTime? endDate, 
+            int? companyId = 0, 
+            RedeemState? state = null
+        )
         {
+            startDate = (startDate == DateTime.MinValue) ? null : startDate;
+            endDate = (endDate == DateTime.MinValue) ? null : endDate;
+
             var claimedCoupons = await _dbContext.RedeemCoupons
                 .Include(rc => rc.Coupon)
                 .Include(rc => rc.Client)
-                .Where(rc => rc.DateRedeem >= startDate && 
-                            rc.DateRedeem < endDate.AddDays(1) && 
-                            rc.Coupon!.CompanyId == companyId &&
-                            (!state.HasValue || rc.State == state.Value))
+                .Where(rc => 
+                    (!startDate.HasValue || rc.DateRedeem.Date >= startDate.Value.Date) &&
+                    (!endDate.HasValue || rc.DateRedeem.Date <= endDate.Value.Date) &&
+                    (rc.Coupon!.CompanyId == companyId || rc.Coupon!.CompanyId > 0 && companyId == 0) &&
+                    (rc.State == state || state == null))
                 .OrderBy(rc => rc.DateRedeem)
                 .Select(rc => new ClaimedCouponDto
                 {
