@@ -52,7 +52,7 @@
               </ul>
             </td>
             <td>
-              <v-icon @click="QrCoupon(coupon.coupon)" class="btn-icon"
+              <v-icon @click="QrCoupon(coupon)" class="btn-icon"
                 >mdi-qrcode</v-icon
               >
             </td>

@@ -8,4 +8,6 @@ public class ClaimedCouponClientDto
     public DateTime DateRedeem { get; set; }
     public CouponClientDto Coupon { get; set; } = null!;
     public ClientBasicDto Client { get; set; } = null!;
+
+    public string? Url { get; set; }
 }

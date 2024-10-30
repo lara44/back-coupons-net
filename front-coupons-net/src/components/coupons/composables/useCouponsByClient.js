@@ -48,10 +48,9 @@ export const useCouponsByClient = () => {
 
   const QrCoupon = async (coupon) => {
     try {
-      const url = `http://localhost:5173/coupons/redeem?code=${coupon.couponCode}`;
-      const qrCodeDataUrl = await QRCode.toDataURL(url);
+      const qrCodeDataUrl = await QRCode.toDataURL(coupon.url);
       const blob = await (await fetch(qrCodeDataUrl)).blob();
-      saveAs(blob, `${coupon.couponCode}.png`);
+      saveAs(blob, `${coupon.coupon.couponCode}.png`);
     } catch (error) {
       console.error("Error generating QR code", error);
     }
