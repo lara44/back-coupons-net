@@ -42,10 +42,10 @@ export const useClientForm = () => {
 
     try {
       const response = await axios.get(
-        `/api/clients/${form.value.identification}`
+        `/api/clients/GetClientByIdentificationAsync?identification=${form.value.identification}`
       );
       if (response.data) {
-        const client = response.data;
+        const client = response.data.data;
         form.value = { ...client };
       }
     } catch (error) {
@@ -75,9 +75,10 @@ export const useClientForm = () => {
       });
 
       console.log("Cliente manejado exitosamente.");
-
-      // Reclama el cupón después de crear o actualizar al cliente
-      await claimCoupon(couponCode, data.data.id);
+      const claim = await claimCoupon(couponCode, data.data.id);
+      console.log(claim);
+      console.log("Cupón reclamado exitosamente:", claim.data);
+      return claim;
     } catch (error) {
       console.error("Error al manejar el cliente:", error);
     }
@@ -90,8 +91,10 @@ export const useClientForm = () => {
         clientId: clientId,
       });
       console.log("Cupón reclamado exitosamente:", response.data);
+      return true;
     } catch (error) {
       console.error("Error al reclamar el cupón:", error);
+      return false;
     }
   };
 

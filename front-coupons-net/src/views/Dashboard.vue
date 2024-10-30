@@ -52,15 +52,12 @@
       </v-row>
     </v-card>
 
-    <v-card>
-      <v-row>
-        <v-col cols="12" md="6">
-          <CouponsByDateChart :filters="appliedFilters" />
-        </v-col>
-        <v-col cols="12" md="6">
-          <CouponsByClientChart :filters="appliedFilters" />
-        </v-col>
-      </v-row>
+    <v-card class="pa-4 mb-6">
+      <CouponsByDateChart :filters="appliedFilters" />
+    </v-card>
+
+    <v-card class="pa-4">
+      <TablaCupones :filters="appliedFilters" />
     </v-card>
   </v-container>
 </template>
@@ -69,14 +66,15 @@
 import { reactive, ref, computed, onMounted } from "vue";
 import CouponsByDateChart from "../components/charts/CouponsByDateChart.vue";
 import CouponsByClientChart from "../components/charts/CouponsByClientChart.vue";
+import TablaCupones from "../components/charts/CuponsTablaClientes.vue";
 import { useUserStore } from "../stores/userStore";
 import { useCompanyStore } from "../stores/companyStore";
 
 // Estados disponibles para filtrar
 const states = [
-  { title: "Todos", value: 0 },
-  { title: "Activos", value: 1 },
-  { title: "Inactivos", value: 2 },
+  { title: "Reclamado", value: 0 },
+  { title: "Redimido", value: 1 },
+  { title: "Expirado", value: 2 },
 ];
 
 // Filtros reactivos

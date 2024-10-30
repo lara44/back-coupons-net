@@ -4,11 +4,11 @@
       <v-col cols="12" sm="8" md="4">
         <v-card
           append-icon="mdi-open-in-new"
-          to="/login"
+          to="/home"
           max-width="700"
           prepend-icon="mdi-check-decagram"
           rel="noopener"
-          subtitle="Click para volver al login"
+          subtitle="Click para volver al home"
           :title="notification"
         >
           <v-toolbar color="#324c6e" dark flat>
@@ -47,7 +47,7 @@ onMounted(() => {
     if (response.status == 200) {
       notification.value = "Cupón Canjeado Exitosamente";
     } else {
-      notification.value = "Error Canjeado Cupón, Contacte el adminsitrador";
+      notification.value = "El Cupón ya fue canjeado";
       console.log(response);
     }
   });

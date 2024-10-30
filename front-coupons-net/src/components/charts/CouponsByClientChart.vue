@@ -28,7 +28,6 @@ import {
 import { ref, onMounted, watch } from "vue";
 import { useDashboardData } from "./composable/useDashboardData";
 
-// Registramos los componentes necesarios de Chart.js
 ChartJS.register(
   Title,
   Tooltip,
@@ -38,10 +37,8 @@ ChartJS.register(
   LinearScale
 );
 
-// Props para recibir los filtros
 const props = defineProps(["filters"]);
 
-// Variables de estado
 const { data, fetchData, loading } = useDashboardData();
 const chartData = ref(null);
 const chartOptions = ref({
@@ -49,28 +46,29 @@ const chartOptions = ref({
   maintainAspectRatio: false,
 });
 
-// Función para actualizar los datos de la gráfica
 const updateChart = () => {
   if (!data.value || data.value.length === 0) {
     chartData.value = { labels: [], datasets: [] };
     return;
   }
 
-  const clientNames = data.value.map(
-    (item) => `${item.client.firstName} ${item.client.lastName}`
-  );
+  const clientData = data.value.reduce((acc, item) => {
+    const clientId = item.client.id;
+    const clientName = `${item.client.firstName} ${item.client.lastName}`;
 
-  const counts = clientNames.reduce((acc, name) => {
-    acc[name] = (acc[name] || 0) + 1;
+    if (!acc[clientId]) {
+      acc[clientId] = { name: clientName, count: 0 };
+    }
+    acc[clientId].count += 1;
     return acc;
   }, {});
 
   chartData.value = {
-    labels: Object.keys(counts),
+    labels: Object.values(clientData).map((client) => client.name),
     datasets: [
       {
         label: "Cupones X Cliente",
-        data: Object.values(counts),
+        data: Object.values(clientData).map((client) => client.count),
         backgroundColor: "rgba(54, 162, 235, 0.2)",
         borderColor: "rgba(54, 162, 235, 1)",
         borderWidth: 1,
@@ -79,7 +77,6 @@ const updateChart = () => {
   };
 };
 
-// Obtenemos los datos al montar el componente
 onMounted(async () => {
   await fetchData(
     props.filters.startDate,
@@ -90,7 +87,6 @@ onMounted(async () => {
   updateChart();
 });
 
-// Actualizamos la gráfica cada vez que los filtros cambien
 watch(
   () => props.filters,
   async (newFilters) => {

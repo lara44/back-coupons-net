@@ -9,7 +9,7 @@ export const useDashboardData = () => {
   const fetchData = async (startDate, endDate, state, companyId) => {
     loading.value = true;
 
-    const url = `http://localhost:5163/api/redeem/GetClaimedCouponsByDateAndCompany?startDate=${startDate}&endDate=${endDate}&companyId=${companyId}&state=${state}`;
+    const url = `http://localhost:5163/api/report/GetRedeemedCouponsByClient?startDate=${startDate}&endDate=${endDate}&companyId=${companyId}&state=${state}`;
 
     try {
       const response = await axios.get(url);

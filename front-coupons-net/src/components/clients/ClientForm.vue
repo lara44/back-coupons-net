@@ -6,6 +6,10 @@
         Para reclamar el cupon, ingresa tus datos
       </v-card-subtitle>
 
+      <v-alert v-if="redeem === false" type="error" class="mb-4" dismissible>
+        Ya existe el cupón asociado a tu identificación
+      </v-alert>
+
       <v-form @submit.prevent="handleRegister" ref="formRef">
         <v-text-field
           v-model="form.identification"
@@ -75,12 +79,21 @@ const { form, errors, validateField, validateForm, manageClient } =
   useClientForm();
 const router = useRouter();
 const formRef = ref(null);
+const redeem = ref(null);
+const showAlert = ref(false); // Controlar la visibilidad de la alerta
 
 const handleRegister = async () => {
   const isValid = await validateForm();
   if (isValid) {
-    await manageClient(props.couponCode);
-    router.push("/consultar-cupones");
+    redeem.value = await manageClient(props.couponCode);
+    if (redeem.value === true) {
+      router.push("/consultar-cupones");
+    } else {
+      showAlert.value = true;
+      setTimeout(() => {
+        showAlert.value = false;
+      }, 3000);
+    }
   }
 };
 </script>

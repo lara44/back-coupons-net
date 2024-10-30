@@ -181,6 +181,7 @@ namespace back_coupons.Repositories.Implementations
               .Select(rc => new ClaimedCouponClientDto
               {
                   Id = rc.Id,
+                  Url = rc.UrlCoupon,
                   Coupon = new CouponClientDto
                   {
                       Id = rc.Coupon!.Id,

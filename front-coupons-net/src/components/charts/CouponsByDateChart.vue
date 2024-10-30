@@ -47,25 +47,49 @@ const chartData = ref(null);
 const chartOptions = ref({
   responsive: true,
   maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: true,
+      position: "top",
+    },
+  },
 });
 
-// Actualiza la gráfica con los datos obtenidos
+// Función para agrupar los cupones por mes
+const groupByMonth = () => {
+  const monthCounts = {};
+
+  data.value.forEach((item) => {
+    const month = new Date(item.dateRedeem).toLocaleString("es-ES", {
+      month: "long",
+      year: "numeric",
+    });
+
+    if (!monthCounts[month]) {
+      monthCounts[month] = 0;
+    }
+    monthCounts[month] += 1;
+  });
+
+  return monthCounts;
+};
+
+// Actualiza la gráfica con los datos agrupados por mes
 const updateChart = () => {
   if (!data.value || data.value.length === 0) {
     chartData.value = { labels: [], datasets: [] };
     return;
   }
 
-  const labels = data.value.map((item) =>
-    new Date(item.dateRedeem).toLocaleDateString()
-  );
-  const values = data.value.map(() => 1); // Cuenta cada cupón
+  const groupedData = groupByMonth();
+  const labels = Object.keys(groupedData);
+  const values = Object.values(groupedData);
 
   chartData.value = {
     labels,
     datasets: [
       {
-        label: "Cupones X Fecha",
+        label: "Cupones por Mes",
         data: values,
         backgroundColor: "rgba(54, 162, 235, 0.2)",
         borderColor: "rgba(54, 162, 235, 1)",
@@ -75,6 +99,7 @@ const updateChart = () => {
   };
 };
 
+// Cargar los datos al montar el componente
 onMounted(async () => {
   await fetchData(
     props.filters.startDate,
@@ -85,6 +110,7 @@ onMounted(async () => {
   updateChart();
 });
 
+// Observar cambios en los filtros y recargar los datos
 watch(
   () => props.filters,
   async (newFilters) => {

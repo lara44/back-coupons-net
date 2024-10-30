@@ -12,7 +12,6 @@
         src="/neocode.png"
         alt="Vuetify"
       ></v-img>
-      <!-- <v-toolbar-title class="title">NEW SPA</v-toolbar-title> -->
       <v-spacer></v-spacer>
       <v-avatar>
         <v-img alt="User Photo" :src="user.photo"></v-img>
@@ -28,12 +27,23 @@
           prepend-icon="mdi-home-city mdi-18px"
           title="Home"
         ></v-list-item>
-        <v-list-item
-          link
-          prepend-icon="mdi-view-dashboard mdi-18px "
-          title="Dashboard"
-          to="/dashboard"
-        ></v-list-item>
+        <v-list-group dense>
+          <template v-slot:activator="{ props }">
+            <v-list-item
+              v-bind="props"
+              prepend-icon="mdi-poll mdi-18px"
+              title="Reportes"
+              value="Reportes"
+            ></v-list-item>
+          </template>
+          <v-list-item
+            link
+            prepend-icon="mdi-view-dashboard mdi-18px "
+            title="Dashboard"
+            to="/dashboard"
+          ></v-list-item>
+        </v-list-group>
+
         <v-list-group dense>
           <template v-slot:activator="{ props }">
             <v-list-item
