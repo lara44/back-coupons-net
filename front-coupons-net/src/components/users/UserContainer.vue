@@ -12,6 +12,17 @@
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6">
+                  <v-select
+                    v-model="newUser.companyId"
+                    :items="companies"
+                    item-title="name"
+                    item-value="id"
+                    label="Empresa"
+                    :rules="[requiredRule('Empresa')]"
+                    required
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6">
                   <v-text-field
                     v-model="newUser.email"
                     label="Correo electrónico"
@@ -153,7 +164,9 @@
           </v-form>
         </v-card-text>
         <v-card-actions>
-          <v-btn size="small" class="btn-general" text @click="closeModal">Cancelar</v-btn>
+          <v-btn size="small" class="btn-general" text @click="closeModal"
+            >Cancelar</v-btn
+          >
           <v-btn size="small" class="mr-4 btn-general" @click="submitForm">{{
             selectedUser ? "Actualizar" : "Guardar"
           }}</v-btn>
@@ -179,7 +192,9 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <v-btn size="small" class="ma-2 btn-general" dark @click="openModal">Nuevo</v-btn>
+      <v-btn size="small" class="ma-2 btn-general" dark @click="openModal"
+        >Nuevo</v-btn
+      >
       <v-card-text>
         <v-table density="compact">
           <thead>
@@ -187,6 +202,7 @@
               <th>Documento</th>
               <th>Nombre</th>
               <th>Correo</th>
+              <th>Empresa</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -195,6 +211,7 @@
               <td>{{ user.document }}</td>
               <td>{{ user.fullName }}</td>
               <td>{{ user.email }}</td>
+              <td>{{ user.company.name }}</td>
               <td>
                 <v-icon @click="editUser(user)" color="#457b9d"
                   >mdi-pencil</v-icon
@@ -237,15 +254,18 @@ import { useUserStore } from "../../stores/userStore";
 import { useCountryStore } from "../../stores/countryStore";
 import { useStateStore } from "../../stores/stateStore";
 import { useCityStore } from "../../stores/cityStore";
+import { useCompanyStore } from "../../stores/companyStore";
 
 const userStore = useUserStore();
 const countryStore = useCountryStore();
 const stateStore = useStateStore();
 const cityStore = useCityStore();
+const companyStore = useCompanyStore();
 
 const countries = computed(() => countryStore.listCountries);
 const states = computed(() => stateStore.listStates);
 const cities = computed(() => cityStore.listCities);
+const companies = computed(() => companyStore.listCompanies);
 const editScenario = ref(false);
 const showPhoto = ref(true);
 
@@ -263,6 +283,7 @@ const newUser = reactive({
   countryId: "",
   stateId: "",
   cityId: "",
+  companyId: "",
   password: "",
   passwordConfirm: "",
 });
@@ -361,6 +382,7 @@ const editUser = (user) => {
   newUser.lastName = selectedUser.value.lastName;
   newUser.address = selectedUser.value.address;
   newUser.cityId = selectedUser.value.cityId;
+  newUser.companyId = selectedUser.value.companyId;
   newUser.photoPreviewEdit = selectedUser.value.photo;
   dialog.value = true;
 };
@@ -419,6 +441,7 @@ const clearForm = () => {
   newUser.countryId = "";
   newUser.stateId = "";
   newUser.cityId = "";
+  newUser.companyId = "";
   newUser.password = "";
   newUser.passwordConfirm = "";
   newUser.photoFile = "";
@@ -443,6 +466,7 @@ const getCities = () => {
 };
 
 onMounted(() => {
+  companyStore.getCompanies();
   countryStore.getCountries();
   userStore.getUsers();
 });

@@ -9,6 +9,16 @@
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="submitForm">
+            <v-select
+              v-if="userStore.role === 'Admin'"
+              v-model="newCoupon.companyId"
+              :items="companies"
+              item-title="name"
+              item-value="id"
+              label="Empresa"
+              :rules="[requiredRule('Empresa')]"
+              required
+            ></v-select>
             <v-text-field
               v-model="newCoupon.couponCode"
               label="Código"
@@ -52,19 +62,12 @@
               required
             >
             </v-select>
-            <v-select
-              v-model="newCoupon.companyId"
-              :items="companies"
-              item-title="name"
-              item-value="id"
-              label="Empresa"
-              :rules="[requiredRule('Empresa')]"
-              required
-            ></v-select>
           </v-form>
         </v-card-text>
         <v-card-actions>
-          <v-btn size="small" class="btn-general" text @click="closeModal">Cancelar</v-btn>
+          <v-btn size="small" class="btn-general" text @click="closeModal"
+            >Cancelar</v-btn
+          >
           <v-btn size="small" class="mr-4 btn-general" @click="submitForm">{{
             selectedCoupon ? "Actualizar" : "Guardar"
           }}</v-btn>
@@ -90,7 +93,9 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <v-btn size="small" class="ma-2 btn-general" dark @click="openModal">Nuevo</v-btn>
+      <v-btn size="small" class="ma-2 btn-general" dark @click="openModal"
+        >Nuevo</v-btn
+      >
       <v-card-text>
         <v-table density="compact">
           <thead>
@@ -157,13 +162,15 @@ import QRCode from "qrcode";
 import { saveAs } from "file-saver";
 import { useCouponStore } from "../../stores/couponStore";
 import { useProductStore } from "../../stores/productStore";
-import { useCompanyStore} from "../../stores/companyStore";
+import { useCompanyStore } from "../../stores/companyStore";
+import { useUserStore } from "../../stores/userStore";
 
 const productStore = useProductStore();
 const companyStore = useCompanyStore();
 const products = computed(() => productStore.listProducts);
 const companies = computed(() => companyStore.listCompanies);
 
+const userStore = useUserStore();
 const currentPage = ref(1); // Página actual
 const itemsPerPage = 10; // Número de usuarios por página
 const couponStore = useCouponStore();
@@ -212,7 +219,6 @@ const expiryDateRule = (value) => {
   );
 };
 
-
 watch(selectedProducts, (newVal) => {
   if (newVal.length > 2) {
     selectedProducts.value = newVal.slice(0, 2);
@@ -227,7 +233,9 @@ const openModal = () => {
   newCoupon.startDate = "";
   newCoupon.expiryDate = "";
   newCoupon.quantityInitial = "";
-  newCoupon.companyId= "",
+  userStore.role === "Admin"
+    ? (newCoupon.companyId = "")
+    : newCoupon.companyId === userStore.companyId;
   selectedProducts.value = [];
 };
 
@@ -236,7 +244,9 @@ const submitForm = async () => {
     return;
   }
 
-  newCoupon.detailCoupons = selectedProducts.value.map(id => ({ productId: id }));
+  newCoupon.detailCoupons = selectedProducts.value.map((id) => ({
+    productId: id,
+  }));
 
   if (selectedCoupon.value) {
     await couponStore.updateCoupon({
@@ -248,15 +258,14 @@ const submitForm = async () => {
     await couponStore.createCoupon(newCoupon);
   }
 
-  await couponStore.getCoupons();
+  await couponStore.getCoupons(userStore);
 
   newCoupon.name = "";
   newCoupon.couponCode = "";
   newCoupon.startDate = "";
   newCoupon.expiryDate = "";
   newCoupon.quantityInitial = "";
-  newCoupon.companyId= "",
-  selectedProducts.value = [];
+  (newCoupon.companyId = ""), (selectedProducts.value = []);
 
   successMessageVisible.value = true;
 
@@ -275,14 +284,15 @@ const editCoupon = (coupon) => {
   newCoupon.expiryDate = selectedCoupon.value.expiryDate;
   newCoupon.quantityInitial = selectedCoupon.value.quantityInitial;
   newCoupon.companyId = selectedCoupon.value.companyId;
-  selectedProducts.value = selectedCoupon.value.detailCoupons.map(dc => dc.productId);
+  selectedProducts.value = selectedCoupon.value.detailCoupons.map(
+    (dc) => dc.productId
+  );
   dialog.value = true;
 };
 
-const deleteCoupon = (coupon) => {
-  couponStore.deleteCoupon(coupon).then(() => {
-    couponStore.getCoupons();
-  });
+const deleteCoupon = async (coupon) => {
+  await couponStore.deleteCoupon(coupon);
+  await couponStore.getCoupons(userStore);
 };
 
 const closeModal = () => {
@@ -308,7 +318,7 @@ const QrCoupon = async (coupon) => {
 };
 
 onMounted(() => {
-  useCouponStore().getCoupons();
+  useCouponStore().getCoupons(userStore);
   productStore.getProducts();
   companyStore.getCompanies();
 });

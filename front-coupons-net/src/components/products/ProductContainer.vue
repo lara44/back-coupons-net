@@ -9,6 +9,17 @@
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="submitForm">
+            <v-select
+              v-if="userStore.role === 'Admin'"
+              v-model="newProduct.companyId"
+              :items="companies"
+              item-title="name"
+              item-value="id"
+              label="Empresa"
+              :rules="[requiredRule('Empresa')]"
+              required
+            ></v-select>
+
             <v-text-field
               v-model="newProduct.name"
               label="Nombre"
@@ -30,7 +41,9 @@
           </v-form>
         </v-card-text>
         <v-card-actions>
-          <v-btn size="small" class="btn-general" text @click="closeModal">Cancelar</v-btn>
+          <v-btn size="small" class="btn-general" text @click="closeModal"
+            >Cancelar</v-btn
+          >
           <v-btn size="small" class="mr-2 btn-general" @click="submitForm">{{
             selectedProduct ? "Actualizar" : "Guardar"
           }}</v-btn>
@@ -56,7 +69,9 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <v-btn size="small" class="ma-2 btn-general" dark @click="openModal">Nuevo</v-btn>
+      <v-btn size="small" class="ma-2 btn-general" dark @click="openModal"
+        >Nuevo</v-btn
+      >
       <v-card-text>
         <v-table density="compact">
           <thead>
@@ -108,144 +123,136 @@
   </v-container>
 </template>
 
-<script>
-import { ref, reactive, computed } from "vue";
+<script setup>
+import { ref, reactive, computed, onMounted } from "vue";
 import { useProductStore } from "../../stores/productStore";
+import { useUserStore } from "../../stores/userStore";
+import { useCompanyStore } from "../../stores/companyStore";
 
-export default {
-  name: "ProductDataTable",
-  setup() {
-    const currentPage = ref(1); // Página actual
-    const itemsPerPage = 10; // Número de usuarios por página
-    const productStore = useProductStore();
-    const successMessageVisible = ref(false);
-    const search = ref("");
-    const newProduct = reactive({
-      name: "",
-      email: "",
-      password: "",
-    });
-    const selectedProduct = ref(null);
-    const dialog = ref(false);
+const currentPage = ref(1); // Página actual
+const itemsPerPage = 10; // Número de usuarios por página
+const productStore = useProductStore();
+const companyStore = useCompanyStore();
+const userStore = useUserStore();
+const successMessageVisible = ref(false);
+const search = ref("");
+const newProduct = reactive({
+  name: "",
+  price: "",
+  barcode: "",
+  companyId: "",
+  DetailCoupons: [],
+});
+const selectedProduct = ref(null);
+const dialog = ref(false);
 
-    const totalProducts = computed(() => productStore.listProducts.length);
-    const totalPages = computed(() =>
-      Math.ceil(totalProducts.value / itemsPerPage)
-    );
+const companies = computed(() => companyStore.listCompanies);
+const totalProducts = computed(() => productStore.listProducts.length);
+const totalPages = computed(() =>
+  Math.ceil(totalProducts.value / itemsPerPage)
+);
 
-    const filteredProducts = computed(() => {
-      const startIndex = (currentPage.value - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      const productList = productStore.listProducts;
-      return productList
-        .filter((product) =>
-          product.name.toLowerCase().includes(search.value.toLowerCase())
-        )
-        .slice(startIndex, endIndex);
-    });
+const filteredProducts = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const productList = productStore.listProducts;
+  return productList
+    .filter((product) =>
+      product.name.toLowerCase().includes(search.value.toLowerCase())
+    )
+    .slice(startIndex, endIndex);
+});
 
-    const requiredRule = (fieldName) => (value) =>
-      !!value || `El campo "${fieldName}" es obligatorio`;
+const requiredRule = (fieldName) => (value) =>
+  !!value || `El campo "${fieldName}" es obligatorio`;
 
-    const priceRule = (value) => {
-      const numberRegex = /^[0-9]+$/;
-      return numberRegex.test(value) || "El campo debe ser un número válido";
-    };
-
-    const barcodeRule = (value) => {
-      return (
-        value.length >= 8 ||
-        "El código de Barras debe tener al menos 8 caracteres"
-      );
-    };
-
-    const openModal = () => {
-      dialog.value = true;
-      selectedProduct.value = null;
-      newProduct.name = "";
-      newProduct.price = "";
-      newProduct.barcode = "";
-    };
-
-    const submitForm = async () => {
-      if (!newProduct.name || !newProduct.price || !newProduct.barcode) {
-        return;
-      }
-      if (selectedProduct.value) {
-        await productStore.updateProduct({
-          ...selectedProduct.value,
-          ...newProduct,
-        });
-      } else {
-        await productStore.createProduct(newProduct);
-      }
-
-      await productStore.getProducts();
-
-      newProduct.name = "";
-      newProduct.price = "";
-      newProduct.barcode = "";
-
-      successMessageVisible.value = true;
-
-      setTimeout(() => {
-        successMessageVisible.value = false;
-      }, 3000);
-
-      dialog.value = false;
-    };
-
-    const deleteProduct = (product) => {
-      productStore.deleteProduct(product).then(() => {
-        productStore.getProducts();
-      });
-    };
-
-    const editProduct = (product) => {
-      selectedProduct.value = { ...product };
-      newProduct.name = selectedProduct.value.name;
-      newProduct.price = selectedProduct.value.price;
-      newProduct.barcode = selectedProduct.value.barcode;
-      dialog.value = true;
-    };
-
-    const closeModal = () => {
-      dialog.value = false;
-      selectedProduct.value = null;
-      newProduct.name = "";
-      newProduct.price = "";
-      newProduct.barcode = "";
-    };
-
-    return {
-      search,
-      currentPage,
-      itemsPerPage,
-      filteredProducts,
-      newProduct,
-      successMessageVisible,
-      selectedProduct,
-      dialog,
-      submitForm,
-      requiredRule,
-      priceRule,
-      barcodeRule,
-      editProduct,
-      deleteProduct,
-      openModal,
-      closeModal,
-      totalPages,
-    };
-  },
-
-  async mounted() {
-    try {
-      await useProductStore().getProducts();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      this.loading = false;
-    }
-  },
+const priceRule = (value) => {
+  const numberRegex = /^[0-9]+$/;
+  return numberRegex.test(value) || "El campo debe ser un número válido";
 };
+
+const barcodeRule = (value) => {
+  return (
+    value.length >= 8 || "El código de Barras debe tener al menos 8 caracteres"
+  );
+};
+
+const openModal = () => {
+  dialog.value = true;
+  selectedProduct.value = null;
+  newProduct.name = "";
+  newProduct.price = "";
+  userStore.role === "Admin"
+    ? (newProduct.companyId = "")
+    : (newProduct.companyId = userStore.companyId);
+};
+
+const submitForm = async () => {
+  if (!newProduct.name || !newProduct.price || !newProduct.barcode) {
+    return;
+  }
+  if (selectedProduct.value) {
+    await productStore.updateProduct({
+      ...selectedProduct.value,
+      ...newProduct,
+    });
+  } else {
+    await productStore.createProduct(newProduct);
+  }
+
+  userStore.role === "Admin"
+    ? useProductStore().getProducts()
+    : useProductStore().getProductsByCompany(userStore.companyId);
+
+  newProduct.name = "";
+  newProduct.price = "";
+  newProduct.barcode = "";
+  newProduct.companyId = "";
+
+  successMessageVisible.value = true;
+
+  setTimeout(() => {
+    successMessageVisible.value = false;
+  }, 3000);
+
+  dialog.value = false;
+};
+
+const deleteProduct = (product) => {
+  productStore.deleteProduct(product);
+
+  userStore.role === "Admin"
+    ? useProductStore().getProducts()
+    : useProductStore().getProductsByCompany(userStore.companyId);
+};
+
+const editProduct = (product) => {
+  selectedProduct.value = { ...product };
+  newProduct.name = selectedProduct.value.name;
+  newProduct.price = selectedProduct.value.price;
+  newProduct.barcode = selectedProduct.value.barcode;
+  newProduct.companyId = selectedProduct.value.companyId;
+  dialog.value = true;
+};
+
+const closeModal = () => {
+  dialog.value = false;
+  selectedProduct.value = null;
+  newProduct.name = "";
+  newProduct.price = "";
+  newProduct.barcode = "";
+  newProduct.companyId = "";
+};
+
+onMounted(() => {
+  try {
+    userStore.role === "Admin"
+      ? useProductStore().getProducts()
+      : useProductStore().getProductsByCompany(userStore.companyId);
+
+    companyStore.getCompanies();
+  } catch (error) {
+    console.error(error);
+  }
+});
 </script>
