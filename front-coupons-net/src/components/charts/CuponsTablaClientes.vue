@@ -6,6 +6,12 @@
 
     <div v-else-if="items.length > 0">
       <v-card>
+        <v-card-title class="text-h5">Reporte de Cupones</v-card-title>
+
+        <v-card-subtitle class="text-right mb-4">
+          <strong>Total Cupones:</strong> {{ totalCupones }}
+        </v-card-subtitle>
+
         <v-btn color="primary" class="mb-4" @click="exportToExcel">
           Exportar a Excel
         </v-btn>
@@ -59,10 +65,12 @@ const props = defineProps(["filters"]);
 // Estado de los datos
 const { data, fetchData, loading } = useDashboardData();
 const items = ref([]);
+const totalCupones = ref(0); // Estado para el total de cupones
 
-// Función para actualizar la tabla con los datos recibidos
+// Función para actualizar la tabla y el total
 const updateTable = () => {
   items.value = data.value || [];
+  totalCupones.value = items.value.length; // Actualizar el total
 };
 
 // Función para exportar los datos a Excel
