@@ -16,6 +16,7 @@ namespace back_coupons.UnitsOfWork.Implementations
 
         public override async Task<ActionResponse<IEnumerable<Client>>> GetAsyncFull() => await _clientRepository.GetAsyncFull();
         public override async Task<ActionResponse<Client>> GetAsync(int id) => await _clientRepository.GetAsync(id);
+        public  async Task<ActionResponse<Client>> GetClientByIdentificationAsync(string identification) => await _clientRepository.GetClientByIdentificationAsync(identification);
         public override async Task<ActionResponse<IEnumerable<Client>>> GetAsync(PaginationDTO pagination) => await _clientRepository.GetAsync(pagination);
     }
 }
