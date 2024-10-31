@@ -128,6 +128,7 @@ import { ref, reactive, computed, onMounted } from "vue";
 import { useProductStore } from "../../stores/productStore";
 import { useUserStore } from "../../stores/userStore";
 import { useCompanyStore } from "../../stores/companyStore";
+import { jwtDecode } from "jwt-decode";
 
 const currentPage = ref(1); // Página actual
 const itemsPerPage = 10; // Número de usuarios por página
@@ -246,9 +247,13 @@ const closeModal = () => {
 
 onMounted(() => {
   try {
+    const token = localStorage.getItem("spa_token");
+    const decodedToken = jwtDecode(token);
+    const company = decodedToken["CompanyId"];
+
     userStore.role === "Admin"
       ? useProductStore().getProducts()
-      : useProductStore().getProductsByCompany(userStore.companyId);
+      : useProductStore().getProductsByCompany(company);
 
     companyStore.getCompanies();
   } catch (error) {
