@@ -70,6 +70,7 @@
 </template>
 
 <script setup>
+import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
 import { useClientForm } from "./composables/useClientForm";
 import { ref } from "vue";
@@ -78,6 +79,7 @@ const props = defineProps(["couponCode"]);
 const { form, errors, validateField, validateForm, manageClient } =
   useClientForm();
 const router = useRouter();
+const toast = useToast();
 const formRef = ref(null);
 const redeem = ref(null);
 const showAlert = ref(false); // Controlar la visibilidad de la alerta
@@ -87,6 +89,7 @@ const handleRegister = async () => {
   if (isValid) {
     redeem.value = await manageClient(props.couponCode);
     if (redeem.value === true) {
+      toast.success("Cupon canjeado exitosamente");
       router.push("/consultar-cupones");
     } else {
       showAlert.value = true;

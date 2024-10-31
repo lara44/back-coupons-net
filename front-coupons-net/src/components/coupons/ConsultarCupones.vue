@@ -93,8 +93,4 @@ const searchCoupons = async () => {
   const response = await search();
   searched.value = response;
 };
-
-const handleAction = (coupon) => {
-  console.log("Ver detalles del cupón:", coupon);
-};
 </script>
