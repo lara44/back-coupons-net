@@ -27,7 +27,8 @@ namespace back_coupons.Repositories.Implementations
             using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secretKey)))
             {
                 var hash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(url)));
-                return $"{url}&signature={hash}";  // Devuelve la URL firmada
+                var encodedHash = Uri.EscapeDataString(hash); // Codifica el hash para que sea seguro en la URL
+                return $"{url}&signature={encodedHash}";  // Devuelve la URL firmada con la firma codificada
             }
         }
 

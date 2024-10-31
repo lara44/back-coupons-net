@@ -164,6 +164,13 @@ import { useCouponStore } from "../../stores/couponStore";
 import { useProductStore } from "../../stores/productStore";
 import { useCompanyStore } from "../../stores/companyStore";
 import { useUserStore } from "../../stores/userStore";
+import { jwtDecode } from "jwt-decode";
+
+const token = localStorage.getItem("spa_token");
+const decodedToken = jwtDecode(token);
+const role =
+  decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+const company = decodedToken["CompanyId"];
 
 const productStore = useProductStore();
 const companyStore = useCompanyStore();
@@ -233,9 +240,9 @@ const openModal = () => {
   newCoupon.startDate = "";
   newCoupon.expiryDate = "";
   newCoupon.quantityInitial = "";
-  userStore.role === "Admin"
+  role === "Admin"
     ? (newCoupon.companyId = "")
-    : newCoupon.companyId === userStore.companyId;
+    : newCoupon.companyId === company;
   selectedProducts.value = [];
 };
 
@@ -258,7 +265,7 @@ const submitForm = async () => {
     await couponStore.createCoupon(newCoupon);
   }
 
-  await couponStore.getCoupons(userStore);
+  await couponStore.getCoupons(role, company);
 
   newCoupon.name = "";
   newCoupon.couponCode = "";
@@ -292,7 +299,7 @@ const editCoupon = (coupon) => {
 
 const deleteCoupon = async (coupon) => {
   await couponStore.deleteCoupon(coupon);
-  await couponStore.getCoupons(userStore);
+  await couponStore.getCoupons(role, company);
 };
 
 const closeModal = () => {
@@ -318,7 +325,7 @@ const QrCoupon = async (coupon) => {
 };
 
 onMounted(() => {
-  useCouponStore().getCoupons(userStore);
+  useCouponStore().getCoupons(role, company);
   productStore.getProducts();
   companyStore.getCompanies();
 });
