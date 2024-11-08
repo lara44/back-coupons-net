@@ -11,5 +11,7 @@ public class CouponClientDto
     public DateTime StartDate { get; set; }
     public DateTime ExpiryDate { get; set; }
     public string? Photo { get; set; }
+    public string? NameCompany {get; set; }
+    public Enums.RedeemState? State { get; set; }
     public ICollection<DetailCouponDto>? DetailCoupons { get; set; }
 }
