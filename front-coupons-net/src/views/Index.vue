@@ -70,7 +70,7 @@ const isClientFormOpen = ref(false);
 const selectedCouponCode = ref(null);
 
 onMounted(() => {
-  couponStore.getCoupons();
+  couponStore.getCouponsFull();
 });
 
 const openClientForm = (couponCode) => {

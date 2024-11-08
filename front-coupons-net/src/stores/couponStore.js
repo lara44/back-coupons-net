@@ -31,6 +31,18 @@ export const useCouponStore = defineStore("couponStore", {
       }
     },
 
+    async getCouponsFull() {
+      try {
+        const response = await axios.get(`/api/coupons/full`);
+        if (response.data.data) {
+          this.listCoupons = response.data.data;
+          console.log(response.data.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     async createCoupon(newCoupon) {
       try {
         const response = await axios.post("/api/coupons", newCoupon);

@@ -30,11 +30,13 @@
 import { ref, reactive, computed, onMounted } from "vue";
 import { useCouponStore } from "../../stores/couponStore";
 import { useRoute } from "vue-router";
+import { useToast } from "vue-toastification";
 
 const router = useRoute();
 const couponStore = useCouponStore();
 const notification = ref("");
 const successMessageVisible = ref(false);
+const toast = useToast();
 
 onMounted(() => {
   const redeem = {
@@ -46,8 +48,10 @@ onMounted(() => {
   couponStore.redeemCoupon(redeem).then((response) => {
     if (response.status == 200) {
       notification.value = "Cupón Canjeado Exitosamente";
+      toast.success("Cupón Canjeado Exitosamente");
     } else {
       notification.value = "El Cupón ya fue canjeado";
+      toast.error("El Cupón ya fue canjeado");
       console.log(response);
     }
   });
