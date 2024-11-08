@@ -191,6 +191,7 @@ namespace back_coupons.Repositories.Implementations
                       StartDate = rc.Coupon.StartDate,
                       ExpiryDate = rc.Coupon.ExpiryDate,
                       Photo = rc.Coupon.Photo,
+                      State = rc.State,
                       DetailCoupons = rc.Coupon.DetailCoupons!.Select(dc => new DetailCouponDto
                       {
                           Id = dc.Id,
