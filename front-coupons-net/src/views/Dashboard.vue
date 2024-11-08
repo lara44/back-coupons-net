@@ -70,6 +70,10 @@ import TablaCupones from "../components/charts/CuponsTablaClientes.vue";
 import { useUserStore } from "../stores/userStore";
 import { useCompanyStore } from "../stores/companyStore";
 
+// Stores
+const userStore = useUserStore();
+const companyStore = useCompanyStore();
+
 // Estados disponibles para filtrar
 const states = [
   { title: "Reclamado", value: 0 },
@@ -77,20 +81,20 @@ const states = [
   { title: "Expirado", value: 2 },
 ];
 
+const companyId = userStore.role === "Admin" ? 0 : userStore.companyId;
+
 // Filtros reactivos
+const currentYear = new Date().getFullYear();
+
 const filters = reactive({
-  startDate: "2024-01-01",
-  endDate: "2024-12-31",
+  startDate: `${currentYear}-01-01`,
+  endDate: `${currentYear}-12-31`,
   state: 0,
-  companyId: 1,
+  companyId: companyId,
 });
 
 const appliedFilters = ref({ ...filters });
 
-// Stores
-const userStore = useUserStore();
-
-const companyStore = useCompanyStore();
 const companies = computed(() => companyStore.listCompanies);
 
 console.log(companies.value);

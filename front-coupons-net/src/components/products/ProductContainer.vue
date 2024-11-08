@@ -129,6 +129,9 @@ import { useProductStore } from "../../stores/productStore";
 import { useUserStore } from "../../stores/userStore";
 import { useCompanyStore } from "../../stores/companyStore";
 import { jwtDecode } from "jwt-decode";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const currentPage = ref(1); // Página actual
 const itemsPerPage = 10; // Número de usuarios por página
@@ -197,8 +200,10 @@ const submitForm = async () => {
       ...selectedProduct.value,
       ...newProduct,
     });
+    toast.success("Producto actualizado exitosamente");
   } else {
     await productStore.createProduct(newProduct);
+    toast.success("Producto creado exitosamente");
   }
 
   userStore.role === "Admin"
@@ -209,12 +214,6 @@ const submitForm = async () => {
   newProduct.price = "";
   newProduct.barcode = "";
   newProduct.companyId = "";
-
-  successMessageVisible.value = true;
-
-  setTimeout(() => {
-    successMessageVisible.value = false;
-  }, 3000);
 
   dialog.value = false;
 };
