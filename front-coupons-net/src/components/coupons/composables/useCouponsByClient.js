@@ -50,7 +50,7 @@ export const useCouponsByClient = () => {
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(coupon.url);
       const blob = await (await fetch(qrCodeDataUrl)).blob();
-      saveAs(blob, `${coupon.coupon.couponCode}.png`);
+      saveAs(blob, `${coupon.coupon.name}.png`);
     } catch (error) {
       console.error("Error generating QR code", error);
     }

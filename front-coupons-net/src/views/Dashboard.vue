@@ -77,7 +77,7 @@ const companyStore = useCompanyStore();
 // Estados disponibles para filtrar
 const states = [
   { title: "Reclamado", value: 0 },
-  { title: "Redimido", value: 1 },
+  { title: "Canjeado", value: 1 },
   { title: "Expirado", value: 2 },
 ];
 

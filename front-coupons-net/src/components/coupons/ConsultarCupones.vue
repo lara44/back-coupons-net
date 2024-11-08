@@ -24,37 +24,76 @@
     </v-card>
 
     <v-card v-if="coupons.length > 0" class="mt-6" elevation="2">
-      <v-table density="compact">
+      <v-table density="compact" class="elevation-1 rounded">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Cupón</th>
-            <th>Código</th>
-            <th>Fecha de Vencimiento</th>
-            <th>Productos</th>
-            <th>Acciones</th>
+            <th class="text-center text-white bg-primary pa-3 font-weight-bold">
+              #
+            </th>
+            <th class="text-center text-white bg-primary pa-3 font-weight-bold">
+              Empresa
+            </th>
+            <th class="text-center text-white bg-primary pa-3 font-weight-bold">
+              Cupón
+            </th>
+            <th class="text-center text-white bg-primary pa-3 font-weight-bold">
+              Código
+            </th>
+            <th class="text-center text-white bg-primary pa-3 font-weight-bold">
+              Fecha de Vencimiento
+            </th>
+            <th class="text-center text-white bg-primary pa-3 font-weight-bold">
+              Estado
+            </th>
+            <th class="text-center text-white bg-primary pa-3 font-weight-bold">
+              Productos
+            </th>
+            <th class="text-center text-white bg-primary pa-3 font-weight-bold">
+              Acciones
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="coupon in coupons" :key="coupon.id">
-            <td>{{ coupon.id }}</td>
+          <tr v-for="(coupon, index) in coupons" :key="coupon.id">
+            <td>{{ index + 1 }}</td>
+            <td>{{ coupon.coupon.nameCompany }}</td>
             <td>{{ coupon.coupon.name }}</td>
             <td>{{ coupon.coupon.couponCode }}</td>
             <td>{{ coupon.coupon.expiryDate.substr(0, 10) }}</td>
             <td>
-              <ul class="product-list">
-                <li
-                  v-for="detail in coupon.coupon.detailCoupons"
-                  :key="detail.id"
-                >
-                  {{ detail.product.name }}
-                </li>
-              </ul>
+              <v-chip
+                :color="
+                  coupon.coupon.state === 0
+                    ? 'blue lighten-4'
+                    : 'green lighten-4'
+                "
+                :text-color="
+                  coupon.coupon.state === 0 ? 'blue darken-2' : 'green darken-2'
+                "
+                class="rounded-pill px-3"
+              >
+                {{ coupon.coupon.state === 0 ? "Reclamado" : "Canjeado" }}
+              </v-chip>
             </td>
             <td>
-              <v-icon @click="QrCoupon(coupon)" class="btn-icon"
-                >mdi-qrcode</v-icon
+              <v-chip-group column class="product-list">
+                <v-chip
+                  v-for="detail in coupon.coupon.detailCoupons"
+                  :key="detail.id"
+                  class="ma-1"
+                >
+                  {{ detail.product.name }}
+                </v-chip>
+              </v-chip-group>
+            </td>
+            <td>
+              <v-icon
+                v-if="coupon.coupon.state === 0"
+                @click="QrCoupon(coupon)"
+                class="btn-icon clickable-icon mr-2"
               >
+                mdi-qrcode
+              </v-icon>
             </td>
           </tr>
         </tbody>
