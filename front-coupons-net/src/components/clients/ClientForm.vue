@@ -89,7 +89,7 @@ const handleRegister = async () => {
   if (isValid) {
     redeem.value = await manageClient(props.couponCode);
     if (redeem.value === true) {
-      toast.success("Cupon canjeado exitosamente");
+      toast.success("Cupon reclamado exitosamente");
       router.push("/consultar-cupones");
     } else {
       showAlert.value = true;

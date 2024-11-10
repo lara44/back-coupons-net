@@ -51,6 +51,12 @@
               :rules="[requiredRule('Cantidad inicial'), numberRule]"
               required
             ></v-text-field>
+            <v-text-field
+              v-model="newCoupon.photo"
+              label="Foto"
+              :rules="[requiredRule('Foto')]"
+              required
+            ></v-text-field>
             <v-select
               v-model="selectedProducts"
               :items="products"
@@ -144,15 +150,6 @@
         style="box-shadow: none !important"
       ></v-pagination>
     </v-card>
-
-    <!-- Snackbar para mostrar el mensaje de éxito -->
-    <v-snackbar v-model="successMessageVisible" timeout="3000">
-      {{
-        selectedCoupon
-          ? "Cupón actualizado exitosamente"
-          : "Cupón creado exitosamente"
-      }}
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -165,6 +162,9 @@ import { useProductStore } from "../../stores/productStore";
 import { useCompanyStore } from "../../stores/companyStore";
 import { useUserStore } from "../../stores/userStore";
 import { jwtDecode } from "jwt-decode";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const token = localStorage.getItem("spa_token");
 const decodedToken = jwtDecode(token);
@@ -181,7 +181,6 @@ const userStore = useUserStore();
 const currentPage = ref(1); // Página actual
 const itemsPerPage = 10; // Número de usuarios por página
 const couponStore = useCouponStore();
-const successMessageVisible = ref(false);
 const search = ref("");
 const newCoupon = reactive({
   name: "",
@@ -191,8 +190,17 @@ const newCoupon = reactive({
   quantityInitial: "",
   quantityActual: "",
   companyId: "",
+  photo: "",
   detailCoupons: [],
 });
+
+const formatDate = (date) => {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 const selectedCoupon = ref(null);
 const selectedProducts = ref([]);
@@ -220,10 +228,20 @@ const numberRule = (value) =>
 
 const expiryDateRule = (value) => {
   if (!value) return 'El campo "Fecha de Finalización" es obligatorio';
-  return (
-    new Date(value) > new Date(newCoupon.startDate) ||
-    "La fecha de finalización debe ser mayor a la fecha de inicio"
-  );
+
+  const currentDate = new Date();
+  const startDate = new Date(newCoupon.startDate);
+  const expiryDate = new Date(value);
+
+  if (expiryDate <= currentDate) {
+    return "La fecha de finalización debe ser mayor a la fecha actual";
+  }
+
+  if (expiryDate <= startDate) {
+    return "La fecha de finalización debe ser mayor a la fecha de inicio";
+  }
+
+  return true; // Si todas las validaciones pasan, devuelve true
 };
 
 watch(selectedProducts, (newVal) => {
@@ -240,9 +258,7 @@ const openModal = () => {
   newCoupon.startDate = "";
   newCoupon.expiryDate = "";
   newCoupon.quantityInitial = "";
-  role === "Admin"
-    ? (newCoupon.companyId = "")
-    : newCoupon.companyId === company;
+  newCoupon.photo = "";
   selectedProducts.value = [];
 };
 
@@ -260,9 +276,12 @@ const submitForm = async () => {
       ...selectedCoupon.value,
       ...newCoupon,
     });
+    toast.success("Cupon Actualizado exitosamente");
   } else {
     newCoupon.quantityActual = newCoupon.quantityInitial;
+    newCoupon.companyId = company;
     await couponStore.createCoupon(newCoupon);
+    toast.success("Cupon creado exitosamente");
   }
 
   await couponStore.getCoupons(role, company);
@@ -272,13 +291,8 @@ const submitForm = async () => {
   newCoupon.startDate = "";
   newCoupon.expiryDate = "";
   newCoupon.quantityInitial = "";
+  newCoupon.photo = "";
   (newCoupon.companyId = ""), (selectedProducts.value = []);
-
-  successMessageVisible.value = true;
-
-  setTimeout(() => {
-    successMessageVisible.value = false;
-  }, 3000);
 
   dialog.value = false;
 };
@@ -287,10 +301,12 @@ const editCoupon = (coupon) => {
   selectedCoupon.value = { ...coupon };
   newCoupon.name = selectedCoupon.value.name;
   newCoupon.couponCode = selectedCoupon.value.couponCode;
-  newCoupon.startDate = selectedCoupon.value.startDate;
-  newCoupon.expiryDate = selectedCoupon.value.expiryDate;
+  newCoupon.startDate = formatDate(selectedCoupon.value.startDate);
+  newCoupon.expiryDate = formatDate(selectedCoupon.value.expiryDate);
   newCoupon.quantityInitial = selectedCoupon.value.quantityInitial;
+  newCoupon.quantityActual = selectedCoupon.value.quantityActual;
   newCoupon.companyId = selectedCoupon.value.companyId;
+  newCoupon.photo = selectedCoupon.value.photo;
   selectedProducts.value = selectedCoupon.value.detailCoupons.map(
     (dc) => dc.productId
   );
@@ -310,6 +326,7 @@ const closeModal = () => {
   newCoupon.startDate = "";
   newCoupon.expiryDate = "";
   newCoupon.quantityInitial = "";
+  newCoupon.photo = "";
   selectedProducts.value = [];
 };
 
@@ -326,7 +343,9 @@ const QrCoupon = async (coupon) => {
 
 onMounted(() => {
   useCouponStore().getCoupons(role, company);
-  productStore.getProducts();
   companyStore.getCompanies();
+  userStore.role === "Admin"
+    ? useProductStore().getProducts()
+    : useProductStore().getProductsByCompany(company);
 });
 </script>

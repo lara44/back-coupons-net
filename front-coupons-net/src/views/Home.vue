@@ -63,13 +63,6 @@
           <v-list-item
             link
             style="font-size: 10px !important"
-            prepend-icon="mdi-clipboard-outline mdi-18px"
-            title="Categorias"
-            to="/categories"
-          ></v-list-item>
-          <v-list-item
-            link
-            style="font-size: 10px !important"
             prepend-icon="mdi-account-group-outline mdi-18px"
             title="Cupones"
             to="/coupons"
@@ -90,6 +83,13 @@
             prepend-icon="mdi-store-24-hour mdi-18px"
             title="Empresas"
             to="/companies"
+          ></v-list-item>
+          <v-list-item
+            link
+            style="font-size: 10px !important"
+            prepend-icon="mdi-clipboard-outline mdi-18px"
+            title="Categorias"
+            to="/categories"
           ></v-list-item>
           <v-list-item
             link
