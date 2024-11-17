@@ -23,6 +23,16 @@
                   ></v-select>
                 </v-col>
                 <v-col cols="12" sm="6">
+                  <v-select
+                    v-model="newUser.userType"
+                    :items="roles"
+                    label="Rol"
+                    :rules="[requiredRule('Rol')]"
+                    outlined
+                  />
+                </v-col>
+
+                <v-col cols="12" sm="6">
                   <v-text-field
                     v-model="newUser.email"
                     label="Correo electrónico"
@@ -255,7 +265,9 @@ import { useCountryStore } from "../../stores/countryStore";
 import { useStateStore } from "../../stores/stateStore";
 import { useCityStore } from "../../stores/cityStore";
 import { useCompanyStore } from "../../stores/companyStore";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const userStore = useUserStore();
 const countryStore = useCountryStore();
 const stateStore = useStateStore();
@@ -286,7 +298,13 @@ const newUser = reactive({
   companyId: "",
   password: "",
   passwordConfirm: "",
+  userType: "",
 });
+
+const roles = [
+  { title: "Administrador", value: 0 },
+  { title: "Empresa", value: 1 },
+];
 
 const errorMessages = ref([]);
 const notification = ref("");
@@ -346,6 +364,7 @@ const submitForm = () => {
         if (response.status === 400) {
           userStore.errorMessages.push(response.response.data);
         } else {
+          toast.success("Usuario actualizado exitosamente");
           notification.value = "Usuario actualizado exitosamente";
           onSave();
         }
@@ -356,6 +375,7 @@ const submitForm = () => {
       if (response.status === 400) {
         userStore.errorMessages.push(response.response.data);
       } else {
+        toast.success("Usuario creado exitosamente");
         notification.value = "Usuario Creado exitosamente";
         onSave();
       }
@@ -384,11 +404,13 @@ const editUser = (user) => {
   newUser.cityId = selectedUser.value.cityId;
   newUser.companyId = selectedUser.value.companyId;
   newUser.photoPreviewEdit = selectedUser.value.photo;
+  newUser.userType = selectedUser.value.userType;
   dialog.value = true;
 };
 
 const deleteUser = (state) => {
   userStore.deleteUser(state);
+  toast.success("Usuario eliminado");
   notification.value = "Usuario eliminado";
 };
 
@@ -447,12 +469,14 @@ const clearForm = () => {
   newUser.photoFile = "";
   newUser.photoPreview = "";
   newUser.photo = "";
+  newUser.userType = "";
   userStore.cleanErrors();
 };
 
 const emailConfirmation = (email) => {
   const user = { email: email };
   userStore.resedToken(user);
+  toast.success("Email enviado exitosamente");
   notification.value = "Email enviado exitosamente";
   successMessage();
 };

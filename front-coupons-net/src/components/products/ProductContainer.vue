@@ -145,7 +145,7 @@ const newProduct = reactive({
   price: "",
   barcode: "",
   companyId: "",
-  DetailCoupons: [],
+  //DetailCoupons: [],
 });
 const selectedProduct = ref(null);
 const dialog = ref(false);
