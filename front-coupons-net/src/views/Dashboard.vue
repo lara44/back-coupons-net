@@ -1,8 +1,9 @@
 <template>
-  <v-container>
+  <div>
+    <CarouselCards v-if="isAdmin" />
+    <!-- Resto del contenido del Dashboard -->
     <v-card class="pa-4 mb-6" elevation="2">
       <v-card-title class="mb-4 text-h5 text-center">Dashboard</v-card-title>
-
       <v-row>
         <v-col cols="12" md="3" v-if="isAdmin">
           <v-select
@@ -14,7 +15,6 @@
             outlined
           />
         </v-col>
-
         <v-col cols="12" md="3">
           <v-text-field
             v-model="filters.startDate"
@@ -24,7 +24,6 @@
             required
           />
         </v-col>
-
         <v-col cols="12" md="3">
           <v-text-field
             v-model="filters.endDate"
@@ -34,7 +33,6 @@
             required
           />
         </v-col>
-
         <v-col cols="12" md="3">
           <v-select
             v-model="filters.state"
@@ -43,7 +41,6 @@
             outlined
           />
         </v-col>
-
         <v-col cols="12" md="3">
           <v-btn color="primary" block @click="applyFilters">
             Aplicar Filtros
@@ -51,21 +48,19 @@
         </v-col>
       </v-row>
     </v-card>
-
     <v-card class="pa-4 mb-6">
       <CouponsByDateChart :filters="appliedFilters" />
     </v-card>
-
     <v-card class="pa-4">
       <TablaCupones :filters="appliedFilters" />
     </v-card>
-  </v-container>
+  </div>
 </template>
 
 <script setup>
-import { reactive, ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
+import CarouselCards from "../components/charts/CarouselCards.vue";
 import CouponsByDateChart from "../components/charts/CouponsByDateChart.vue";
-import CouponsByClientChart from "../components/charts/CouponsByClientChart.vue";
 import TablaCupones from "../components/charts/CuponsTablaClientes.vue";
 import { useUserStore } from "../stores/userStore";
 import { useCompanyStore } from "../stores/companyStore";
@@ -84,35 +79,26 @@ const states = [
 const companyId = userStore.role === "Admin" ? 0 : userStore.companyId;
 
 // Filtros reactivos
-const currentYear = new Date().getFullYear();
-
-const filters = reactive({
-  startDate: `${currentYear}-01-01`,
-  endDate: `${currentYear}-12-31`,
+const filters = ref({
+  startDate: `${new Date().getFullYear()}-01-01`,
+  endDate: `${new Date().getFullYear()}-12-31`,
   state: 0,
-  companyId: companyId,
+  companyId,
 });
 
-const appliedFilters = ref({ ...filters });
-
+const appliedFilters = ref({ ...filters.value });
 const companies = computed(() => companyStore.listCompanies);
-
-console.log(companies.value);
-
 const isAdmin = computed(() => userStore.role === "Admin");
-console.log(isAdmin.value);
 
 onMounted(async () => {
   if (isAdmin.value) {
     await companyStore.getCompanies();
   } else {
-    filters.companyId = userStore.companyId;
+    filters.value.companyId = userStore.companyId;
   }
 });
 
-// Aplicar filtros
 const applyFilters = () => {
-  appliedFilters.value = { ...filters };
-  console.log("Filtros aplicados:", appliedFilters.value);
+  appliedFilters.value = { ...filters.value };
 };
 </script>
