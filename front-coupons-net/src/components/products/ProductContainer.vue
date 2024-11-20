@@ -252,10 +252,6 @@ const closeModal = () => {
 
 onMounted(() => {
   try {
-    const token = localStorage.getItem("spa_token");
-    const decodedToken = jwtDecode(token);
-    const company = decodedToken["CompanyId"];
-
     role === "Admin"
       ? useProductStore().getProducts()
       : useProductStore().getProductsByCompany(company);
