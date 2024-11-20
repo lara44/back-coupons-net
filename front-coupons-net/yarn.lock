@@ -1145,10 +1145,10 @@ vue-toastification@^2.0.0-rc.5:
     "@vue/server-renderer" "3.4.21"
     "@vue/shared" "3.4.21"
 
-vuetify@^3.6.8:
-  version "3.7.3"
-  resolved "https://registry.npmjs.org/vuetify/-/vuetify-3.7.3.tgz"
-  integrity sha512-bpuvBpZl1/+nLlXDgdVXekvMNR6W/ciaoa8CYlpeAzAARbY8zUFSoBq05JlLhkIHI58AnzKVy4c09d0OtfYAPg==
+vuetify@^3.7.4:
+  version "3.7.4"
+  resolved "https://registry.npmjs.org/vuetify/-/vuetify-3.7.4.tgz"
+  integrity sha512-Y8UU5wUDQXC3oz2uumPb8IOdvB4XMCxtxnmqdOc+LihNuPlkSgxIwf92ndRzbOtJFKHsggFUxpyLqpQp+A+5kg==
 
 which-module@^2.0.0:
   version "2.0.1"

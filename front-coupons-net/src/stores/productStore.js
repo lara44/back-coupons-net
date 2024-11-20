@@ -49,7 +49,10 @@ export const useProductStore = defineStore("productStore", {
 
     async updateProduct(updatedProduct) {
       try {
-        const response = await axios.put(`/api/products/${updatedProduct.id}`);
+        const response = await axios.put(
+          `/api/products/${updatedProduct.id}`,
+          updatedProduct
+        );
         return response;
       } catch (error) {
         console.error(error);

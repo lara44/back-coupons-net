@@ -35,8 +35,8 @@ export const useCouponStore = defineStore("couponStore", {
       try {
         const response = await axios.get(`/api/coupons/full`);
         if (response.data.data) {
-          this.listCoupons = response.data.data;
-          console.log(response.data.data);
+          this.listCoupons = response.data.data.sort((a, b) => b.id - a.id);
+          console.log(this.listCoupons);
         }
       } catch (error) {
         console.error(error);

@@ -132,9 +132,6 @@
                 <v-icon @click="deleteCoupon(coupon)" class="btn-icon"
                   >mdi-delete</v-icon
                 >
-                <v-icon @click="QrCoupon(coupon)" class="btn-icon"
-                  >mdi-qrcode</v-icon
-                >
               </td>
             </tr>
             <tr v-if="!filteredCoupons.length">
