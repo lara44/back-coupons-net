@@ -133,6 +133,12 @@ import { useToast } from "vue-toastification";
 
 const toast = useToast();
 
+const token = localStorage.getItem("spa_token");
+const decodedToken = jwtDecode(token);
+const role =
+  decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+const company = decodedToken["CompanyId"];
+
 const currentPage = ref(1); // Página actual
 const itemsPerPage = 10; // Número de usuarios por página
 const productStore = useProductStore();
@@ -186,9 +192,9 @@ const openModal = () => {
   selectedProduct.value = null;
   newProduct.name = "";
   newProduct.price = "";
-  userStore.role === "Admin"
+  role === "Admin"
     ? (newProduct.companyId = "")
-    : (newProduct.companyId = userStore.companyId);
+    : (newProduct.companyId = company);
 };
 
 const submitForm = async () => {
@@ -206,9 +212,9 @@ const submitForm = async () => {
     toast.success("Producto creado exitosamente");
   }
 
-  userStore.role === "Admin"
+  role === "Admin"
     ? useProductStore().getProducts()
-    : useProductStore().getProductsByCompany(userStore.companyId);
+    : useProductStore().getProductsByCompany(company);
 
   newProduct.name = "";
   newProduct.price = "";
@@ -221,9 +227,9 @@ const submitForm = async () => {
 const deleteProduct = (product) => {
   productStore.deleteProduct(product);
 
-  userStore.role === "Admin"
+  role === "Admin"
     ? useProductStore().getProducts()
-    : useProductStore().getProductsByCompany(userStore.companyId);
+    : useProductStore().getProductsByCompany(company);
 };
 
 const editProduct = (product) => {
@@ -246,11 +252,7 @@ const closeModal = () => {
 
 onMounted(() => {
   try {
-    const token = localStorage.getItem("spa_token");
-    const decodedToken = jwtDecode(token);
-    const company = decodedToken["CompanyId"];
-
-    userStore.role === "Admin"
+    role === "Admin"
       ? useProductStore().getProducts()
       : useProductStore().getProductsByCompany(company);
 
